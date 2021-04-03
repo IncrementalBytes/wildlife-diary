@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="2dp"
+  android:layout_marginEnd="2dp"
+  android:layout_marginBottom="2dp"
+  android:background="@color/black"
+  android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/encounter_item_wildlife"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:singleLine="true"
+    android:text="@string/placeholder"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    app:layout_constraintBottom_toTopOf="@id/encounter_item_abbreviation"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/encounter_item_abbreviation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/default_view_margin"
+    android:layout_marginEnd="@dimen/default_view_margin"
+    android:layout_marginBottom="@dimen/default_view_margin"
+    android:singleLine="true"
+    android:text="@string/placeholder"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/encounter_item_wildlife" />
+
+  <TextView
+    android:id="@+id/encounter_item_date"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:text="@string/placeholder"
+    android:textColor="@color/orangey"
+    app:layout_constraintBottom_toBottomOf="@id/encounter_item_abbreviation"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="@id/encounter_item_abbreviation" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

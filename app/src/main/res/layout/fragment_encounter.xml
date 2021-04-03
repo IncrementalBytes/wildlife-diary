@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <TextView
+    android:id="@+id/encounter_text_date"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:text="@string/label_date"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@id/encounter_edit_date"
+    app:layout_constraintBottom_toBottomOf="@id/encounter_edit_date"/>
+
+  <EditText
+    android:id="@+id/encounter_edit_date"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:ems="6"
+    android:inputType="date"
+    android:labelFor="@id/encounter_text_date"
+    android:hint="@string/hint_date"
+    app:layout_constraintStart_toEndOf="@id/encounter_text_date"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:autofillHints="" />
+
+  <TextView
+    android:id="@+id/encounter_text_wildlife"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:text="@string/label_species"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@id/encounter_auto_wildlife"
+    app:layout_constraintBottom_toBottomOf="@id/encounter_auto_wildlife"/>
+
+  <AutoCompleteTextView
+    android:id="@+id/encounter_auto_wildlife"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:labelFor="@id/encounter_text_wildlife"
+    android:hint="@string/hint_abbreviation"
+    app:layout_constraintStart_toEndOf="@id/encounter_text_wildlife"
+    app:layout_constraintTop_toBottomOf="@id/encounter_edit_date"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+  <TextView
+    android:id="@+id/encounter_text_task"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:text="@string/label_task"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@id/encounter_spinner_task"
+    app:layout_constraintBottom_toBottomOf="@id/encounter_spinner_task"/>
+
+  <Spinner
+    android:id="@+id/encounter_spinner_task"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/encounter_text_task"
+    app:layout_constraintTop_toBottomOf="@id/encounter_auto_wildlife" />
+
+  <Button
+    android:id="@+id/encounter_button_add"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:text="@string/label_add"
+    app:layout_constraintTop_toBottomOf="@id/encounter_spinner_task"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
+
+  <ListView
+    android:id="@+id/encounter_list_tasks"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/encounter_button_add"
+    app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
