@@ -15,9 +15,9 @@
  */
 package net.whollynugatory.android.wildlife.db.view;
 
-import androidx.room.DatabaseView;
+  import androidx.room.DatabaseView;
 
-import net.whollynugatory.android.wildlife.Utils;
+  import net.whollynugatory.android.wildlife.Utils;
 
 @DatabaseView(
   "SELECT Encounter.date AS Date, " +
@@ -25,15 +25,15 @@ import net.whollynugatory.android.wildlife.Utils;
     "Encounter.encounter_id AS EncounterId, " +
     "Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.abbreviation AS WildlifeAbbreviation, " +
-    "Tasks.name AS TaskName, " +
-    "Tasks.description AS TaskDescription, " +
-    "Tasks.is_sensitive AS IsSensitive " +
+    "Tasks.is_sensitive AS IsSensitive, " +
+    "COUNT(Encounter.task_id) AS TaskCount " +
     "FROM encounter_table AS Encounter " +
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
+    "GROUP BY EncounterId, Tasks.is_sensitive " +
     "ORDER BY Date ASC"
 )
-public class EncounterDetails {
+public class EncounterSummary {
 
   public long Date;
 
@@ -41,9 +41,7 @@ public class EncounterDetails {
 
   public boolean IsSensitive;
 
-  public String TaskDescription;
-
-  public String TaskName;
+  public int TaskCount;
 
   public String UserId;
 
@@ -51,13 +49,12 @@ public class EncounterDetails {
 
   public String WildlifeSpecies;
 
-  public EncounterDetails() {
+  public EncounterSummary() {
 
     Date = 0;
     EncounterId = Utils.UNKNOWN_ID;
     IsSensitive = false;
-    TaskDescription = Utils.UNKNOWN_STRING;
-    TaskName = Utils.UNKNOWN_STRING;
+    TaskCount = 0;
     UserId = Utils.UNKNOWN_USER_ID;
     WildlifeAbbreviation = Utils.UNKNOWN_STRING;
     WildlifeSpecies = Utils.UNKNOWN_STRING;

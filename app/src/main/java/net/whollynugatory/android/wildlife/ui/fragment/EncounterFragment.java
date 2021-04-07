@@ -213,11 +213,7 @@ public class EncounterFragment extends Fragment {
         itemStates.add(itemState);
       }
 
-//      ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(
-//        getActivity(),
-//        android.R.layout.simple_spinner_item,
-//        new ArrayList<>(mTaskMap.keySet()));
-//      dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+      itemStates.sort(new Utils.SortByName());
       CustomAdapter customAdapter = new CustomAdapter(getActivity(), 0, itemStates);
       mTaskSpinner.setAdapter(customAdapter);
       prepareWildlifeList();
@@ -228,10 +224,10 @@ public class EncounterFragment extends Fragment {
 
       // TODO: validate
       EncounterEntity encounterEntity = new EncounterEntity();
-      encounterEntity.Date = mDateEdit.getText().toString();
-      encounterEntity.EncounterId = UUID.randomUUID().toString(); // is the same for each task id
+      encounterEntity.Date = Utils.convertToLong(mDateEdit.getText().toString());
+      encounterEntity.EncounterId = UUID.randomUUID().toString();
       encounterEntity.UserId = mUserId;
-      encounterEntity.WildlifeId = mWildlifeMap.get(mWildlifeText.getText().toString());
+      encounterEntity.WildlifeId = mWildlifeMap.get(mWildlifeText.getText().toString().toUpperCase());
       int totalItems = mTaskSpinner.getAdapter().getCount();
       for (int taskCount = 0; taskCount < totalItems; taskCount++) {
         SpinnerItemState item = (SpinnerItemState) mTaskSpinner.getAdapter().getItem(taskCount);

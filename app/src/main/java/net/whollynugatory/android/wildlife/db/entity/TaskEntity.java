@@ -40,17 +40,21 @@ public class TaskEntity implements Serializable {
   @ColumnInfo(name = "description")
   public String Description;
 
+  @ColumnInfo(name = "is_sensitive")
+  public boolean IsSensitive;
+
   public TaskEntity() {
 
-    Id = Utils.UNKNOWN_ID;
-    Name = Utils.UNKNOWN_STRING;
     Description = Utils.UNKNOWN_STRING;
+    Id = Utils.UNKNOWN_ID;
+    IsSensitive = false;
+    Name = Utils.UNKNOWN_STRING;
   }
 
   @NonNull
   @Override
   public String toString() {
 
-    return String.format(Locale.US, "{Id: %s, Name: %s}|", Id, Name);
+    return String.format(Locale.US, "{Id: %s, Name: %s, IsSensitive: %s}", Id, Name, IsSensitive);
   }
 }

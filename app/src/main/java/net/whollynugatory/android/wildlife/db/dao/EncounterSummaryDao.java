@@ -17,29 +17,15 @@ package net.whollynugatory.android.wildlife.db.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
+import net.whollynugatory.android.wildlife.db.view.EncounterSummary;
 
 import java.util.List;
 
 @Dao
-public interface TaskDao {
+public interface EncounterSummaryDao {
 
-  @Query("SELECT COUNT() FROM task_table")
-  LiveData<Integer> count();
-
-  @Query("SELECT * FROM task_table")
-  LiveData<List<TaskEntity>> getAll();
-
-  @Query("SELECT name FROM task_table ORDER BY name DESC")
-  LiveData<List<String>> getNames();
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insert(TaskEntity taskEntity);
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertAll(List<TaskEntity> taskEntityList);
+  @Query("SELECT * FROM EncounterSummary ORDER BY Date DESC LIMIT 50")
+  LiveData<List<EncounterSummary>> getRecentSummary();
 }

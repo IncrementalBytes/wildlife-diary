@@ -42,9 +42,7 @@ public class EncounterDataFragment  extends Fragment {
 
   public interface OnEncounterDataListener {
 
-    void onEncounterDataMissing();
-
-    void onEncounterDataPopulated();
+    void onEncounterDataPopulated(int itemsPopulated);
   }
 
   private OnEncounterDataListener mCallback;
@@ -89,6 +87,7 @@ public class EncounterDataFragment  extends Fragment {
     FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).get()
       .addOnCompleteListener(task -> {
 
+        int itemsPopulated = 0;
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data", task.getException());
         } else {
@@ -98,13 +97,12 @@ public class EncounterDataFragment  extends Fragment {
               EncounterEntity encounterEntity = dataSnapshot.getValue(EncounterEntity.class);
               encounterEntity.Id = dataSnapshot.getKey();
               wildlifeViewModel.insertEncounter(encounterEntity);
+              itemsPopulated++;
             }
-
-            mCallback.onEncounterDataPopulated();
-          } else {
-            mCallback.onEncounterDataMissing();
           }
         }
+
+        mCallback.onEncounterDataPopulated(itemsPopulated);
       });
   }
 }

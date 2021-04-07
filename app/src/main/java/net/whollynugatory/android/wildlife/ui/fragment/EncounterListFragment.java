@@ -31,10 +31,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.db.view.EncounterDetails;
+import net.whollynugatory.android.wildlife.db.view.EncounterSummary;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,7 +47,7 @@ public class EncounterListFragment extends Fragment {
   public interface OnEncounterListListener {
 
     void onEncounterListPopulated(int size);
-    void onEncounterDetailsClicked(String encounterId);
+    void onEncounterSummaryClicked(String encounterId);
   }
 
   private OnEncounterListListener mCallback;
@@ -78,10 +80,22 @@ public class EncounterListFragment extends Fragment {
     mRecyclerView.setAdapter(mEncounterAdapter);
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
 
-    wildlifeViewModel.getRecentEncounterDetailsGrouped().observe(getViewLifecycleOwner(), encounterDetails -> {
+    wildlifeViewModel.getRecentEncounterSummary().observe(getViewLifecycleOwner(), encounterSummaryList -> {
 
-      mEncounterAdapter.setEncounterList(encounterDetails);
-      mCallback.onEncounterListPopulated(encounterDetails.size());
+      boolean showSensitive = Utils.getShowSensitive(getContext());
+      HashMap<String, EncounterSummary> encounterSummaries = new HashMap<>();
+      for (EncounterSummary encounterSummary : encounterSummaryList) {
+        if (encounterSummary.IsSensitive) {
+          if (showSensitive && !encounterSummaries.containsKey(encounterSummary.EncounterId)) {
+            encounterSummaries.put(encounterSummary.EncounterId, encounterSummary);
+          }
+        } else if(!encounterSummaries.containsKey(encounterSummary.EncounterId)) {
+          encounterSummaries.put(encounterSummary.EncounterId, encounterSummary);
+        }
+      }
+
+      mEncounterAdapter.setEncounterList(encounterSummaries.values());
+      mCallback.onEncounterListPopulated(encounterSummaries.size());
     });
   }
 
@@ -150,7 +164,7 @@ public class EncounterListFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + EncounterAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<EncounterDetails> mEncounterDetailsList;
+    private List<EncounterSummary> mEncounterSummaryList;
 
     public EncounterAdapter(Context context) {
 
@@ -168,9 +182,9 @@ public class EncounterListFragment extends Fragment {
     @Override
     public void onBindViewHolder(@NonNull EncounterAdapter.EncounterHolder holder, int position) {
 
-      if (mEncounterDetailsList != null) {
-        EncounterDetails encounterDetails = mEncounterDetailsList.get(position);
-        holder.bind(encounterDetails);
+      if (mEncounterSummaryList != null) {
+        EncounterSummary encounterSummary = mEncounterSummaryList.get(position);
+        holder.bind(encounterSummary);
       } else {
         // No books!
       }
@@ -179,17 +193,17 @@ public class EncounterListFragment extends Fragment {
     @Override
     public int getItemCount() {
 
-      if (mEncounterDetailsList != null) {
-        return mEncounterDetailsList.size();
+      if (mEncounterSummaryList != null) {
+        return mEncounterSummaryList.size();
       } else {
         return 0;
       }
     }
 
-    public void setEncounterList(List<EncounterDetails> encounterDetailsList) {
+    public void setEncounterList(Collection<EncounterSummary> encounterSummaryList) {
 
-      Log.d(TAG, "++setEncounterList(List<EncounterDetails>)");
-      mEncounterDetailsList = new ArrayList<>(encounterDetailsList);
+      Log.d(TAG, "++setEncounterList(Collection<EncounterSummary>)");
+      mEncounterSummaryList = new ArrayList<>(encounterSummaryList);
       notifyDataSetChanged();
     }
 
@@ -201,7 +215,7 @@ public class EncounterListFragment extends Fragment {
       private final TextView mEncounterDateTextView;
       private final TextView mWildlifeTextView;
 
-      private EncounterDetails mEncounterDetails;
+      private EncounterSummary mEncounterSummary;
 
       EncounterHolder(View itemView) {
         super(itemView);
@@ -213,20 +227,20 @@ public class EncounterListFragment extends Fragment {
         itemView.setOnClickListener(this);
       }
 
-      void bind(EncounterDetails encounterDetails) {
+      void bind(EncounterSummary encounterSummary) {
 
-        mEncounterDetails = encounterDetails;
+        mEncounterSummary = encounterSummary;
 
-        mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
-        mEncounterDateTextView.setText(mEncounterDetails.Date);
-        mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
+        mAbbreviationTextView.setText(mEncounterSummary.WildlifeAbbreviation);
+        mEncounterDateTextView.setText(Utils.displayDate(mEncounterSummary.Date));
+        mWildlifeTextView.setText(mEncounterSummary.WildlifeSpecies);
       }
 
       @Override
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        mCallback.onEncounterDetailsClicked(mEncounterDetails.EncounterId);
+        mCallback.onEncounterSummaryClicked(mEncounterSummary.EncounterId);
       }
     }
   }

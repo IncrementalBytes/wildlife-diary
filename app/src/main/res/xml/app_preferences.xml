@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <androidx.preference.PreferenceCategory>
+
+    <androidx.preference.SwitchPreference
+      android:title="@string/perf_title_get_notified"
+      android:defaultValue="true"
+      android:key="@string/perf_key_get_notified"
+      android:persistent="true"
+      android:summary="@string/perf_summary_get_notified"/>
+
+  </androidx.preference.PreferenceCategory>
+
+  <androidx.preference.PreferenceCategory>
+
+    <androidx.preference.SwitchPreferenceCompat
+      android:defaultValue="false"
+      android:key="@string/pref_key_enable_sensitive"
+      android:persistent="true"
+      android:summary="@string/pref_summary_enable_sensitive"
+      android:title="@string/pref_title_enable_sensitive"/>
+
+  </androidx.preference.PreferenceCategory>
+
+  <androidx.preference.PreferenceCategory android:title="@string/pref_category_about">
+    <androidx.preference.EditTextPreference
+      android:key="@string/pref_key_app_version"
+      android:singleLine="true"
+      android:title="@string/pref_title_app_version"
+      android:summary=""
+      android:enabled="false"/>
+  </androidx.preference.PreferenceCategory>
+
+</PreferenceScreen>

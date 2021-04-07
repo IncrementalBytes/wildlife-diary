@@ -22,38 +22,28 @@ import androidx.lifecycle.LiveData;
 
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
-import net.whollynugatory.android.wildlife.db.dao.EncounterDetailDao;
-import net.whollynugatory.android.wildlife.db.view.EncounterDetails;
+import net.whollynugatory.android.wildlife.db.dao.EncounterSummaryDao;
+import net.whollynugatory.android.wildlife.db.view.EncounterSummary;
 
 import java.util.List;
 
-public class EncounterDetailRepository {
+public class EncounterSummaryRepository {
 
-  private static final String TAG = Utils.BASE_TAG + EncounterDetailRepository.class.getSimpleName();
+  private static final String TAG = Utils.BASE_TAG + EncounterSummaryRepository.class.getSimpleName();
 
-  private final EncounterDetailDao mDao;
-  private final LiveData<List<EncounterDetails>> mRecentDetails;
+  private final EncounterSummaryDao mDao;
+  private final LiveData<List<EncounterSummary>> mRecentSummary;
 
-  public EncounterDetailRepository(Application application) {
+  public EncounterSummaryRepository(Application application) {
 
-    Log.d(TAG, "++EncounterDetailRepository(Application)");
+    Log.d(TAG, "++EncounterSummaryRepository(Application)");
     WildlifeDatabase db = WildlifeDatabase.getInstance(application);
-    mDao = db.encounterDetailDao();
-    mRecentDetails = mDao.getRecent();
+    mDao = db.encounterSummaryDao();
+    mRecentSummary = mDao.getRecentSummary();
   }
 
-  public LiveData<List<EncounterDetails>> getByEncounterId(String encounterId) {
+  public LiveData<List<EncounterSummary>> getRecentSummary() {
 
-    return mDao.getByEncounterId(encounterId);
-  }
-
-  public LiveData<List<EncounterDetails>> getRecent() {
-
-    return mRecentDetails;
-  }
-
-  public LiveData<List<EncounterDetails>> getRecentAndGroupByEncounter() {
-
-    return mDao.getRecentAndGroupByEncounter();
+    return mRecentSummary;
   }
 }

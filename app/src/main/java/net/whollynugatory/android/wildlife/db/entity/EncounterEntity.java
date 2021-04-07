@@ -54,7 +54,7 @@ public class EncounterEntity implements Serializable {
   public String EncounterId;
 
   @ColumnInfo(name = "date")
-  public String Date;
+  public long Date;
 
   @NonNull
   @ColumnInfo(name = "task_id")
@@ -72,7 +72,7 @@ public class EncounterEntity implements Serializable {
 
     Id = Utils.UNKNOWN_ID;
     EncounterId = Utils.UNKNOWN_ID;
-    Date = Utils.UNKNOWN_DATE;
+    Date = 0;
     TaskId = Utils.UNKNOWN_ID;
     WildlifeId = Utils.UNKNOWN_ID;
     UserId = Utils.UNKNOWN_USER_ID;

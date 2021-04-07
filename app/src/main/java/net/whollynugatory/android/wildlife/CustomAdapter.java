@@ -32,7 +32,6 @@ public class CustomAdapter extends ArrayAdapter<SpinnerItemState> {
 
   private final Context mContext;
   private final ArrayList<SpinnerItemState> mListState;
-//  private CustomAdapter mCustomAdapter;
   private boolean isFromView = false;
 
   public CustomAdapter(Context context, int resource, List<SpinnerItemState> objects) {
@@ -40,7 +39,6 @@ public class CustomAdapter extends ArrayAdapter<SpinnerItemState> {
 
     mContext = context;
     mListState = (ArrayList<SpinnerItemState>) objects;
-//    mCustomAdapter = this;
   }
 
   @Override

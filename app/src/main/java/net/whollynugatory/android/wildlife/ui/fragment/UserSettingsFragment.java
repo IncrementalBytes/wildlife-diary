@@ -22,23 +22,24 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import net.whollynugatory.android.wildlife.BuildConfig;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class UserSettingsFragment extends PreferenceFragmentCompat {
 
-  private static final String TAG = Utils.BASE_TAG + SettingsFragment.class.getSimpleName();
+  private static final String TAG = Utils.BASE_TAG + UserSettingsFragment.class.getSimpleName();
 
-  public static SettingsFragment newInstance() {
+  public static UserSettingsFragment newInstance() {
 
     Log.d(TAG, "++newInstance()");
-    return new SettingsFragment();
+    return new UserSettingsFragment();
   }
 
   /*
-      Fragment Override(s)
+    Fragment Override(s)
    */
   @Override
   public void onAttach(@NonNull Context context) {
@@ -52,18 +53,32 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     Log.d(TAG, "++onCreatePreferences(Bundle, String)");
     addPreferencesFromResource(R.xml.app_preferences);
-    setupAppVersionPreference();
+    setupShowSensitivePreference();
+    EditTextPreference editTextPreference = findPreference(getString(R.string.pref_key_app_version));
+    if (editTextPreference != null) {
+      editTextPreference.setSummary(BuildConfig.VERSION_NAME);
+    }
   }
 
   /*
     Private Method(s)
    */
-  private void setupAppVersionPreference() {
+  private void setupShowSensitivePreference() {
 
-    Log.d(TAG, "++setupAppVersionPreference()");
-    EditTextPreference editTextPreference = findPreference(getString(R.string.pref_key_app_version));
-    if (editTextPreference != null) {
-      editTextPreference.setSummary(BuildConfig.VERSION_NAME);
+    Log.d(TAG, "++setupShowSensitivePreference()");
+    SwitchPreference switchPreference = findPreference(getString(R.string.pref_key_enable_sensitive));
+    if (switchPreference != null) {
+      switchPreference.setChecked(Utils.getShowSensitive(getActivity()));
+      switchPreference.setOnPreferenceChangeListener(
+        (preference, newValue) -> {
+
+          Log.d(TAG, "++setupShowSensitivePreference::onPreferenceChange()");
+          Utils.saveBooleanPreference(
+            getActivity(),
+            R.string.pref_key_enable_sensitive,
+            (boolean) newValue);
+          return true;
+        });
     }
   }
 }

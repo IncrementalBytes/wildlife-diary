@@ -27,19 +27,21 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.dao.EncounterDao;
 import net.whollynugatory.android.wildlife.db.dao.EncounterDetailDao;
+import net.whollynugatory.android.wildlife.db.dao.EncounterSummaryDao;
 import net.whollynugatory.android.wildlife.db.dao.TaskDao;
 import net.whollynugatory.android.wildlife.db.dao.WildlifeDao;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.db.view.EncounterDetails;
+import net.whollynugatory.android.wildlife.db.view.EncounterSummary;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(
   entities = {EncounterEntity.class, TaskEntity.class, WildlifeEntity.class},
-  views = {EncounterDetails.class},
+  views = {EncounterDetails.class, EncounterSummary.class},
   version = 1,
   exportSchema = false)
 public abstract class WildlifeDatabase extends RoomDatabase {
@@ -51,6 +53,7 @@ public abstract class WildlifeDatabase extends RoomDatabase {
 
   public abstract EncounterDao encounterDao();
   public abstract EncounterDetailDao encounterDetailDao();
+  public abstract EncounterSummaryDao encounterSummaryDao();
   public abstract TaskDao taskDao();
   public abstract WildlifeDao wildlifeDao();
 
@@ -58,8 +61,8 @@ public abstract class WildlifeDatabase extends RoomDatabase {
 
   public static WildlifeDatabase getInstance(final Context context) {
 
-    Log.d(TAG, "++getInstance(Context)");
     if (sInstance == null) {
+      Log.d(TAG, "++getInstance(Context)");
       synchronized (WildlifeDatabase.class) {
         if (sInstance == null) {
           sInstance = Room.databaseBuilder(context.getApplicationContext(), WildlifeDatabase.class, Utils.DATABASE_NAME)

@@ -49,6 +49,8 @@ import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.ui.fragment.TaskDataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.WildlifeDataFragment;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity implements
   EncounterDataFragment.OnEncounterDataListener,
   EncounterFragment.OnEncounterListener,
@@ -196,30 +198,16 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterDataMissing() {
-
-    Log.d(TAG, "++onEncounterDataMissing()");
-    String message = "No encounters found.";
-    if (mUserEntity.CanAdd) {
-      message += " Try adding some!";
-    } else {
-      message += " Please try again later.";
-    }
-
-    showMessageInSnackBar(message);
-  }
-
-  @Override
-  public void onEncounterDataPopulated() {
+  public void onEncounterDataPopulated(int itemsPopulated) {
 
     Log.d(TAG, "++onEncounterDataPopulated()");
     replaceFragment(EncounterListFragment.newInstance(mUserEntity.Id));
   }
 
   @Override
-  public void onEncounterDetailsClicked(String encounterId) {
+  public void onEncounterSummaryClicked(String encounterId) {
 
-    Log.d(TAG, "onEncounterDetailsClicked(String)");
+    Log.d(TAG, "onEncounterSummaryClicked(String)");
     replaceFragment(EncounterDetailFragment.newInstance(encounterId));
   }
 
@@ -227,6 +215,13 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterListPopulated(int size) {
 
     Log.d(TAG, "++onEncounterListPopulated(int)");
+    if (size < 1) {
+      showMessageInSnackBar(
+        String.format(
+          Locale.US,
+          "No encounters found. %s",
+          mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
+    }
   }
 
   @Override

@@ -35,6 +35,7 @@ import net.whollynugatory.android.wildlife.db.view.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class EncounterDetailFragment extends Fragment {
 
@@ -42,7 +43,6 @@ public class EncounterDetailFragment extends Fragment {
 
   private TextView mDateText;
   private TextView mWildlifeText;
-  private TextView mAbbreviationText;
   private ListView mTaskList;
 
   private String mEncounterId;
@@ -66,23 +66,36 @@ public class EncounterDetailFragment extends Fragment {
     Log.d(TAG, "++onActivityCreated(Bundle)");
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
 
-    wildlifeViewModel.getEncounterDetails(mEncounterId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
+    wildlifeViewModel.getEncounterDetails(mEncounterId).observe(
+      getViewLifecycleOwner(),
+      encounterDetailsList -> {
 
-      mWildlifeText.setText(encounterDetailsList.get(0).WildlifeSpecies);
-      mDateText.setText(encounterDetailsList.get(0).Date);
-      mAbbreviationText.setText(encounterDetailsList.get(0).WildlifeAbbreviation);
+        mWildlifeText.setText(
+          String.format(
+            Locale.US,
+            getString(R.string.format_wildlife),
+            encounterDetailsList.get(0).WildlifeSpecies,
+            encounterDetailsList.get(0).WildlifeAbbreviation));
+        mDateText.setText(Utils.displayDate(encounterDetailsList.get(0).Date));
 
-      ArrayList<String> tasks = new ArrayList<>();
-      for (EncounterDetails encounterDetails : encounterDetailsList) {
-        tasks.add(encounterDetails.TaskName);
-      }
+        ArrayList<String> tasks = new ArrayList<>();
+        boolean showSensitive = Utils.getShowSensitive(getContext());
+        for (EncounterDetails encounterDetails : encounterDetailsList) {
+          if (encounterDetails.IsSensitive) {
+            if (showSensitive && !tasks.contains(encounterDetails.TaskName)) {
+              tasks.add(encounterDetails.TaskName);
+            }
+          } else if (!tasks.contains(encounterDetails.TaskName)) {
+            tasks.add(encounterDetails.TaskName);
+          }
+        }
 
-      ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(
-        getActivity(),
-        android.R.layout.simple_list_item_checked, // TODO: consider other type of layout? (needs researching)
-        new ArrayList<>(tasks));
-      mTaskList.setAdapter(dataAdapter);
-    });
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(
+          getActivity(),
+          android.R.layout.simple_list_item_checked, // TODO: consider other type of layout? (needs researching)
+          new ArrayList<>(tasks));
+        mTaskList.setAdapter(dataAdapter);
+      });
   }
 
   @Override
@@ -114,7 +127,6 @@ public class EncounterDetailFragment extends Fragment {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_encounter_details, container, false);
-    mAbbreviationText = view.findViewById(R.id.encounter_details_text_abbreviation);
     mDateText = view.findViewById(R.id.encounter_details_text_date);
     mWildlifeText = view.findViewById(R.id.encounter_details_text_wildlife);
     mTaskList = view.findViewById(R.id.encounter_details_list_tasks);

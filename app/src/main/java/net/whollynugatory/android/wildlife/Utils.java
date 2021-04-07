@@ -21,6 +21,11 @@ import androidx.preference.PreferenceManager;
 
 import androidx.annotation.StringRes;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Locale;
+
 public class Utils {
 
   public static final String ARG_ENCOUNTER_ENTITY = "encounter_entity";
@@ -38,6 +43,51 @@ public class Utils {
   public static final String USERS_ROOT = "Users";
   public static final String WILDLIFE_ROOT = "Wildlife";
 
+  public static long convertToLong(String dateString) {
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(2000, 0, 1, 0, 0, 0);
+    if (dateString.length() < 8) {
+      String dateFormat = "MMddYYYY";
+      dateString = dateString + dateFormat.substring(dateString.length());
+    }
+
+    int month = Integer.parseInt(dateString.substring(0, 2));
+    int day = Integer.parseInt(dateString.substring(3, 5));
+    int year = Integer.parseInt(dateString.substring(6, 10));
+    month = month < 1 ? 1 : Math.min(month, 12);
+    calendar.set(Calendar.MONTH, month - 1);
+    calendar.set(Calendar.DATE, Math.min(day, calendar.getActualMaximum(Calendar.DATE)));
+    year = (year < 1900) ? 1900 : Math.min(year, 2100);
+    calendar.set(Calendar.YEAR, year);
+    return calendar.getTimeInMillis();
+  }
+
+  public static String displayDate(long dateInMilliseconds) {
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(dateInMilliseconds);
+    return new SimpleDateFormat( "MM/dd/yyyy", Locale.US).format(calendar.getTime());
+  }
+
+  public static boolean getSendNotifications(Context context) {
+
+    return getBooleanPref(context, R.string.perf_key_get_notified, true);
+  }
+
+  public static boolean getShowSensitive(Context context) {
+
+    return getBooleanPref(context, R.string.pref_key_enable_sensitive, false);
+  }
+
+  public static void saveBooleanPreference(Context context, @StringRes int prefKeyId, boolean value) {
+
+    PreferenceManager.getDefaultSharedPreferences(context)
+      .edit()
+      .putBoolean(context.getString(prefKeyId), value)
+      .apply();
+  }
+
   /*
     Private Method(s)
    */
@@ -54,5 +104,13 @@ public class Utils {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String prefKey = context.getString(prefKeyId);
     return sharedPreferences.getInt(prefKey, defaultValue);
+  }
+
+  public static class SortByName implements Comparator<SpinnerItemState> {
+
+    public int compare(SpinnerItemState a, SpinnerItemState b) {
+
+      return a.getTitle().compareTo(b.getTitle());
+    }
   }
 }

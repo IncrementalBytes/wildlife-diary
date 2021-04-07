@@ -2,53 +2,47 @@
   "Tasks": {
     "5195279b-b057-4d17-aace-82e371d9eb44": {
       "Name": "Force Fed",
-      "Description": "Insert bite-size portions of diet directly into crop.",
-      "Hidden": "false"
+      "Description": "Insert bite-size portions of diet directly into crop."
     },
     "695ec329-b99e-444f-a582-c43a3a35d10c": {
       "Name": "Gavage",
-      "Description": "Provide nourishment via a feeding tube directly into stomach.",
-      "Hidden": "false"
+      "Description": "Provide nourishment via a feeding tube directly into stomach."
     },
     "25f14681-7b98-4a35-8759-ba668c353eb1": {
       "Name": "Handled - Euthanasia",
       "Description": "Safely and securely held patient for euthanasia.",
-      "Hidden": "true"
+      "IsSensitive": "true"
     },
     "1219a543-cafd-4513-8e1e-e41c3be64862": {
       "Name": "Handled - Exam",
-      "Description": "Safely and securely held patient for intake examination.",
-      "Hidden": "false"
+      "Description": "Safely and securely held patient for intake examination."
     },
     "175720d7-79d3-4c7c-be33-2dd33db277fb": {
       "Name": "Handled - Medication",
-      "Description": "Safely and securely held patient for medication.",
-      "Hidden": "false"
+      "Description": "Safely and securely held patient for medication."
     },
     "0525c4b8-37e4-4b95-bdc6-d1df62f7d670": {
       "Name": "Handled - Subcutaneous",
-      "Description": "Safely and securely held patient for subcutaneous fluids.",
-      "Hidden": "false"
+      "Description": "Safely and securely held patient for subcutaneous fluids."
     },
     "fc0e2bdf-00c0-4da4-855b-857c233effa6": {
       "Name": "Ocular Medication",
-      "Description": "Applied medication to patients eye(s).",
-      "Hidden": "false"
+      "Description": "Applied medication to patients eye(s)."
     },
     "25a40f6a-fa23-4331-9fd8-ed8d0bfbb780": {
       "Name": "Oral Medication",
       "Description": "Gave medication to patient through mouth.",
-      "Hidden": "false"
+      "IsHidden": "false"
     },
     "98bf72f8-f388-4a6a-962e-b3f4cc94f174": {
-      "Name": "Sub Subcutaneous",
+      "Name": "Sub-Subcutaneous",
       "Description": "Gave fluids or medication to patient underneath the skin.",
-      "Hidden": "false"
+      "IsHidden": "false"
     },
     "d91114ce-6b33-4798-804a-0e0ca6adca0d": {
       "Name": "Banded",
       "Description": "Attached identification band to patient.",
-      "Hidden": "false"
+      "IsHidden": "false"
     }
   },
   "Wildlife": {

@@ -20,4 +20,16 @@
   <string name="encounter_data">Checking out Encounter data…</string>
   <string name="wildlife_data">Checking out Wildlife data…</string>
   <string name="task_data">Checking out Task data…</string>
+  <string name="pref_category_notifications">Notifications</string>
+  <string name="perf_title_get_notified">Get Notified</string>
+  <string name="perf_key_get_notified">get_notified</string>
+  <string name="perf_summary_get_notified">Notify me when new encounters are added.</string>
+  <string name="pref_category_show_sensitive">Sensitive Tasks</string>
+  <string name="pref_key_enable_sensitive">enable_sensitive</string>
+  <string name="pref_summary_enable_sensitive">Show all tasks</string>
+  <string name="pref_title_enable_sensitive">Show Sensitive Tasks</string>
+  <string name="pref_category_about">About</string>
+  <string name="pref_key_app_version">key_app_version</string>
+  <string name="pref_title_app_version">Application Version</string>
+  <string name="format_wildlife">%s (%s)</string>
 </resources>
