@@ -16,6 +16,8 @@
 package net.whollynugatory.android.wildlife.ui;
 
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +38,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import net.whollynugatory.android.wildlife.db.entity.UserEntity;
 import net.whollynugatory.android.wildlife.R;
@@ -43,10 +46,10 @@ import net.whollynugatory.android.wildlife.ui.fragment.EncounterDataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterListFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.SettingsFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.SummaryFragment;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.ui.fragment.TaskDataFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.WildlifeDataFragment;
 
 import java.util.Locale;
@@ -72,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements
     Log.d(TAG, "++onCreate(Bundle)");
     setContentView(R.layout.activity_main);
 
+    if (Utils.getSendNotifications(this)) {
+      createNotificationChannel();
+    }
+
     mAddEncounterButton = findViewById(R.id.main_fab_add);
     mAddEncounterButton.setVisibility(View.INVISIBLE);
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
@@ -82,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
       Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
       if (fragment != null) {
         String fragmentClassName = fragment.getClass().getName();
-        if (fragmentClassName.equals(SettingsFragment.class.getName())) {
+        if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
           setTitle(getString(R.string.title_settings));
         } else {
           setTitle(getString(R.string.app_name));
@@ -101,43 +108,53 @@ public class MainActivity extends AppCompatActivity implements
           replaceFragment(SummaryFragment.newInstance());
           return true;
         case R.id.navigation_settings:
-          replaceFragment(SettingsFragment.newInstance());
+          replaceFragment(UserSettingsFragment.newInstance());
           return true;
       }
 
       return false;
     });
 
-    FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    FirebaseMessaging.getInstance().subscribeToTopic("wildlifeNotification");
     String userId = getIntent().getStringExtra(Utils.ARG_FIREBASE_USER_ID);
+    if (userId == null || userId.length() < 0 || userId.equals(Utils.UNKNOWN_USER_ID)) {
+      userId = Utils.getUserId(this);
+    }
+
     Log.d(TAG, "Firebase UID: " + userId);
-    FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
-      .addOnCompleteListener(task -> {
+    if (userId.length() < 0 || userId.equals(Utils.UNKNOWN_USER_ID)) {
+      showMessageInSnackBar("Unable to determine user data. Please sign out of app and try again.");
+    } else {
+      String finalUserId = userId;
+      FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
+        .addOnCompleteListener(task -> {
 
-        mAddEncounterButton.setVisibility(View.INVISIBLE);
-        if (!task.isSuccessful()) {
-          Log.e(TAG, "Error getting data", task.getException());
-          showMessageInSnackBar("There was a problem accessing data. Try again later.");
-        } else {
-          mUserEntity = task.getResult().getValue(UserEntity.class);
-          if (mUserEntity == null) {
-            mUserEntity = new UserEntity();
-            mUserEntity.Id = userId;
-            FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).setValue(mUserEntity)
-              .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
+          mAddEncounterButton.setVisibility(View.INVISIBLE);
+          if (!task.isSuccessful()) {
+            Log.e(TAG, "Error getting data", task.getException());
+            showMessageInSnackBar("There was a problem accessing data. Try again later.");
           } else {
-            mUserEntity.Id = userId;
-            if (mUserEntity.CanAdd) {
-              mAddEncounterButton.setVisibility(View.VISIBLE);
-              mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance(mUserEntity.Id)));
+            mUserEntity = task.getResult().getValue(UserEntity.class);
+            Utils.setUserId(this, finalUserId);
+            if (mUserEntity == null) {
+              mUserEntity = new UserEntity();
+              mUserEntity.Id = finalUserId;
+              FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(finalUserId).setValue(mUserEntity)
+                .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
+            } else {
+              mUserEntity.Id = finalUserId;
+              if (mUserEntity.CanAdd) {
+                mAddEncounterButton.setVisibility(View.VISIBLE);
+                mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance(mUserEntity.Id)));
+              }
             }
+
+            // TODO: add animation/notification that work is happening
+
+            replaceFragment(TaskDataFragment.newInstance());
           }
-
-          replaceFragment(TaskDataFragment.newInstance());
-        }
-      });
-
-    // TODO: add animation/notification that work is happening
+        });
+    }
   }
 
   @Override
@@ -155,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements
     if (item.getItemId() == R.id.menu_settings) {
       // TODO: disable home menu
       // TODO: show (if hidden) bottom navigation
-      replaceFragment(SettingsFragment.newInstance());
+      replaceFragment(UserSettingsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_logout) {
       // TODO: hide bottom navigation
       // TODO: disable settings and sync menu
@@ -255,6 +272,18 @@ public class MainActivity extends AppCompatActivity implements
   /*
     Private Method(s)
    */
+  private void createNotificationChannel() {
+
+    Log.d(TAG, "++createNotificationChannel()");
+    NotificationChannel channel = new NotificationChannel(
+      getString(R.string.default_notification_channel_id),
+      getString(R.string.channel_name),
+      NotificationManager.IMPORTANCE_DEFAULT);
+    channel.setDescription(getString(R.string.channel_description));
+    NotificationManager notificationManager = getSystemService(NotificationManager.class);
+    notificationManager.createNotificationChannel(channel);
+  }
+
   private void replaceFragment(Fragment fragment) {
 
     Log.d(TAG, "++replaceFragment()");

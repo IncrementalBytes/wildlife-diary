@@ -41,6 +41,7 @@ public class Utils {
   public static final String UNKNOWN_STRING = "UNKNOWN";
   public static final String UNKNOWN_USER_ID = "0000000000000000000000000000";
   public static final String USERS_ROOT = "Users";
+  public static final String WILDLIFE_NOTIFICATION = "wildlifeNotification"; // needs to keep in sync with index.js
   public static final String WILDLIFE_ROOT = "Wildlife";
 
   public static long convertToLong(String dateString) {
@@ -70,6 +71,11 @@ public class Utils {
     return new SimpleDateFormat( "MM/dd/yyyy", Locale.US).format(calendar.getTime());
   }
 
+  public static String getUserId(Context context) {
+
+    return getStringPref(context, R.string.perf_key_get_user_id, Utils.UNKNOWN_USER_ID);
+  }
+
   public static boolean getSendNotifications(Context context) {
 
     return getBooleanPref(context, R.string.perf_key_get_notified, true);
@@ -80,12 +86,19 @@ public class Utils {
     return getBooleanPref(context, R.string.pref_key_enable_sensitive, false);
   }
 
-  public static void saveBooleanPreference(Context context, @StringRes int prefKeyId, boolean value) {
+  public static void setEnableNotifications(Context context, boolean enableNotifications) {
 
-    PreferenceManager.getDefaultSharedPreferences(context)
-      .edit()
-      .putBoolean(context.getString(prefKeyId), value)
-      .apply();
+    setBooleanPref(context, R.string.pref_key_enable_notifications, enableNotifications);
+  }
+
+  public static void setShowSensitive(Context context, boolean showSensitive) {
+
+    setBooleanPref(context, R.string.pref_key_enable_sensitive, showSensitive);
+  }
+
+  public static void setUserId(Context context, String userId) {
+
+    setStringPref(context, R.string.perf_key_get_user_id, userId);
   }
 
   /*
@@ -106,6 +119,32 @@ public class Utils {
     return sharedPreferences.getInt(prefKey, defaultValue);
   }
 
+  private static String getStringPref(Context context, @StringRes int preferenceKeyId, String defaultValue) {
+
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    String prefKey = context.getString(preferenceKeyId);
+    return sharedPreferences.getString(prefKey, defaultValue);
+  }
+
+  private static void setBooleanPref(Context context, @StringRes int preferenceKeyId, boolean value) {
+
+    PreferenceManager.getDefaultSharedPreferences(context)
+      .edit()
+      .putBoolean(context.getString(preferenceKeyId), value)
+      .apply();
+  }
+
+  private static void setStringPref(Context context, @StringRes int preferenceKeyId, String preferenceValue) {
+
+    PreferenceManager.getDefaultSharedPreferences(context)
+      .edit()
+      .putString(context.getString(preferenceKeyId), preferenceValue)
+      .apply();
+  }
+
+  /*
+    Public Class(es)
+   */
   public static class SortByName implements Comparator<SpinnerItemState> {
 
     public int compare(SpinnerItemState a, SpinnerItemState b) {

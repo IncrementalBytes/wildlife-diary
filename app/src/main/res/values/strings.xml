@@ -32,4 +32,9 @@
   <string name="pref_key_app_version">key_app_version</string>
   <string name="pref_title_app_version">Application Version</string>
   <string name="format_wildlife">%s (%s)</string>
+  <string name="channel_name">Wildlife Diary Channel</string>
+  <string name="channel_description">Unique channel for wildlife diary notifications</string>
+  <string name="default_notification_channel_id">wildlife-notification-id</string>
+  <string name="perf_key_get_user_id">get_user_id</string>
+  <string name="pref_key_enable_notifications">enable_notifications</string>
 </resources>

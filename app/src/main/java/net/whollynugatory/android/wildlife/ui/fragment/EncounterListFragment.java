@@ -204,6 +204,7 @@ public class EncounterListFragment extends Fragment {
 
       Log.d(TAG, "++setEncounterList(Collection<EncounterSummary>)");
       mEncounterSummaryList = new ArrayList<>(encounterSummaryList);
+      mEncounterSummaryList.sort((a, b) -> Long.compare(b.Date, a.Date));
       notifyDataSetChanged();
     }
 

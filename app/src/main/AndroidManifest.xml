@@ -10,6 +10,15 @@
     android:supportsRtl="true"
     android:theme="@style/Theme.Wildlife"
     android:fullBackupContent="@xml/backup_descriptor">
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_icon"
+      android:resource="@drawable/ic_stat_ic_notification" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_color"
+      android:resource="@color/orangey" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_channel_id"
+      android:value="@string/default_notification_channel_id" />
     <activity android:name=".ui.SignInActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -17,6 +26,13 @@
       </intent-filter>
     </activity>
     <activity android:name=".ui.MainActivity"/>
+    <service
+      android:name=".WildlifeMessagingService"
+      android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+      </intent-filter>
+    </service>
   </application>
 
 </manifest>
