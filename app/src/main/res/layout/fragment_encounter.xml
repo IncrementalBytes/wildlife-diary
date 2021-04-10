@@ -4,6 +4,14 @@
   android:layout_height="match_parent"
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
+  <ImageButton
+    android:id="@+id/encounter_button_close"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_close_dark"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
+
   <TextView
     android:id="@+id/encounter_text_date"
     android:layout_width="wrap_content"
@@ -26,7 +34,7 @@
     android:labelFor="@id/encounter_text_date"
     android:hint="@string/hint_date"
     app:layout_constraintStart_toEndOf="@id/encounter_text_date"
-    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/encounter_button_close"
     app:layout_constraintEnd_toEndOf="parent"
     android:autofillHints="" />
 

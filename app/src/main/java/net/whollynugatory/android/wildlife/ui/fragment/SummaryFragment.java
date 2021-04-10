@@ -15,11 +15,22 @@
  */
 package net.whollynugatory.android.wildlife.ui.fragment;
 
+import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+
+import java.util.Locale;
 
 public class SummaryFragment extends Fragment {
 
@@ -29,5 +40,26 @@ public class SummaryFragment extends Fragment {
 
     Log.d(TAG, "++newInstance()");
     return new SummaryFragment();
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    Log.d(TAG, "++onActivityCreated(Bundle)");
+  }
+
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+
+    Log.d(TAG, "++onAttach(Context)");
+  }
+
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+    Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
+    return inflater.inflate(R.layout.fragment_summary, container, false);
   }
 }

@@ -54,7 +54,6 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
     Log.d(TAG, "++onCreatePreferences(Bundle, String)");
     addPreferencesFromResource(R.xml.app_preferences);
     setupAppVersionPreference();
-    setupSendNotificationsPreference();
     setupShowSensitivePreference();
   }
 
@@ -67,24 +66,6 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
     EditTextPreference editTextPreference = findPreference(getString(R.string.pref_key_app_version));
     if (editTextPreference != null) {
       editTextPreference.setSummary(BuildConfig.VERSION_NAME);
-    }
-  }
-
-  private void setupSendNotificationsPreference() {
-
-    Log.d(TAG, "++setupSendNotificationsPreference()");
-    SwitchPreference switchPreference = findPreference(getString(R.string.pref_key_enable_notifications));
-    if (switchPreference != null) {
-      switchPreference.setChecked(Utils.getSendNotifications(getActivity()));
-      switchPreference.setOnPreferenceChangeListener(
-        (preference, newValue) -> {
-
-          Log.d(TAG, "++setupSendNotificationsPreference::onPreferenceChange()");
-          Utils.setEnableNotifications(
-            getActivity(),
-            (boolean) newValue);
-          return true;
-        });
     }
   }
 

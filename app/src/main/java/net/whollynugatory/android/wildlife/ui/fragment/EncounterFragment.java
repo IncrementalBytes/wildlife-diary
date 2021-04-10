@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -57,6 +58,7 @@ public class EncounterFragment extends Fragment {
   public interface OnEncounterListener {
 
     void onEncounterAdded();
+    void onEncounterClosed();
   }
 
   private OnEncounterListener mCallback;
@@ -219,6 +221,8 @@ public class EncounterFragment extends Fragment {
       prepareWildlifeList();
     });
 
+    ImageButton closeButton = view.findViewById(R.id.encounter_button_close);
+    closeButton.setOnClickListener(v -> mCallback.onEncounterClosed());
     Button addButton = view.findViewById(R.id.encounter_button_add);
     addButton.setOnClickListener(v -> {
 
@@ -234,6 +238,7 @@ public class EncounterFragment extends Fragment {
         if (item.isSelected()) {
           encounterEntity.Id = UUID.randomUUID().toString();
           encounterEntity.TaskId = item.getId();
+          item.setSelected(false);
           FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).child(encounterEntity.Id).setValue(encounterEntity)
             .addOnCompleteListener(task -> {
 
@@ -241,6 +246,8 @@ public class EncounterFragment extends Fragment {
                 Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
               } else {
                 mCallback.onEncounterAdded();
+                mDateEdit.setText("");
+                mWildlifeText.setText("");
               }
             });
         }

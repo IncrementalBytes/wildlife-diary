@@ -75,9 +75,7 @@ public class MainActivity extends AppCompatActivity implements
     Log.d(TAG, "++onCreate(Bundle)");
     setContentView(R.layout.activity_main);
 
-    if (Utils.getSendNotifications(this)) {
-      createNotificationChannel();
-    }
+    manageNotificationChannel();
 
     mAddEncounterButton = findViewById(R.id.main_fab_add);
     mAddEncounterButton.setVisibility(View.INVISIBLE);
@@ -121,10 +119,10 @@ public class MainActivity extends AppCompatActivity implements
       userId = Utils.getUserId(this);
     }
 
-    Log.d(TAG, "Firebase UID: " + userId);
     if (userId.length() < 0 || userId.equals(Utils.UNKNOWN_USER_ID)) {
       showMessageInSnackBar("Unable to determine user data. Please sign out of app and try again.");
     } else {
+      Log.d(TAG, "Firebase UID: " + userId);
       String finalUserId = userId;
       FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
         .addOnCompleteListener(task -> {
@@ -166,6 +164,13 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
+  protected void onDestroy() {
+    super.onDestroy();
+
+    Log.d(TAG, "++onDestroy()");
+  }
+
+  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
     Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
@@ -204,6 +209,20 @@ public class MainActivity extends AppCompatActivity implements
     return super.onOptionsItemSelected(item);
   }
 
+  @Override
+  protected void onPause() {
+    super.onPause();
+
+    Log.d(TAG, "++onPause()");
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+
+    Log.d(TAG, "++onResume()");
+  }
+
   /*
     Fragment Override(s)
    */
@@ -211,6 +230,13 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterAdded() {
 
     Log.d(TAG, "++onEncounterAdded()");
+    showMessageInSnackBar("Encounter Added!");
+  }
+
+  @Override
+  public void onEncounterClosed() {
+
+    Log.d(TAG, "++onEncounterClosed()");
     replaceFragment(EncounterDataFragment.newInstance());
   }
 
@@ -272,16 +298,22 @@ public class MainActivity extends AppCompatActivity implements
   /*
     Private Method(s)
    */
-  private void createNotificationChannel() {
+  private void manageNotificationChannel() {
 
-    Log.d(TAG, "++createNotificationChannel()");
-    NotificationChannel channel = new NotificationChannel(
-      getString(R.string.default_notification_channel_id),
-      getString(R.string.channel_name),
-      NotificationManager.IMPORTANCE_DEFAULT);
-    channel.setDescription(getString(R.string.channel_description));
+    Log.d(TAG, "++manageNotificationChannel()");
     NotificationManager notificationManager = getSystemService(NotificationManager.class);
-    notificationManager.createNotificationChannel(channel);
+    NotificationChannel notificationChannel = notificationManager.getNotificationChannel(getString(R.string.default_notification_channel_id));
+    if (notificationChannel == null) {
+      Log.d(TAG, "Creating notification channel.");
+      notificationChannel = new NotificationChannel(
+        getString(R.string.default_notification_channel_id),
+        getString(R.string.channel_name),
+        NotificationManager.IMPORTANCE_DEFAULT);
+      notificationChannel.setDescription(getString(R.string.channel_description));
+      notificationManager.createNotificationChannel(notificationChannel);
+    } else {
+      Log.d(TAG, "Notification channel already exists.");
+    }
   }
 
   private void replaceFragment(Fragment fragment) {

@@ -31,17 +31,14 @@ public class Utils {
   public static final String ARG_ENCOUNTER_ENTITY = "encounter_entity";
   public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
-  public static final String ARG_USER = "user";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String ENCOUNTER_ROOT = "Encounters";
   public static final String TASK_ROOT = "Tasks";
-  public static final String UNKNOWN_DATE = "01/01/2000";
   public static final String UNKNOWN_ID = "000000000-0000-0000-0000-000000000000";
   public static final String UNKNOWN_STRING = "UNKNOWN";
   public static final String UNKNOWN_USER_ID = "0000000000000000000000000000";
   public static final String USERS_ROOT = "Users";
-  public static final String WILDLIFE_NOTIFICATION = "wildlifeNotification"; // needs to keep in sync with index.js
   public static final String WILDLIFE_ROOT = "Wildlife";
 
   public static long convertToLong(String dateString) {
@@ -76,19 +73,9 @@ public class Utils {
     return getStringPref(context, R.string.perf_key_get_user_id, Utils.UNKNOWN_USER_ID);
   }
 
-  public static boolean getSendNotifications(Context context) {
-
-    return getBooleanPref(context, R.string.perf_key_get_notified, true);
-  }
-
   public static boolean getShowSensitive(Context context) {
 
     return getBooleanPref(context, R.string.pref_key_enable_sensitive, false);
-  }
-
-  public static void setEnableNotifications(Context context, boolean enableNotifications) {
-
-    setBooleanPref(context, R.string.pref_key_enable_notifications, enableNotifications);
   }
 
   public static void setShowSensitive(Context context, boolean showSensitive) {

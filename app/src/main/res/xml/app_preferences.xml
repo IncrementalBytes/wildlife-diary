@@ -4,17 +4,6 @@
   <androidx.preference.PreferenceCategory>
 
     <androidx.preference.SwitchPreference
-      android:title="@string/perf_title_get_notified"
-      android:defaultValue="true"
-      android:key="@string/perf_key_get_notified"
-      android:persistent="true"
-      android:summary="@string/perf_summary_get_notified"/>
-
-  </androidx.preference.PreferenceCategory>
-
-  <androidx.preference.PreferenceCategory>
-
-    <androidx.preference.SwitchPreferenceCompat
       android:defaultValue="false"
       android:key="@string/pref_key_enable_sensitive"
       android:persistent="true"

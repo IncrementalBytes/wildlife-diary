@@ -20,11 +20,6 @@
   <string name="encounter_data">Checking out Encounter data…</string>
   <string name="wildlife_data">Checking out Wildlife data…</string>
   <string name="task_data">Checking out Task data…</string>
-  <string name="pref_category_notifications">Notifications</string>
-  <string name="perf_title_get_notified">Get Notified</string>
-  <string name="perf_key_get_notified">get_notified</string>
-  <string name="perf_summary_get_notified">Notify me when new encounters are added.</string>
-  <string name="pref_category_show_sensitive">Sensitive Tasks</string>
   <string name="pref_key_enable_sensitive">enable_sensitive</string>
   <string name="pref_summary_enable_sensitive">Show all tasks</string>
   <string name="pref_title_enable_sensitive">Show Sensitive Tasks</string>
@@ -32,9 +27,8 @@
   <string name="pref_key_app_version">key_app_version</string>
   <string name="pref_title_app_version">Application Version</string>
   <string name="format_wildlife">%s (%s)</string>
-  <string name="channel_name">Wildlife Diary Channel</string>
-  <string name="channel_description">Unique channel for wildlife diary notifications</string>
+  <string name="channel_name">New Encounter Added</string>
+  <string name="channel_description">Get notified when a new encounter is added.</string>
   <string name="default_notification_channel_id">wildlife-notification-id</string>
   <string name="perf_key_get_user_id">get_user_id</string>
-  <string name="pref_key_enable_notifications">enable_notifications</string>
 </resources>
