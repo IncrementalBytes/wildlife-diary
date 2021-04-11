@@ -24,13 +24,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-
-import java.util.Locale;
 
 public class SummaryFragment extends Fragment {
 

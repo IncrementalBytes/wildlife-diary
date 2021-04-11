@@ -3,11 +3,9 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
 
-exports.pushNotification = functions.database.ref("/Encounters/{pushId}")
-    .onWrite((change, context) => {
-      console.log(
-          "Push notification event triggered for ",
-          context.params.pushId);
+exports.pushNotification = functions.database.ref("/DataStamps")
+    .onUpdate((change, context) => {
+      console.log("Push notification event triggered for DataStamps");
 
       const payload = {
         notification: {

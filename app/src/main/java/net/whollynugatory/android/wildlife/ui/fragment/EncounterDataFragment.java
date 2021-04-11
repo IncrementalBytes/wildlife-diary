@@ -42,7 +42,8 @@ public class EncounterDataFragment  extends Fragment {
 
   public interface OnEncounterDataListener {
 
-    void onEncounterDataPopulated(int itemsPopulated);
+    void onEncounterDataMissing();
+    void onEncounterDataPopulated();
   }
 
   private OnEncounterDataListener mCallback;
@@ -58,8 +59,29 @@ public class EncounterDataFragment  extends Fragment {
     super.onActivityCreated(savedInstanceState);
 
     Log.d(TAG, "++onActivityCreated(Bundle)");
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    wildlifeViewModel.encounterCount().observe(getViewLifecycleOwner(), encounterCount -> populateEncounterTable());
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).get().addOnCompleteListener(
+      task -> {
+
+        if (!task.isSuccessful()) {
+          Log.d(TAG, "Checking data stamp for Encounters was unsuccessful.", task.getException());
+        } else {
+          String remoteStamp = Utils.UNKNOWN_ID;
+          for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+            if (dataSnapshot.getKey().equals(Utils.ENCOUNTER_ROOT)) {
+              remoteStamp = dataSnapshot.getValue().toString();
+              break;
+            }
+          }
+
+          String encounterStamp = Utils.getEncountersStamp(getActivity());
+          if (encounterStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !encounterStamp.equalsIgnoreCase(remoteStamp)) {
+            populateEncounterTable(remoteStamp);
+          } else {
+            Log.d(TAG, "Encounter data in-sync.");
+            mCallback.onEncounterDataPopulated();
+          }
+        }
+      });
   }
 
   @Override
@@ -81,15 +103,15 @@ public class EncounterDataFragment  extends Fragment {
     return inflater.inflate(R.layout.fragment_encounter_data, container, false);
   }
 
-  private void populateEncounterTable() {
+  private void populateEncounterTable(String dataStamp) {
 
-    Log.d(TAG, "++populateEncounterTable()");
+    Log.d(TAG, "++populateEncounterTable(String)");
     FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).get()
       .addOnCompleteListener(task -> {
 
-        int itemsPopulated = 0;
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data", task.getException());
+          mCallback.onEncounterDataMissing();
         } else {
           if (task.getResult().getChildrenCount() > 0) {
             WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
@@ -97,12 +119,14 @@ public class EncounterDataFragment  extends Fragment {
               EncounterEntity encounterEntity = dataSnapshot.getValue(EncounterEntity.class);
               encounterEntity.Id = dataSnapshot.getKey();
               wildlifeViewModel.insertEncounter(encounterEntity);
-              itemsPopulated++;
             }
+
+            Utils.setEncountersStamp(getActivity(), dataStamp);
+            mCallback.onEncounterDataPopulated();
+          } else {
+            mCallback.onEncounterDataMissing();
           }
         }
-
-        mCallback.onEncounterDataPopulated(itemsPopulated);
       });
   }
 }

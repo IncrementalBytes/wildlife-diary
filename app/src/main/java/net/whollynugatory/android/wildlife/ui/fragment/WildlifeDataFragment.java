@@ -60,8 +60,29 @@ public class WildlifeDataFragment  extends Fragment {
     super.onActivityCreated(savedInstanceState);
 
     Log.d(TAG, "++onActivityCreated(Bundle)");
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    wildlifeViewModel.wildlifeCount().observe(getViewLifecycleOwner(), wildlifeCount -> populateWildlifeTable());
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).get().addOnCompleteListener(
+      task -> {
+
+        if (!task.isSuccessful()) {
+          Log.d(TAG, "Checking data stamp for Wildlife was unsuccessful.", task.getException());
+        } else {
+          String remoteStamp = Utils.UNKNOWN_ID;
+          for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+            if (dataSnapshot.getKey().equals(Utils.WILDLIFE_ROOT)) {
+              remoteStamp = dataSnapshot.getValue().toString();
+              break;
+            }
+          }
+
+          String wildlifeStamp = Utils.getWildlifeStamp(getActivity());
+          if (wildlifeStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !wildlifeStamp.equalsIgnoreCase(remoteStamp)) {
+            populateWildlifeTable(remoteStamp);
+          } else {
+            Log.d(TAG, "Wildlife data in-sync.");
+            mCallback.onWildlifeDataPopulated();
+          }
+        }
+      });
   }
 
   @Override
@@ -83,9 +104,9 @@ public class WildlifeDataFragment  extends Fragment {
     return inflater.inflate(R.layout.fragment_wildlife_data, container, false);
   }
 
-  private void populateWildlifeTable() {
+  private void populateWildlifeTable(String dataStamp) {
 
-    Log.d(TAG, "++populateWildlifeTable()");
+    Log.d(TAG, "++populateWildlifeTable(String)");
     FirebaseDatabase.getInstance().getReference().child(Utils.WILDLIFE_ROOT).get()
       .addOnCompleteListener(task -> {
 
@@ -100,6 +121,7 @@ public class WildlifeDataFragment  extends Fragment {
               wildlifeViewModel.insertWildlife(wildlifeEntity);
             }
 
+            Utils.setWildlifeStamp(getActivity(), dataStamp);
             mCallback.onWildlifeDataPopulated();
           } else {
             mCallback.onWildlifeDataMissing();

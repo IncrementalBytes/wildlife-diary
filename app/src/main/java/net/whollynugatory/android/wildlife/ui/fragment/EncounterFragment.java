@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 public class EncounterFragment extends Fragment {
@@ -222,7 +223,20 @@ public class EncounterFragment extends Fragment {
     });
 
     ImageButton closeButton = view.findViewById(R.id.encounter_button_close);
-    closeButton.setOnClickListener(v -> mCallback.onEncounterClosed());
+    closeButton.setOnClickListener(v -> {
+
+      Map<String, Object> childUpdates = new HashMap<>();
+      childUpdates.put(Utils.ENCOUNTER_ROOT, UUID.randomUUID().toString());
+      FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).updateChildren(childUpdates)
+        .addOnCompleteListener(task -> {
+
+          if (!task.isSuccessful()) {
+            Log.w(TAG, "Unable to update remote data stamp for changes.", task.getException());
+          }
+        });
+      mCallback.onEncounterClosed();
+    });
+
     Button addButton = view.findViewById(R.id.encounter_button_add);
     addButton.setOnClickListener(v -> {
 

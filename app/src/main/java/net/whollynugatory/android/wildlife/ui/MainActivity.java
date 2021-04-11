@@ -241,7 +241,19 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterDataPopulated(int itemsPopulated) {
+  public void onEncounterDataMissing() {
+
+    Log.d(TAG, "++onEncounterDataMissing()");
+//    onEncounterListPopulated(0);
+    showMessageInSnackBar(
+      String.format(
+        Locale.US,
+        "No encounters found. %s",
+        mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
+  }
+
+  @Override
+  public void onEncounterDataPopulated() {
 
     Log.d(TAG, "++onEncounterDataPopulated()");
     replaceFragment(EncounterListFragment.newInstance(mUserEntity.Id));
@@ -250,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements
   @Override
   public void onEncounterSummaryClicked(String encounterId) {
 
-    Log.d(TAG, "onEncounterSummaryClicked(String)");
+    Log.d(TAG, "++onEncounterSummaryClicked(String)");
     replaceFragment(EncounterDetailFragment.newInstance(encounterId));
   }
 
@@ -259,11 +271,11 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onEncounterListPopulated(int)");
     if (size < 1) {
-      showMessageInSnackBar(
-        String.format(
-          Locale.US,
-          "No encounters found. %s",
-          mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
+//      showMessageInSnackBar(
+//        String.format(
+//          Locale.US,
+//          "No encounters found. %s",
+//          mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
     }
   }
 

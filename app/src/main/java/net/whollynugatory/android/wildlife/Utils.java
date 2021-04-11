@@ -33,6 +33,7 @@ public class Utils {
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
+  public static final String DATASTAMPS_ROOT = "DataStamps";
   public static final String ENCOUNTER_ROOT = "Encounters";
   public static final String TASK_ROOT = "Tasks";
   public static final String UNKNOWN_ID = "000000000-0000-0000-0000-000000000000";
@@ -68,9 +69,14 @@ public class Utils {
     return new SimpleDateFormat( "MM/dd/yyyy", Locale.US).format(calendar.getTime());
   }
 
-  public static String getUserId(Context context) {
+  public static String getEncountersStamp(Context context) {
 
-    return getStringPref(context, R.string.perf_key_get_user_id, Utils.UNKNOWN_USER_ID);
+    return getStringPref(context, R.string.perf_key_stamp_encounters, Utils.UNKNOWN_ID);
+  }
+
+  public static String getTasksStamp(Context context) {
+
+    return getStringPref(context, R.string.perf_key_stamp_tasks, Utils.UNKNOWN_ID);
   }
 
   public static boolean getShowSensitive(Context context) {
@@ -78,14 +84,39 @@ public class Utils {
     return getBooleanPref(context, R.string.pref_key_enable_sensitive, false);
   }
 
+  public static String getUserId(Context context) {
+
+    return getStringPref(context, R.string.perf_key_user_id, Utils.UNKNOWN_USER_ID);
+  }
+
+  public static String getWildlifeStamp(Context context) {
+
+    return getStringPref(context, R.string.perf_key_stamp_wildlife, Utils.UNKNOWN_ID);
+  }
+
+  public static void setEncountersStamp(Context context, String newEncountersStamp) {
+
+    setStringPref(context, R.string.perf_key_stamp_encounters, newEncountersStamp);
+  }
+
   public static void setShowSensitive(Context context, boolean showSensitive) {
 
     setBooleanPref(context, R.string.pref_key_enable_sensitive, showSensitive);
   }
 
+  public static void setTasksStamp(Context context, String newTasksStamp) {
+
+    setStringPref(context, R.string.perf_key_stamp_tasks, newTasksStamp);
+  }
+
   public static void setUserId(Context context, String userId) {
 
-    setStringPref(context, R.string.perf_key_get_user_id, userId);
+    setStringPref(context, R.string.perf_key_user_id, userId);
+  }
+
+  public static void setWildlifeStamp(Context context, String newWildlifeStamp) {
+
+    setStringPref(context, R.string.perf_key_stamp_wildlife, newWildlifeStamp);
   }
 
   /*

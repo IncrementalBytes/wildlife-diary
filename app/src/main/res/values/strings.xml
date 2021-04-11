@@ -30,5 +30,9 @@
   <string name="channel_name">New Encounter Added</string>
   <string name="channel_description">Get notified when a new encounter is added.</string>
   <string name="default_notification_channel_id">wildlife-notification-id</string>
-  <string name="perf_key_get_user_id">get_user_id</string>
+  <string name="perf_key_user_id">user_id</string>
+  <string name="perf_key_stamp_tasks">stamp_tasks</string>
+  <string name="perf_key_stamp_encounters">stamp_encounters</string>
+  <string name="perf_key_stamp_wildlife">stamp_wildlife</string>
+  <string name="close_encounters">Close Encounters</string>
 </resources>

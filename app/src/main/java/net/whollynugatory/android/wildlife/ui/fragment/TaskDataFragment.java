@@ -60,8 +60,29 @@ public class TaskDataFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
 
     Log.d(TAG, "++onActivityCreated(Bundle)");
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    wildlifeViewModel.taskCount().observe(getViewLifecycleOwner(), taskCount -> populateTaskTable());
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).get().addOnCompleteListener(
+      task -> {
+
+        if (!task.isSuccessful()) {
+          Log.d(TAG, "Checking data stamp for Tasks was unsuccessful.", task.getException());
+        } else {
+          String remoteStamp = Utils.UNKNOWN_ID;
+          for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+            if (dataSnapshot.getKey().equals(Utils.TASK_ROOT)) {
+              remoteStamp = dataSnapshot.getValue().toString();
+              break;
+            }
+          }
+
+          String taskStamp = Utils.getTasksStamp(getActivity());
+          if (taskStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !taskStamp.equalsIgnoreCase(remoteStamp)) {
+            populateTaskTable(remoteStamp);
+          } else {
+            Log.d(TAG, "Task data in-sync.");
+            mCallback.onTaskDataPopulated();
+          }
+        }
+      });
   }
 
   @Override
@@ -83,9 +104,9 @@ public class TaskDataFragment extends Fragment {
     return inflater.inflate(R.layout.fragment_task_data, container, false);
   }
 
-  private void populateTaskTable() {
+  private void populateTaskTable(String dataStamp) {
 
-    Log.d(TAG, "++populateTaskTable()");
+    Log.d(TAG, "++populateTaskTable(String)");
     FirebaseDatabase.getInstance().getReference().child(Utils.TASK_ROOT).get()
       .addOnCompleteListener(task -> {
 
@@ -100,6 +121,7 @@ public class TaskDataFragment extends Fragment {
               wildlifeViewModel.insertTask(taskEntity);
             }
 
+            Utils.setTasksStamp(getActivity(), dataStamp);
             mCallback.onTaskDataPopulated();
           } else {
             mCallback.onTaskDataMissing();
