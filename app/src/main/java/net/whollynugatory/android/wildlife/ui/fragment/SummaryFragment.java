@@ -21,12 +21,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableRow;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.databinding.FragmentSummaryBinding;
+import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
 public class SummaryFragment extends Fragment {
 
@@ -56,6 +61,12 @@ public class SummaryFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    return inflater.inflate(R.layout.fragment_summary, container, false);
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    FragmentSummaryBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false);
+    View view = binding.getRoot();
+    wildlifeViewModel.getSummary(Utils.getShowSensitive(getActivity())).observe(getViewLifecycleOwner(), binding::setSummary);
+    TableRow euthanasiaRow = view.findViewById(R.id.summary_row_handled_euthanasia);
+    euthanasiaRow.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
+    return view;
   }
 }

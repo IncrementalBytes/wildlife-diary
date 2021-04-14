@@ -1,17 +1,328 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <TextView
-    android:id="@+id/summary_text_message"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Not available yet. Stay tuned!"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"/>
+  <data>
+    <variable name="summary" type="net.whollynugatory.android.wildlife.db.view.SummaryDetails"/>
+  </data>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <TableRow
+        android:id="@+id/summary_row_total_encounters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_total_encounters"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_total_encounters"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_total_encounters_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.TotalEncounters)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_unique_encounters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_unique_encounters"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_unique_encounters"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_unique_encounters_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.SpeciesEncountered)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_most_encountered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_most_encountered"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_most_encountered"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_most_encountered_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{summary.MostEncountered}" />
+      </TableRow>
+
+      <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+          android:layout_height="18dp"
+          android:layout_width="match_parent"/>
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_handled_exam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_handled_exam"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_handled_exam"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_handled_exam_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.HandledExam)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_handled_medication"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_handled_medication"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_handled_medication"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_handled_medication_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.HandledMedication)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_handled_subcutaneous"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_handled_subcutaneous"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_handled_subcutaneous"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_handled_subcutaneous_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.HandledSubcutaneous)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_handled_euthanasia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_handled_euthanasia"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_handled_euthanasia"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_handled_euthanasia_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.HandledEuthanasia)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_medication_oral"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_medication_oral"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_oral_medication"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_medication_oral_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.MedicationOral)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_medication_ocular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_medication_ocular"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_ocular_medication"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_medication_ocular_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.MedicationOcular)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_gavaged"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_gavaged"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_gavaged"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_gavaged_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.Gavaged)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_force_fed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_force_fed"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_force_fed"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_force_fed_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.ForceFed)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_subcutaneous"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_subcutaneous"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_subcutaneous"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_subcutaneous_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.Subcutaneous)}" />
+      </TableRow>
+
+      <TableRow
+        android:id="@+id/summary_row_banded"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/summary_text_banded"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_view_margin"
+          android:text="@string/header_banded"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/summary_text_banded_value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@{String.valueOf(summary.Banded)}" />
+      </TableRow>
+    </TableLayout>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

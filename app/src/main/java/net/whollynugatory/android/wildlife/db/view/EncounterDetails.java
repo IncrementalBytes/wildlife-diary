@@ -23,8 +23,10 @@ import net.whollynugatory.android.wildlife.Utils;
   "SELECT Encounter.date AS Date, " +
     "Encounter.user_id AS UserId, " +
     "Encounter.encounter_id AS EncounterId, " +
+    "Wildlife.id AS WildlifeId, " +
     "Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.abbreviation AS WildlifeAbbreviation, " +
+    "Tasks.id AS TaskId, " +
     "Tasks.name AS TaskName, " +
     "Tasks.description AS TaskDescription, " +
     "Tasks.is_sensitive AS IsSensitive " +
@@ -43,11 +45,15 @@ public class EncounterDetails {
 
   public String TaskDescription;
 
+  public String TaskId;
+
   public String TaskName;
 
   public String UserId;
 
   public String WildlifeAbbreviation;
+
+  public String WildlifeId;
 
   public String WildlifeSpecies;
 
@@ -57,9 +63,11 @@ public class EncounterDetails {
     EncounterId = Utils.UNKNOWN_ID;
     IsSensitive = false;
     TaskDescription = Utils.UNKNOWN_STRING;
+    TaskId = Utils.UNKNOWN_ID;
     TaskName = Utils.UNKNOWN_STRING;
     UserId = Utils.UNKNOWN_USER_ID;
     WildlifeAbbreviation = Utils.UNKNOWN_STRING;
+    WildlifeId = Utils.UNKNOWN_ID;
     WildlifeSpecies = Utils.UNKNOWN_STRING;
   }
 }

@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.db.view.EncounterSummary;
+import net.whollynugatory.android.wildlife.db.view.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class EncounterListFragment extends Fragment {
   public interface OnEncounterListListener {
 
     void onEncounterListPopulated(int size);
-    void onEncounterSummaryClicked(String encounterId);
+    void onEncounterDetailsClicked(String encounterId);
   }
 
   private OnEncounterListListener mCallback;
@@ -80,22 +80,22 @@ public class EncounterListFragment extends Fragment {
     mRecyclerView.setAdapter(mEncounterAdapter);
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
 
-    wildlifeViewModel.getRecentEncounterSummary().observe(getViewLifecycleOwner(), encounterSummaryList -> {
+    wildlifeViewModel.getRecentEncounterDetails().observe(getViewLifecycleOwner(), encounterDetailsList -> {
 
       boolean showSensitive = Utils.getShowSensitive(getContext());
-      HashMap<String, EncounterSummary> encounterSummaries = new HashMap<>();
-      for (EncounterSummary encounterSummary : encounterSummaryList) {
-        if (encounterSummary.IsSensitive) {
-          if (showSensitive && !encounterSummaries.containsKey(encounterSummary.EncounterId)) {
-            encounterSummaries.put(encounterSummary.EncounterId, encounterSummary);
+      HashMap<String, EncounterDetails> encounterDetailsHashMap = new HashMap<>();
+      for (EncounterDetails encounterDetails : encounterDetailsList) {
+        if (encounterDetails.IsSensitive) {
+          if (showSensitive && !encounterDetailsHashMap.containsKey(encounterDetails.EncounterId)) {
+            encounterDetailsHashMap.put(encounterDetails.EncounterId, encounterDetails);
           }
-        } else if(!encounterSummaries.containsKey(encounterSummary.EncounterId)) {
-          encounterSummaries.put(encounterSummary.EncounterId, encounterSummary);
+        } else if(!encounterDetailsHashMap.containsKey(encounterDetails.EncounterId)) {
+          encounterDetailsHashMap.put(encounterDetails.EncounterId, encounterDetails);
         }
       }
 
-      mEncounterAdapter.setEncounterList(encounterSummaries.values());
-      mCallback.onEncounterListPopulated(encounterSummaries.size());
+      mEncounterAdapter.setEncounterList(encounterDetailsHashMap.values());
+      mCallback.onEncounterListPopulated(encounterDetailsHashMap.size());
     });
   }
 
@@ -164,7 +164,7 @@ public class EncounterListFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + EncounterAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<EncounterSummary> mEncounterSummaryList;
+    private List<EncounterDetails> mEncounterDetailsList;
 
     public EncounterAdapter(Context context) {
 
@@ -182,9 +182,9 @@ public class EncounterListFragment extends Fragment {
     @Override
     public void onBindViewHolder(@NonNull EncounterAdapter.EncounterHolder holder, int position) {
 
-      if (mEncounterSummaryList != null) {
-        EncounterSummary encounterSummary = mEncounterSummaryList.get(position);
-        holder.bind(encounterSummary);
+      if (mEncounterDetailsList != null) {
+        EncounterDetails encounterDetails = mEncounterDetailsList.get(position);
+        holder.bind(encounterDetails);
       } else {
         // No books!
       }
@@ -193,18 +193,18 @@ public class EncounterListFragment extends Fragment {
     @Override
     public int getItemCount() {
 
-      if (mEncounterSummaryList != null) {
-        return mEncounterSummaryList.size();
+      if (mEncounterDetailsList != null) {
+        return mEncounterDetailsList.size();
       } else {
         return 0;
       }
     }
 
-    public void setEncounterList(Collection<EncounterSummary> encounterSummaryList) {
+    public void setEncounterList(Collection<EncounterDetails> encounterDetailsCollection) {
 
-      Log.d(TAG, "++setEncounterList(Collection<EncounterSummary>)");
-      mEncounterSummaryList = new ArrayList<>(encounterSummaryList);
-      mEncounterSummaryList.sort((a, b) -> Long.compare(b.Date, a.Date));
+      Log.d(TAG, "++setEncounterList(Collection<EncounterDetails>)");
+      mEncounterDetailsList = new ArrayList<>(encounterDetailsCollection);
+      mEncounterDetailsList.sort((a, b) -> Long.compare(b.Date, a.Date));
       notifyDataSetChanged();
     }
 
@@ -216,7 +216,7 @@ public class EncounterListFragment extends Fragment {
       private final TextView mEncounterDateTextView;
       private final TextView mWildlifeTextView;
 
-      private EncounterSummary mEncounterSummary;
+      private EncounterDetails mEncounterDetails;
 
       EncounterHolder(View itemView) {
         super(itemView);
@@ -228,20 +228,20 @@ public class EncounterListFragment extends Fragment {
         itemView.setOnClickListener(this);
       }
 
-      void bind(EncounterSummary encounterSummary) {
+      void bind(EncounterDetails encounterDetails) {
 
-        mEncounterSummary = encounterSummary;
+        mEncounterDetails = encounterDetails;
 
-        mAbbreviationTextView.setText(mEncounterSummary.WildlifeAbbreviation);
-        mEncounterDateTextView.setText(Utils.displayDate(mEncounterSummary.Date));
-        mWildlifeTextView.setText(mEncounterSummary.WildlifeSpecies);
+        mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
+        mEncounterDateTextView.setText(Utils.displayDate(mEncounterDetails.Date));
+        mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
       }
 
       @Override
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        mCallback.onEncounterSummaryClicked(mEncounterSummary.EncounterId);
+        mCallback.onEncounterDetailsClicked(mEncounterDetails.EncounterId);
       }
     }
   }

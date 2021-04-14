@@ -260,9 +260,9 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterSummaryClicked(String encounterId) {
+  public void onEncounterDetailsClicked(String encounterId) {
 
-    Log.d(TAG, "++onEncounterSummaryClicked(String)");
+    Log.d(TAG, "++onEncounterDetailsClicked(String)");
     replaceFragment(EncounterDetailFragment.newInstance(encounterId));
   }
 
@@ -305,6 +305,14 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onWildlifeDataPopulated()");
     replaceFragment(EncounterDataFragment.newInstance());
+  }
+
+  /*
+    Public Method(s)
+   */
+  public void summaryTableSynced() {
+
+    Log.d(TAG, "++summaryTableSynced()");
   }
 
   /*

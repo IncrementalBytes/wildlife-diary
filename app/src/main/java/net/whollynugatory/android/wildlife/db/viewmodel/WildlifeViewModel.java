@@ -21,15 +21,15 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
+import net.whollynugatory.android.wildlife.db.view.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.db.repository.EncounterDetailRepository;
 import net.whollynugatory.android.wildlife.db.repository.EncounterRepository;
-import net.whollynugatory.android.wildlife.db.repository.EncounterSummaryRepository;
+import net.whollynugatory.android.wildlife.db.repository.SummaryRepository;
 import net.whollynugatory.android.wildlife.db.repository.TaskRepository;
 import net.whollynugatory.android.wildlife.db.repository.WildlifeRepository;
 import net.whollynugatory.android.wildlife.db.view.EncounterDetails;
-import net.whollynugatory.android.wildlife.db.view.EncounterSummary;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class WildlifeViewModel extends AndroidViewModel {
 
   private final EncounterRepository mEncounterRepository;
   private final EncounterDetailRepository mEncounterDetailRepository;
-  private final EncounterSummaryRepository mEncounterSummaryRepository;
+  private final SummaryRepository mSummaryRepository;
   private final TaskRepository mTaskRepository;
   private final WildlifeRepository mWildlifeRepository;
 
@@ -46,7 +46,7 @@ public class WildlifeViewModel extends AndroidViewModel {
 
     mEncounterRepository = new EncounterRepository(application);
     mEncounterDetailRepository = new EncounterDetailRepository(application);
-    mEncounterSummaryRepository = new EncounterSummaryRepository(application);
+    mSummaryRepository = new SummaryRepository(application);
     mTaskRepository = new TaskRepository(application);
     mWildlifeRepository = new WildlifeRepository(application);
   }
@@ -66,9 +66,9 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mEncounterDetailRepository.getRecent();
   }
 
-  public LiveData<List<EncounterSummary>> getRecentEncounterSummary() {
+  public LiveData<SummaryDetails> getSummary(boolean includeSensitive) {
 
-    return mEncounterSummaryRepository.getRecentSummary();
+    return mSummaryRepository.getRecentSummary(includeSensitive);
   }
 
   public LiveData<List<EncounterDetails>> getRecentEncounterDetailsGrouped() {

@@ -68,6 +68,7 @@ public class EncounterFragment extends Fragment {
   private Spinner mTaskSpinner;
   private AutoCompleteTextView mWildlifeText;
 
+  private int mEncountersAdded;
   private String mUserId;
   private HashMap<String, String> mWildlifeMap;
   private WildlifeViewModel mWildlifeViewModel;
@@ -222,20 +223,25 @@ public class EncounterFragment extends Fragment {
       prepareWildlifeList();
     });
 
+    mEncountersAdded = 0;
     ImageButton closeButton = view.findViewById(R.id.encounter_button_close);
     closeButton.setOnClickListener(v -> {
 
-      Map<String, Object> childUpdates = new HashMap<>();
-      childUpdates.put(Utils.ENCOUNTER_ROOT, UUID.randomUUID().toString());
-      FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).updateChildren(childUpdates)
-        .addOnCompleteListener(task -> {
+      if (mEncountersAdded > 0) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(Utils.ENCOUNTER_ROOT, UUID.randomUUID().toString());
+        FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).updateChildren(childUpdates)
+          .addOnCompleteListener(task -> {
 
-          if (!task.isSuccessful()) {
-            Log.w(TAG, "Unable to update remote data stamp for changes.", task.getException());
-          }
-        });
+            if (!task.isSuccessful()) {
+              Log.w(TAG, "Unable to update remote data stamp for changes.", task.getException());
+            }
+          });
+      }
+
       mCallback.onEncounterClosed();
     });
+
 
     Button addButton = view.findViewById(R.id.encounter_button_add);
     addButton.setOnClickListener(v -> {
@@ -262,6 +268,7 @@ public class EncounterFragment extends Fragment {
                 mCallback.onEncounterAdded();
                 mDateEdit.setText("");
                 mWildlifeText.setText("");
+                mEncountersAdded++;
               }
             });
         }

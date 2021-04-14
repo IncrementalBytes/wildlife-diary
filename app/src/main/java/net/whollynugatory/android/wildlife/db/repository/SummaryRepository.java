@@ -22,28 +22,24 @@ import androidx.lifecycle.LiveData;
 
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
-import net.whollynugatory.android.wildlife.db.dao.EncounterSummaryDao;
-import net.whollynugatory.android.wildlife.db.view.EncounterSummary;
+import net.whollynugatory.android.wildlife.db.dao.SummaryDao;
+import net.whollynugatory.android.wildlife.db.view.SummaryDetails;
 
-import java.util.List;
+public class SummaryRepository {
 
-public class EncounterSummaryRepository {
+  private static final String TAG = Utils.BASE_TAG + SummaryRepository.class.getSimpleName();
 
-  private static final String TAG = Utils.BASE_TAG + EncounterSummaryRepository.class.getSimpleName();
+  private final SummaryDao mDao;
 
-  private final EncounterSummaryDao mDao;
-  private final LiveData<List<EncounterSummary>> mRecentSummary;
+  public SummaryRepository(Application application) {
 
-  public EncounterSummaryRepository(Application application) {
-
-    Log.d(TAG, "++EncounterSummaryRepository(Application)");
+    Log.d(TAG, "++SummaryRepository(Application)");
     WildlifeDatabase db = WildlifeDatabase.getInstance(application);
-    mDao = db.encounterSummaryDao();
-    mRecentSummary = mDao.getRecentSummary();
+    mDao = db.summaryDao();
   }
 
-  public LiveData<List<EncounterSummary>> getRecentSummary() {
+  public LiveData<SummaryDetails> getRecentSummary(boolean includeSensitive) {
 
-    return mRecentSummary;
+    return includeSensitive ? mDao.getSummary() : mDao.getSummarySanitized();
   }
 }

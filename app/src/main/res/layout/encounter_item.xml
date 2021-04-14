@@ -32,7 +32,7 @@
     android:layout_marginBottom="@dimen/default_view_margin"
     android:singleLine="true"
     android:text="@string/placeholder"
-    android:textColor="@color/lite_blue"
+    android:textColor="@color/blue"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

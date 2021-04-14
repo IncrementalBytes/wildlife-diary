@@ -35,4 +35,17 @@
   <string name="perf_key_stamp_encounters">stamp_encounters</string>
   <string name="perf_key_stamp_wildlife">stamp_wildlife</string>
   <string name="close_encounters">Close Encounters</string>
+  <string name="header_total_encounters">Total Encounters:</string>
+  <string name="header_unique_encounters">Unique Encounters:</string>
+  <string name="header_handled_exam">Handled (Exam):</string>
+  <string name="header_handled_medication">Handled (Medication):</string>
+  <string name="header_handled_subcutaneous">Handled (Subcutaneous):</string>
+  <string name="header_handled_euthanasia">Handled (Euthanasia):</string>
+  <string name="header_oral_medication">Oral Medication:</string>
+  <string name="header_ocular_medication">Ocular Medication:</string>
+  <string name="header_gavaged">Gavaged:</string>
+  <string name="header_force_fed">Force Fed:</string>
+  <string name="header_subcutaneous">Subcutaneous:</string>
+  <string name="header_banded">Banded:</string>
+  <string name="header_most_encountered">Most Encountered:</string>
 </resources>

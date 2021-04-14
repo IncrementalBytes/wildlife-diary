@@ -44,7 +44,7 @@
     android:contentDescription="@string/desc_add_encounter"
     android:elevation="2dp"
     android:src="@drawable/ic_add_dark"
-    app:backgroundTint="@color/green"
+    app:backgroundTint="@color/blue"
     app:layout_constraintBottom_toTopOf="@id/main_nav_bottom"
     app:layout_constraintEnd_toEndOf="parent" />
 

@@ -15,7 +15,7 @@
     },
     "1219a543-cafd-4513-8e1e-e41c3be64862": {
       "Name": "Handled - Exam",
-      "Description": "Safely and securely held patient for intake examination."
+      "Description": "Safely and securely held patient for examination."
     },
     "175720d7-79d3-4c7c-be33-2dd33db277fb": {
       "Name": "Handled - Medication",
@@ -35,7 +35,7 @@
       "IsHidden": "false"
     },
     "98bf72f8-f388-4a6a-962e-b3f4cc94f174": {
-      "Name": "Sub-Subcutaneous",
+      "Name": "Subcutaneous",
       "Description": "Gave fluids or medication to patient underneath the skin.",
       "IsHidden": "false"
     },
