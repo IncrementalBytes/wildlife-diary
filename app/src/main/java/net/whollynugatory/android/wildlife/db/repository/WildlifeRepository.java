@@ -32,25 +32,14 @@ public class WildlifeRepository {
   private static final String TAG = Utils.BASE_TAG + WildlifeRepository.class.getSimpleName();
 
   private final WildlifeDao mDao;
-  private final LiveData<Integer> mCount;
   private final LiveData<List<WildlifeEntity>> mAllWildlife;
-  private final LiveData<List<String>> mAbbreviations;
-  private final LiveData<List<String>> mNames;
 
   public WildlifeRepository(Application application) {
 
     Log.d(TAG, "++WildlifeRepository(Application)");
     WildlifeDatabase db = WildlifeDatabase.getInstance(application);
     mDao = db.wildlifeDao();
-    mCount = mDao.count();
     mAllWildlife = mDao.getAll();
-    mAbbreviations = mDao.getAbbreviations();
-    mNames = mDao.getNames();
-  }
-
-  public LiveData<Integer> count() {
-
-    return mCount;
   }
 
   public LiveData<List<WildlifeEntity>> getAll() {
@@ -58,23 +47,8 @@ public class WildlifeRepository {
     return mAllWildlife;
   }
 
-  public LiveData<List<String>> getAbbreviations() {
-
-    return mAbbreviations;
-  }
-
-  public LiveData<List<String>> getNames() {
-
-    return mNames;
-  }
-
   public void insert(WildlifeEntity wildlifeEntity) {
 
     WildlifeDatabase.databaseWriteExecutor.execute(() -> mDao.insert(wildlifeEntity));
-  }
-
-  public void insertAll(List<WildlifeEntity> wildlifeEntityList) {
-
-    WildlifeDatabase.databaseWriteExecutor.execute(() -> mDao.insertAll(wildlifeEntityList));
   }
 }

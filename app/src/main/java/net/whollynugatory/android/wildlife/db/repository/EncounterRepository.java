@@ -23,7 +23,10 @@ import androidx.lifecycle.LiveData;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
 import net.whollynugatory.android.wildlife.db.dao.EncounterDao;
+import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
+import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
+import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 
 import java.util.List;
 
@@ -32,43 +35,34 @@ public class EncounterRepository {
   private static final String TAG = Utils.BASE_TAG + EncounterRepository.class.getSimpleName();
 
   private final EncounterDao mDao;
-  private final LiveData<Integer> mCount;
-  private final LiveData<List<EncounterEntity>> mAllEncounters;
-//  private final LiveData<List<EncounterWithTasks>> mEncounterWithTasks;
+  private final LiveData<List<EncounterSummary>> mEncounterSummaryList;
 
   public EncounterRepository(Application application) {
 
     Log.d(TAG, "++EncounterRepository(Application)");
     WildlifeDatabase db = WildlifeDatabase.getInstance(application);
     mDao = db.encounterDao();
-    mCount = mDao.count();
-    mAllEncounters = mDao.getAll();
-//    mEncounterWithTasks = mDao.getEncounterWithTasks();
+    mEncounterSummaryList = mDao.getEncounterSummaries();
   }
 
-  public LiveData<Integer> count() {
+  public LiveData<EncounterDetails> getEncounterDetailsById(String encounterId) {
 
-    return mCount;
+    return mDao.getEncounterDetailsById(encounterId);
   }
 
-  public LiveData<List<EncounterEntity>> getAll() {
+  public LiveData<List<EncounterSummary>> getEncounterSummaries() {
 
-    return mAllEncounters;
+    return mEncounterSummaryList;
   }
 
-//  public LiveData<List<EncounterWithTasks>> getEncounterWithTasks() {
-//
-//    return mEncounterWithTasks;
-//  }
+  public LiveData<SummaryDetails> getSummaryDetails() {
+
+    return mDao.getSummaryDetails();
+  }
 
   public void insert(EncounterEntity encounterEntity) {
 
     Log.d(TAG, encounterEntity.toString());
     WildlifeDatabase.databaseWriteExecutor.execute(() -> mDao.insert(encounterEntity));
-  }
-
-  public void insertAll(List<EncounterEntity> encounterEntityList) {
-
-    WildlifeDatabase.databaseWriteExecutor.execute(() -> mDao.insertAll(encounterEntityList));
   }
 }

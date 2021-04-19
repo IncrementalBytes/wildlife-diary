@@ -87,10 +87,14 @@ public class MainActivity extends AppCompatActivity implements
       Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
       if (fragment != null) {
         String fragmentClassName = fragment.getClass().getName();
-        if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
+        if (fragmentClassName.equals(EncounterListFragment.class.getName())) {
+          mAddEncounterButton.setVisibility(View.VISIBLE);
+        } else if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
           setTitle(getString(R.string.title_settings));
+          mAddEncounterButton.setVisibility(View.INVISIBLE);
         } else {
           setTitle(getString(R.string.app_name));
+          mAddEncounterButton.setVisibility(View.INVISIBLE);
         }
       }
     });
@@ -98,22 +102,22 @@ public class MainActivity extends AppCompatActivity implements
     navigationView.setOnNavigationItemSelectedListener(menuItem -> {
 
       Log.d(TAG, "++onNavigationItemSelectedListener(MenuItem)");
-      switch (menuItem.getItemId()) {
-        case R.id.navigation_encounters:
-          replaceFragment(EncounterListFragment.newInstance(mUserEntity.Id));
-          return true;
-        case R.id.navigation_summary:
-          replaceFragment(SummaryFragment.newInstance());
-          return true;
-        case R.id.navigation_settings:
-          replaceFragment(UserSettingsFragment.newInstance());
-          return true;
+      if (menuItem.getItemId() == R.id.navigation_encounters) {
+        replaceFragment(EncounterListFragment.newInstance(mUserEntity.Id));
+        return true;
+      } else if (menuItem.getItemId() == R.id.navigation_summary) {
+        replaceFragment(SummaryFragment.newInstance());
+        return true;
+      } else if (menuItem.getItemId() == R.id.navigation_settings) {
+        replaceFragment(UserSettingsFragment.newInstance());
+        return true;
+      } else {
+        return false;
       }
-
-      return false;
     });
 
     FirebaseMessaging.getInstance().subscribeToTopic("wildlifeNotification");
+
     String userId = getIntent().getStringExtra(Utils.ARG_FIREBASE_USER_ID);
     if (userId == null || userId.length() < 0 || userId.equals(Utils.UNKNOWN_USER_ID)) {
       userId = Utils.getUserId(this);
@@ -175,12 +179,8 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
     if (item.getItemId() == R.id.menu_settings) {
-      // TODO: disable home menu
-      // TODO: show (if hidden) bottom navigation
       replaceFragment(UserSettingsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_logout) {
-      // TODO: hide bottom navigation
-      // TODO: disable settings and sync menu
       AlertDialog dialog = new AlertDialog.Builder(this)
         .setMessage(R.string.logout_message)
         .setPositiveButton(android.R.string.yes, (dialog1, which) -> {
@@ -271,11 +271,14 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onEncounterListPopulated(int)");
     if (size < 1) {
-//      showMessageInSnackBar(
-//        String.format(
-//          Locale.US,
-//          "No encounters found. %s",
-//          mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
+      showMessageInSnackBar(
+        String.format(
+          Locale.US,
+          "No encounters found. %s",
+          mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
+    } else {
+      // see if snack bar is showing and remove
+      closeSnackbar();
     }
   }
 
@@ -308,16 +311,16 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   /*
-    Public Method(s)
-   */
-  public void summaryTableSynced() {
-
-    Log.d(TAG, "++summaryTableSynced()");
-  }
-
-  /*
     Private Method(s)
    */
+  private void closeSnackbar() {
+
+    Log.d(TAG, "++closeSnackbar()");
+    if (mSnackbar != null && mSnackbar.isShownOrQueued()) {
+      mSnackbar.dismiss();
+    }
+  }
+
   private void manageNotificationChannel() {
 
     Log.d(TAG, "++manageNotificationChannel()");

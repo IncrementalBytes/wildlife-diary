@@ -37,6 +37,8 @@ public class SummaryFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + SummaryFragment.class.getSimpleName();
 
+  private FragmentSummaryBinding mBinding;
+
   public static SummaryFragment newInstance() {
 
     Log.d(TAG, "++newInstance()");
@@ -62,11 +64,19 @@ public class SummaryFragment extends Fragment {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    FragmentSummaryBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false);
-    View view = binding.getRoot();
-    wildlifeViewModel.getSummary(Utils.getShowSensitive(getActivity())).observe(getViewLifecycleOwner(), binding::setSummary);
+    mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false);
+    View view = mBinding.getRoot();
+    wildlifeViewModel.getSummaryDetails().observe(getViewLifecycleOwner(), mBinding::setSummary);
     TableRow euthanasiaRow = view.findViewById(R.id.summary_row_handled_euthanasia);
     euthanasiaRow.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
     return view;
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+
+    Log.d(TAG, "++onDestroy()");
+    mBinding = null;
   }
 }

@@ -14,13 +14,4 @@
     <!-- Customize your theme here. -->
     <item name="colorAccent">@color/orangey</item>
   </style>
-
-  <style name="Theme.Wildlife.NoActionBar">
-    <item name="windowActionBar">false</item>
-    <item name="windowNoTitle">true</item>
-  </style>
-
-  <style name="Theme.Wildlife.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-  <style name="Theme.Wildlife.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

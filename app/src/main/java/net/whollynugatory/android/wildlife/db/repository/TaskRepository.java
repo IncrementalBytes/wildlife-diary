@@ -33,8 +33,6 @@ public class TaskRepository {
 
   private final TaskDao mDao;
   private final LiveData<List<TaskEntity>> mAllTasks;
-  private final LiveData<List<String>> mAllTaskNames;
-  private final LiveData<Integer> mCount;
 
   public TaskRepository(Application application) {
 
@@ -42,18 +40,6 @@ public class TaskRepository {
     WildlifeDatabase db = WildlifeDatabase.getInstance(application);
     mDao = db.taskDao();
     mAllTasks = mDao.getAll();
-    mAllTaskNames = mDao.getNames();
-    mCount = mDao.count();
-  }
-
-  public LiveData<Integer> count() {
-
-    return mCount;
-  }
-
-  public LiveData<List<String>> getNames() {
-
-    return mAllTaskNames;
   }
 
   public LiveData<List<TaskEntity>> getAll() {
@@ -64,10 +50,5 @@ public class TaskRepository {
   public void insert(TaskEntity taskEntity) {
 
     WildlifeDatabase.databaseWriteExecutor.execute(() -> mDao.insert(taskEntity));
-  }
-
-  public void insertAll(List<TaskEntity> taskEntityList) {
-
-    WildlifeDatabase.databaseWriteExecutor.execute(() -> mDao.insertAll(taskEntityList));
   }
 }

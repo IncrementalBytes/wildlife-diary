@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package net.whollynugatory.android.wildlife;
+package net.whollynugatory.android.wildlife.ui;
 
 import android.content.Context;
 import android.view.View;

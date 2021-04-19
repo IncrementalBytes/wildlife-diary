@@ -21,23 +21,20 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
-import net.whollynugatory.android.wildlife.db.view.SummaryDetails;
+import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
+import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
-import net.whollynugatory.android.wildlife.db.repository.EncounterDetailRepository;
 import net.whollynugatory.android.wildlife.db.repository.EncounterRepository;
-import net.whollynugatory.android.wildlife.db.repository.SummaryRepository;
 import net.whollynugatory.android.wildlife.db.repository.TaskRepository;
 import net.whollynugatory.android.wildlife.db.repository.WildlifeRepository;
-import net.whollynugatory.android.wildlife.db.view.EncounterDetails;
+import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 
 import java.util.List;
 
 public class WildlifeViewModel extends AndroidViewModel {
 
   private final EncounterRepository mEncounterRepository;
-  private final EncounterDetailRepository mEncounterDetailRepository;
-  private final SummaryRepository mSummaryRepository;
   private final TaskRepository mTaskRepository;
   private final WildlifeRepository mWildlifeRepository;
 
@@ -45,45 +42,23 @@ public class WildlifeViewModel extends AndroidViewModel {
     super(application);
 
     mEncounterRepository = new EncounterRepository(application);
-    mEncounterDetailRepository = new EncounterDetailRepository(application);
-    mSummaryRepository = new SummaryRepository(application);
     mTaskRepository = new TaskRepository(application);
     mWildlifeRepository = new WildlifeRepository(application);
   }
 
-  public LiveData<Integer> encounterCount() {
+  public LiveData<EncounterDetails> getEncounterDetails(String encounterId) {
 
-    return mEncounterRepository.count();
+    return mEncounterRepository.getEncounterDetailsById(encounterId);
   }
 
-  public LiveData<List<EncounterDetails>> getEncounterDetails(String encounterId) {
+  public LiveData<List<EncounterSummary>> getEncounterSummaries() {
 
-    return mEncounterDetailRepository.getByEncounterId(encounterId);
+    return mEncounterRepository.getEncounterSummaries();
   }
 
-  public LiveData<List<EncounterDetails>> getRecentEncounterDetails() {
+  public LiveData<SummaryDetails> getSummaryDetails() {
 
-    return mEncounterDetailRepository.getRecent();
-  }
-
-  public LiveData<SummaryDetails> getSummary(boolean includeSensitive) {
-
-    return mSummaryRepository.getRecentSummary(includeSensitive);
-  }
-
-  public LiveData<List<EncounterDetails>> getRecentEncounterDetailsGrouped() {
-
-    return mEncounterDetailRepository.getRecentAndGroupByEncounter();
-  }
-
-  public LiveData<List<EncounterEntity>> getEncounters() {
-
-    return mEncounterRepository.getAll();
-  }
-
-  public LiveData<List<String>> getTaskNames() {
-
-    return mTaskRepository.getNames();
+    return mEncounterRepository.getSummaryDetails();
   }
 
   public LiveData<List<TaskEntity>> getTasks() {
@@ -94,16 +69,6 @@ public class WildlifeViewModel extends AndroidViewModel {
   public LiveData<List<WildlifeEntity>> getWildlife() {
 
     return mWildlifeRepository.getAll();
-  }
-
-  public LiveData<List<String>> getWildlifeAbbreviations() {
-
-    return mWildlifeRepository.getAbbreviations();
-  }
-
-  public LiveData<List<String>> getWildlifeNames() {
-
-    return mWildlifeRepository.getNames();
   }
 
   public void insertEncounter(EncounterEntity encounterEntity) {
@@ -119,15 +84,5 @@ public class WildlifeViewModel extends AndroidViewModel {
   public void insertWildlife(WildlifeEntity wildlifeEntity) {
 
     mWildlifeRepository.insert(wildlifeEntity);
-  }
-
-  public LiveData<Integer> taskCount() {
-
-    return mTaskRepository.count();
-  }
-
-  public LiveData<Integer> wildlifeCount() {
-
-    return mWildlifeRepository.count();
   }
 }

@@ -1,6 +1,5 @@
 <resources>
   <string name="app_name">Wildlife Diary</string>
-  <string name="title_item_detail">Item Detail</string>
   <string name="dismiss">Dismiss</string>
   <string name="desc_add_encounter">Add new encounter</string>
   <string name="menu_encounters">Encounters</string>
@@ -26,7 +25,6 @@
   <string name="pref_category_about">About</string>
   <string name="pref_key_app_version">key_app_version</string>
   <string name="pref_title_app_version">Application Version</string>
-  <string name="format_wildlife">%s (%s)</string>
   <string name="channel_name">New Encounter Added</string>
   <string name="channel_description">Get notified when a new encounter is added.</string>
   <string name="default_notification_channel_id">wildlife-notification-id</string>
@@ -35,17 +33,20 @@
   <string name="perf_key_stamp_encounters">stamp_encounters</string>
   <string name="perf_key_stamp_wildlife">stamp_wildlife</string>
   <string name="close_encounters">Close Encounters</string>
-  <string name="header_total_encounters">Total Encounters:</string>
-  <string name="header_unique_encounters">Unique Encounters:</string>
-  <string name="header_handled_exam">Handled (Exam):</string>
-  <string name="header_handled_medication">Handled (Medication):</string>
-  <string name="header_handled_subcutaneous">Handled (Subcutaneous):</string>
-  <string name="header_handled_euthanasia">Handled (Euthanasia):</string>
-  <string name="header_oral_medication">Oral Medication:</string>
-  <string name="header_ocular_medication">Ocular Medication:</string>
-  <string name="header_gavaged">Gavaged:</string>
-  <string name="header_force_fed">Force Fed:</string>
-  <string name="header_subcutaneous">Subcutaneous:</string>
-  <string name="header_banded">Banded:</string>
-  <string name="header_most_encountered">Most Encountered:</string>
+  <string name="header_total_encounters">Total Encounters</string>
+  <string name="header_unique_encounters">Unique Encounters</string>
+  <string name="header_handled_exam">Handled (Exam)</string>
+  <string name="header_handled_force_fed">Handled (Force Fed)</string>
+  <string name="header_handled_gavage">Handled (Gavage)</string>
+  <string name="header_handled_medication">Handled (Medication)</string>
+  <string name="header_handled_subcutaneous">Handled (Subcutaneous)</string>
+  <string name="header_handled_euthanasia">Handled (Euthanasia)</string>
+  <string name="header_oral_medication">Oral Medication</string>
+  <string name="header_ocular_medication">Ocular Medication</string>
+  <string name="header_gavage">Gavage</string>
+  <string name="header_force_fed">Force Fed</string>
+  <string name="header_subcutaneous">Subcutaneous</string>
+  <string name="header_banded">Banded</string>
+  <string name="header_most_encountered">Most Encountered</string>
+  <string name="desc_task_completed">Shows whether or not task was completed during this encounter</string>
 </resources>

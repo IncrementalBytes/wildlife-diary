@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.db.view.EncounterDetails;
+import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
 import java.util.ArrayList;
@@ -79,23 +79,17 @@ public class EncounterListFragment extends Fragment {
     mEncounterAdapter = new EncounterAdapter(getContext());
     mRecyclerView.setAdapter(mEncounterAdapter);
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    wildlifeViewModel.getEncounterSummaries().observe(getViewLifecycleOwner(), encounterSummaries -> {
 
-    wildlifeViewModel.getRecentEncounterDetails().observe(getViewLifecycleOwner(), encounterDetailsList -> {
-
-      boolean showSensitive = Utils.getShowSensitive(getContext());
-      HashMap<String, EncounterDetails> encounterDetailsHashMap = new HashMap<>();
-      for (EncounterDetails encounterDetails : encounterDetailsList) {
-        if (encounterDetails.IsSensitive) {
-          if (showSensitive && !encounterDetailsHashMap.containsKey(encounterDetails.EncounterId)) {
-            encounterDetailsHashMap.put(encounterDetails.EncounterId, encounterDetails);
-          }
-        } else if(!encounterDetailsHashMap.containsKey(encounterDetails.EncounterId)) {
-          encounterDetailsHashMap.put(encounterDetails.EncounterId, encounterDetails);
+      HashMap<String, EncounterSummary> encounterSummaryHashMap = new HashMap<>();
+      for (EncounterSummary encounterSummary : encounterSummaries) {
+        if(!encounterSummaryHashMap.containsKey(encounterSummary.EncounterId)) {
+          encounterSummaryHashMap.put(encounterSummary.EncounterId, encounterSummary);
         }
       }
 
-      mEncounterAdapter.setEncounterList(encounterDetailsHashMap.values());
-      mCallback.onEncounterListPopulated(encounterDetailsHashMap.size());
+      mEncounterAdapter.setEncounterSummaryList(encounterSummaryHashMap.values());
+      mCallback.onEncounterListPopulated(encounterSummaryHashMap.size());
     });
   }
 
@@ -164,7 +158,7 @@ public class EncounterListFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + EncounterAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<EncounterDetails> mEncounterDetailsList;
+    private List<EncounterSummary> mEncounterSummaries;
 
     public EncounterAdapter(Context context) {
 
@@ -182,29 +176,29 @@ public class EncounterListFragment extends Fragment {
     @Override
     public void onBindViewHolder(@NonNull EncounterAdapter.EncounterHolder holder, int position) {
 
-      if (mEncounterDetailsList != null) {
-        EncounterDetails encounterDetails = mEncounterDetailsList.get(position);
-        holder.bind(encounterDetails);
+      if (mEncounterSummaries != null) {
+        EncounterSummary encounterSummary = mEncounterSummaries.get(position);
+        holder.bind(encounterSummary);
       } else {
-        // No books!
+        mCallback.onEncounterListPopulated(0);
       }
     }
 
     @Override
     public int getItemCount() {
 
-      if (mEncounterDetailsList != null) {
-        return mEncounterDetailsList.size();
+      if (mEncounterSummaries != null) {
+        return mEncounterSummaries.size();
       } else {
         return 0;
       }
     }
 
-    public void setEncounterList(Collection<EncounterDetails> encounterDetailsCollection) {
+    public void setEncounterSummaryList(Collection<EncounterSummary> encounterSummaryCollection) {
 
-      Log.d(TAG, "++setEncounterList(Collection<EncounterDetails>)");
-      mEncounterDetailsList = new ArrayList<>(encounterDetailsCollection);
-      mEncounterDetailsList.sort((a, b) -> Long.compare(b.Date, a.Date));
+      Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterSummary>)");
+      mEncounterSummaries = new ArrayList<>(encounterSummaryCollection);
+      mEncounterSummaries.sort((a, b) -> Long.compare(b.Date, a.Date));
       notifyDataSetChanged();
     }
 
@@ -216,7 +210,7 @@ public class EncounterListFragment extends Fragment {
       private final TextView mEncounterDateTextView;
       private final TextView mWildlifeTextView;
 
-      private EncounterDetails mEncounterDetails;
+      private EncounterSummary mEncounterSummary;
 
       EncounterHolder(View itemView) {
         super(itemView);
@@ -228,20 +222,20 @@ public class EncounterListFragment extends Fragment {
         itemView.setOnClickListener(this);
       }
 
-      void bind(EncounterDetails encounterDetails) {
+      void bind(EncounterSummary encounterSummary) {
 
-        mEncounterDetails = encounterDetails;
+        mEncounterSummary = encounterSummary;
 
-        mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
-        mEncounterDateTextView.setText(Utils.displayDate(mEncounterDetails.Date));
-        mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
+        mAbbreviationTextView.setText(mEncounterSummary.WildlifeAbbreviation);
+        mEncounterDateTextView.setText(Utils.displayDate(mEncounterSummary.Date));
+        mWildlifeTextView.setText(mEncounterSummary.WildlifeSpecies);
       }
 
       @Override
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        mCallback.onEncounterDetailsClicked(mEncounterDetails.EncounterId);
+        mCallback.onEncounterDetailsClicked(mEncounterSummary.EncounterId);
       }
     }
   }

@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package net.whollynugatory.android.wildlife;
+package net.whollynugatory.android.wildlife.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -24,6 +24,9 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import net.whollynugatory.android.wildlife.R;
+import net.whollynugatory.android.wildlife.SpinnerItemState;
 
 import java.util.ArrayList;
 import java.util.List;

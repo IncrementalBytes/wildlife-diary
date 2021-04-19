@@ -1,5 +1,10 @@
 {
   "Tasks": {
+    "d91114ce-6b33-4798-804a-0e0ca6adca0d": {
+      "Name": "Banded",
+      "Description": "Attached identification band to patient.",
+      "IsHidden": "false"
+    },
     "5195279b-b057-4d17-aace-82e371d9eb44": {
       "Name": "Force Fed",
       "Description": "Insert bite-size portions of diet directly into crop."
@@ -16,6 +21,14 @@
     "1219a543-cafd-4513-8e1e-e41c3be64862": {
       "Name": "Handled - Exam",
       "Description": "Safely and securely held patient for examination."
+    },
+    "d27b32b3-8403-4552-8d2b-7723d6777fac": {
+      "Name": "Handled - Force Fed",
+      "Description": "Safely and securely held patient for force feed."
+    },
+    "c1ebbb56-4c65-42fb-beb8-c628393ffc3a": {
+      "Name": "Handled - Gavage",
+      "Description": "Safely and securely held patient for gavage."
     },
     "175720d7-79d3-4c7c-be33-2dd33db277fb": {
       "Name": "Handled - Medication",
@@ -37,11 +50,6 @@
     "98bf72f8-f388-4a6a-962e-b3f4cc94f174": {
       "Name": "Subcutaneous",
       "Description": "Gave fluids or medication to patient underneath the skin.",
-      "IsHidden": "false"
-    },
-    "d91114ce-6b33-4798-804a-0e0ca6adca0d": {
-      "Name": "Banded",
-      "Description": "Attached identification band to patient.",
       "IsHidden": "false"
     }
   },

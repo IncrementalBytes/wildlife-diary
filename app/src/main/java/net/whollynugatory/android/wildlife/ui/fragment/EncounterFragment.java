@@ -35,7 +35,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-import net.whollynugatory.android.wildlife.CustomAdapter;
+import net.whollynugatory.android.wildlife.ui.CustomAdapter;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.SpinnerItemState;
 import net.whollynugatory.android.wildlife.Utils;
@@ -43,7 +43,7 @@ import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.AutoCompleteAdapter;
+import net.whollynugatory.android.wildlife.ui.AutoCompleteAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
