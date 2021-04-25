@@ -76,9 +76,11 @@ public interface EncounterDao {
     "Wildlife.abbreviation AS WildlifeAbbreviation " +
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
+    "WHERE user_id == :userId " +
     "GROUP BY Encounter.encounter_id " +
+    "ORDER BY Date DESC " +
     "LIMIT 50")
-  LiveData<List<EncounterSummary>> getEncounterSummaries();
+  LiveData<List<EncounterSummary>> getEncounterSummaries(String userId);
 
   @Query("SELECT COUNT(DISTINCT encounter_id) AS TotalEncounters, " +
     "    COUNT(DISTINCT wildlife_id) AS TotalSpeciesEncountered, " +
@@ -94,12 +96,13 @@ public interface EncounterDao {
     "    (SELECT COUNT(*) FROM encounter_table WHERE task_id == 'fc0e2bdf-00c0-4da4-855b-857c233effa6') AS TotalOcularMedicated, " +
     "    (SELECT COUNT(*) FROM encounter_table WHERE task_id == '25a40f6a-fa23-4331-9fd8-ed8d0bfbb780') AS TotalOralMedicated, " +
     "    (SELECT COUNT(*) FROM encounter_table WHERE task_id == '98bf72f8-f388-4a6a-962e-b3f4cc94f174') AS TotalSubcutaneous, " +
-    "    (SELECT Wildlife.friendly_name FROM " +
-    "        (SELECT Wildlife.friendly_name, wildlife_id, COUNT(*) AS Count " +
+    "    (SELECT FriendlyName FROM " +
+    "        (SELECT wt.friendly_name AS FriendlyName, wildlife_id, COUNT(*) AS Count " +
     "            FROM encounter_table " +
+    "            INNER JOIN wildlife_table AS wt ON wt.id == encounter_table.wildlife_id " +
     "            GROUP BY wildlife_id " +
-    "            ORDER BY Count DESC " +
-    "            LIMIT 1)) AS MostEncountered " +
+    "            ORDER BY Count DESC) " +
+    "            LIMIT 1) AS MostEncountered " +
     "    FROM encounter_table " +
     "    INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id")
   LiveData<SummaryDetails> getSummaryDetails();

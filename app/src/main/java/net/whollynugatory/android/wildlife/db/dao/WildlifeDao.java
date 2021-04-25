@@ -28,21 +28,9 @@ import java.util.List;
 @Dao
 public interface WildlifeDao {
 
-  @Query("SELECT COUNT() FROM wildlife_table")
-  LiveData<Integer> count();
-
   @Query("SELECT * FROM wildlife_table")
   LiveData<List<WildlifeEntity>> getAll();
 
-  @Query("SELECT abbreviation from wildlife_table ORDER BY abbreviation DESC")
-  LiveData<List<String>> getAbbreviations();
-
-  @Query("SELECT friendly_name from wildlife_table ORDER BY friendly_name DESC")
-  LiveData<List<String>> getNames();
-
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(WildlifeEntity wildlifeEntity);
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertAll(List<WildlifeEntity> wildlifeEntityList);
 }

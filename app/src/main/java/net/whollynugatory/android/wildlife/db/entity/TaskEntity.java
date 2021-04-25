@@ -18,6 +18,7 @@ package net.whollynugatory.android.wildlife.db.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import net.whollynugatory.android.wildlife.Utils;
@@ -56,5 +57,15 @@ public class TaskEntity implements Serializable {
   public String toString() {
 
     return String.format(Locale.US, "{Id: %s, Name: %s, IsSensitive: %s}", Id, Name, IsSensitive);
+  }
+
+  @Ignore
+  public boolean isValid() {
+
+    if (Description.isEmpty() || Name.isEmpty()) {
+      return false;
+    }
+
+    return !Id.isEmpty() && !Id.equals(Utils.UNKNOWN_ID);
   }
 }

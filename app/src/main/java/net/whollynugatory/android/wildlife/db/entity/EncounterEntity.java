@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -90,5 +91,31 @@ public class EncounterEntity implements Serializable {
       EncounterId,
       TaskId,
       WildlifeId);
+  }
+
+  @Ignore
+  public boolean isValid() {
+
+    if (Id.isEmpty() || Id.equals(Utils.UNKNOWN_ID)) {
+      return false;
+    }
+
+    if (Date < 1) {
+      return false;
+    }
+
+    if (EncounterId.isEmpty() || EncounterId.equals(Utils.UNKNOWN_ID)) {
+      return false;
+    }
+
+    if (TaskId.isEmpty() || TaskId.equals(Utils.UNKNOWN_ID)) {
+      return false;
+    }
+
+    if (WildlifeId.isEmpty() || WildlifeId.equals(Utils.UNKNOWN_ID)) {
+      return false;
+    }
+
+    return !UserId.isEmpty() && !UserId.equals(Utils.UNKNOWN_ID);
   }
 }

@@ -21,9 +21,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableRow;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -66,9 +66,12 @@ public class SummaryFragment extends Fragment {
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false);
     View view = mBinding.getRoot();
-    wildlifeViewModel.getSummaryDetails().observe(getViewLifecycleOwner(), mBinding::setSummary);
-    TableRow euthanasiaRow = view.findViewById(R.id.summary_row_handled_euthanasia);
-    euthanasiaRow.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
+    wildlifeViewModel.getSummaryDetails().observe(getViewLifecycleOwner(), summaryDetails -> {
+
+      mBinding.setSummary(summaryDetails);
+    });
+    CardView euthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
+    euthanasiaCard.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
     return view;
   }
 

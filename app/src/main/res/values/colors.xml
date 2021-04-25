@@ -2,13 +2,12 @@
 <resources>
   <color name="black">#FF000000</color>
   <color name="white">#FFFFFFFF</color>
-  <color name="lite_green">#FF80E27E</color>
   <color name="green">#FF4CAF50</color>
   <color name="dark_green">#FF087F23</color>
   <color name="background_green">#FF1B5E20</color>
   <color name="lite_blue">#FF8BF6FF</color>
   <color name="blue">#FF4FC3F7</color>
   <color name="dark_blue">#FF08237F</color>
-  <color name="orangey">#FFF57F17</color>
+  <color name="bright_orange">#FFF57F17</color>
   <color name="dark_red">#FF7F0823</color>
 </resources>

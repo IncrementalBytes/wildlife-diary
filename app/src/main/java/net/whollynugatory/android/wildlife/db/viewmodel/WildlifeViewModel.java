@@ -25,8 +25,6 @@ import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
 import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
-import net.whollynugatory.android.wildlife.db.repository.EncounterRepository;
-import net.whollynugatory.android.wildlife.db.repository.TaskRepository;
 import net.whollynugatory.android.wildlife.db.repository.WildlifeRepository;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 
@@ -34,51 +32,47 @@ import java.util.List;
 
 public class WildlifeViewModel extends AndroidViewModel {
 
-  private final EncounterRepository mEncounterRepository;
-  private final TaskRepository mTaskRepository;
   private final WildlifeRepository mWildlifeRepository;
 
   public WildlifeViewModel(Application application) {
     super(application);
 
-    mEncounterRepository = new EncounterRepository(application);
-    mTaskRepository = new TaskRepository(application);
     mWildlifeRepository = new WildlifeRepository(application);
   }
 
   public LiveData<EncounterDetails> getEncounterDetails(String encounterId) {
 
-    return mEncounterRepository.getEncounterDetailsById(encounterId);
+    return mWildlifeRepository.getEncounterDetailsById(encounterId);
   }
 
-  public LiveData<List<EncounterSummary>> getEncounterSummaries() {
+  public LiveData<List<EncounterSummary>> getEncounterSummaries(String userId) {
 
-    return mEncounterRepository.getEncounterSummaries();
+    return mWildlifeRepository.getEncounterSummaries(userId);
   }
 
   public LiveData<SummaryDetails> getSummaryDetails() {
 
-    return mEncounterRepository.getSummaryDetails();
+    return mWildlifeRepository.getSummaryDetails();
   }
 
   public LiveData<List<TaskEntity>> getTasks() {
 
-    return mTaskRepository.getAll();
+    return mWildlifeRepository.getAllTasks();
   }
 
   public LiveData<List<WildlifeEntity>> getWildlife() {
 
-    return mWildlifeRepository.getAll();
+    return mWildlifeRepository.getAllWildlife();
   }
 
   public void insertEncounter(EncounterEntity encounterEntity) {
 
-    mEncounterRepository.insert(encounterEntity);
+    mWildlifeRepository.insert(encounterEntity);
   }
 
   public void insertTask(TaskEntity taskEntity) {
 
-    mTaskRepository.insert(taskEntity);
+    mWildlifeRepository.insert(taskEntity);
   }
 
   public void insertWildlife(WildlifeEntity wildlifeEntity) {

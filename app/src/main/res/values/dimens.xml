@@ -2,4 +2,6 @@
 <resources>
   <dimen name="fab_margin">16dp</dimen>
   <dimen name="default_view_margin">8dp</dimen>
+  <dimen name="default_card_margin">3dp</dimen>
+  <dimen name="default_card_corner">5dp</dimen>
 </resources>

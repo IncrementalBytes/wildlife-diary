@@ -18,6 +18,7 @@ package net.whollynugatory.android.wildlife.db.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import net.whollynugatory.android.wildlife.Utils;
@@ -55,5 +56,15 @@ public class WildlifeEntity implements Serializable {
   public String toString() {
 
     return String.format(Locale.US, "{Id: %s, Abbreviation: %s, Name: %s}", Id, Abbreviation, FriendlyName);
+  }
+
+  @Ignore
+  public boolean isValid() {
+
+    if (Abbreviation.isEmpty() || FriendlyName.isEmpty()) {
+       return false;
+    }
+
+    return !Id.isEmpty() && !Id.equals(Utils.UNKNOWN_ID);
   }
 }

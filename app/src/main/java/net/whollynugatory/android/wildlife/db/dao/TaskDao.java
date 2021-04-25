@@ -28,18 +28,9 @@ import java.util.List;
 @Dao
 public interface TaskDao {
 
-  @Query("SELECT COUNT() FROM task_table")
-  LiveData<Integer> count();
-
   @Query("SELECT * FROM task_table")
   LiveData<List<TaskEntity>> getAll();
 
-  @Query("SELECT name FROM task_table ORDER BY name DESC")
-  LiveData<List<String>> getNames();
-
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(TaskEntity taskEntity);
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertAll(List<TaskEntity> taskEntityList);
 }

@@ -37,6 +37,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -119,11 +120,11 @@ public class MainActivity extends AppCompatActivity implements
     FirebaseMessaging.getInstance().subscribeToTopic("wildlifeNotification");
 
     String userId = getIntent().getStringExtra(Utils.ARG_FIREBASE_USER_ID);
-    if (userId == null || userId.length() < 0 || userId.equals(Utils.UNKNOWN_USER_ID)) {
+    if (userId == null || userId.equals(Utils.UNKNOWN_USER_ID)) {
       userId = Utils.getUserId(this);
     }
 
-    if (userId.length() < 0 || userId.equals(Utils.UNKNOWN_USER_ID)) {
+    if (userId.isEmpty() || userId.equals(Utils.UNKNOWN_USER_ID)) {
       showMessageInSnackBar("Unable to determine user data. Please sign out of app and try again.");
     } else {
       Log.d(TAG, "Firebase UID: " + userId);
@@ -136,24 +137,28 @@ public class MainActivity extends AppCompatActivity implements
             Log.e(TAG, "Error getting data", task.getException());
             showMessageInSnackBar("There was a problem accessing data. Try again later.");
           } else {
-            mUserEntity = task.getResult().getValue(UserEntity.class);
-            Utils.setUserId(this, finalUserId);
-            if (mUserEntity == null) {
-              mUserEntity = new UserEntity();
-              mUserEntity.Id = finalUserId;
-              FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(finalUserId).setValue(mUserEntity)
-                .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
-            } else {
-              mUserEntity.Id = finalUserId;
-              if (mUserEntity.CanAdd) {
-                mAddEncounterButton.setVisibility(View.VISIBLE);
-                mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance(mUserEntity.Id)));
+            DataSnapshot result = task.getResult();
+            if (result != null) {
+              mUserEntity = result.getValue(UserEntity.class);
+              Utils.setUserId(this, finalUserId);
+              if (mUserEntity == null) {
+                mUserEntity = new UserEntity();
+                mUserEntity.Id = finalUserId;
+                FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(finalUserId).setValue(mUserEntity)
+                  .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
+              } else {
+                mUserEntity.Id = finalUserId;
+                if (mUserEntity.CanAdd) {
+                  mAddEncounterButton.setVisibility(View.VISIBLE);
+                  mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance(mUserEntity.Id)));
+                }
               }
+
+              // TODO: add animation/notification that work is happening
+              replaceFragment(TaskDataFragment.newInstance());
+            } else {
+              showMessageInSnackBar("Data returned from cloud was unexpected. Try again later.");
             }
-
-            // TODO: add animation/notification that work is happening
-
-            replaceFragment(TaskDataFragment.newInstance());
           }
         });
     }
@@ -241,10 +246,23 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
+  public void onEncounterFailure(String message) {
+
+    Log.d(TAG, "++onEncounterFailure(String)");
+    showMessageInSnackBar(message);
+  }
+
+  @Override
+  public void onEncounterDataFailure(String message) {
+
+    Log.d(TAG, "++onEncounterDataFailure(String)");
+    showMessageInSnackBar(message);
+  }
+
+  @Override
   public void onEncounterDataMissing() {
 
     Log.d(TAG, "++onEncounterDataMissing()");
-//    onEncounterListPopulated(0);
     showMessageInSnackBar(
       String.format(
         Locale.US,
@@ -267,19 +285,17 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterListPopulated(int size) {
+  public void onEncounterListPopulated() {
 
     Log.d(TAG, "++onEncounterListPopulated(int)");
-    if (size < 1) {
-      showMessageInSnackBar(
-        String.format(
-          Locale.US,
-          "No encounters found. %s",
-          mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
-    } else {
-      // see if snack bar is showing and remove
-      closeSnackbar();
-    }
+    // TODO: what to do when list is ready?
+  }
+
+  @Override
+  public void onTaskDataFailure(String message) {
+
+    Log.d(TAG, "++onTaskDataFailure(String)");
+    showMessageInSnackBar(message);
   }
 
   @Override
@@ -294,6 +310,13 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onTaskDataPopulated()");
     replaceFragment(WildlifeDataFragment.newInstance());
+  }
+
+  @Override
+  public void onWildlifeDataFailure(String message) {
+
+    Log.d(TAG, "++onWildlifeDataFailure(String)");
+    showMessageInSnackBar(message);
   }
 
   @Override

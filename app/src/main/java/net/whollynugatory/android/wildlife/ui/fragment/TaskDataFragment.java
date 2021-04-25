@@ -42,6 +42,8 @@ public class TaskDataFragment extends Fragment {
 
   public interface OnTaskDataListener {
 
+    void onTaskDataFailure(String message);
+
     void onTaskDataMissing();
 
     void onTaskDataPopulated();
@@ -60,26 +62,36 @@ public class TaskDataFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
 
     Log.d(TAG, "++onActivityCreated(Bundle)");
-    FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).get().addOnCompleteListener(
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).get().addOnCompleteListener(
       task -> {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Checking data stamp for Tasks was unsuccessful.", task.getException());
+          mCallback.onTaskDataFailure("Unable to retrieve Task data stamp.");
         } else {
           String remoteStamp = Utils.UNKNOWN_ID;
-          for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-            if (dataSnapshot.getKey().equals(Utils.TASK_ROOT)) {
-              remoteStamp = dataSnapshot.getValue().toString();
-              break;
+          DataSnapshot resultSnapshot = task.getResult();
+          if (resultSnapshot != null) {
+            for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
+              String id = dataSnapshot.getKey();
+              if (id != null && id.equals(Utils.TASK_ROOT)) {
+                Object valueObject = dataSnapshot.getValue();
+                if (valueObject != null) {
+                  remoteStamp = valueObject.toString();
+                  break;
+                }
+              }
             }
-          }
 
-          String taskStamp = Utils.getTasksStamp(getActivity());
-          if (taskStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !taskStamp.equalsIgnoreCase(remoteStamp)) {
-            populateTaskTable(remoteStamp);
+            String taskStamp = Utils.getTasksStamp(getActivity());
+            if (taskStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !taskStamp.equalsIgnoreCase(remoteStamp)) {
+              populateTaskTable(remoteStamp);
+            } else {
+              Log.d(TAG, "Task data in-sync.");
+              mCallback.onTaskDataPopulated();
+            }
           } else {
-            Log.d(TAG, "Task data in-sync.");
-            mCallback.onTaskDataPopulated();
+            mCallback.onTaskDataFailure("Task data stamp not found.");
           }
         }
       });
@@ -111,20 +123,47 @@ public class TaskDataFragment extends Fragment {
       .addOnCompleteListener(task -> {
 
         if (!task.isSuccessful()) {
-          Log.e(TAG, "Error getting data", task.getException());
+          Log.e(TAG, "Error getting data.", task.getException());
+          mCallback.onTaskDataFailure("Could not retrieve Task data.");
         } else {
-          if (task.getResult().getChildrenCount() > 0) {
-            WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
-            for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-              TaskEntity taskEntity = dataSnapshot.getValue(TaskEntity.class);
-              taskEntity.Id = dataSnapshot.getKey();
-              wildlifeViewModel.insertTask(taskEntity);
-            }
+          DataSnapshot resultSnapshot = task.getResult();
+          if (resultSnapshot != null) {
+            if (resultSnapshot.getChildrenCount() > 0) {
+              Log.d(TAG, "Attempting Task inserts: " + resultSnapshot.getChildrenCount());
+              if (getActivity() != null) {
+                WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
+                boolean hadErrors = false;
+                for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
+                  TaskEntity taskEntity = dataSnapshot.getValue(TaskEntity.class);
+                  String id = dataSnapshot.getKey();
+                  if (taskEntity != null && id != null) {
+                    taskEntity.Id = id;
+                    if (taskEntity.isValid()) {
+                      wildlifeViewModel.insertTask(taskEntity);
+                    } else {
+                      Log.w(TAG, "Task entity was invalid, not adding: " + taskEntity.Id);
+                    }
+                  } else {
+                    Log.w(TAG, "Failed to create Task entity.");
+                    hadErrors = true;
+                    break;
+                  }
+                }
 
-            Utils.setTasksStamp(getActivity(), dataStamp);
-            mCallback.onTaskDataPopulated();
+                if (hadErrors) {
+                  mCallback.onTaskDataFailure("Populating local Task database failed.");
+                } else {
+                  Utils.setTasksStamp(getActivity(), dataStamp);
+                  mCallback.onTaskDataPopulated();
+                }
+              } else {
+                mCallback.onTaskDataFailure("App was not ready for operation at this time.");
+              }
+            } else {
+              mCallback.onTaskDataMissing();
+            }
           } else {
-            mCallback.onTaskDataMissing();
+            mCallback.onTaskDataFailure("Task results not found.");
           }
         }
       });

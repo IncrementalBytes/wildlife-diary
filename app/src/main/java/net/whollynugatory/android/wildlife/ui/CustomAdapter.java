@@ -47,16 +47,16 @@ public class CustomAdapter extends ArrayAdapter<SpinnerItemState> {
   @Override
   public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
 
-    return getCustomView(position, convertView, parent);
+    return getCustomView(position, convertView);
   }
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
 
-    return getCustomView(position, convertView, parent);
+    return getCustomView(position, convertView);
   }
 
-  public View getCustomView(final int position, View convertView, ViewGroup parent) {
+  public View getCustomView(final int position, View convertView) {
 
     final ViewHolder holder;
     if (convertView == null) {
@@ -72,7 +72,6 @@ public class CustomAdapter extends ArrayAdapter<SpinnerItemState> {
 
     holder.NameText.setText(mListState.get(position).getTitle());
 
-    // checked event fire from getview() or user input
     isFromView = true;
     holder.ItemCheckBox.setChecked(mListState.get(position).isSelected());
     isFromView = false;

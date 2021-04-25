@@ -28,12 +28,11 @@ import java.util.Locale;
 
 public class Utils {
 
-  public static final String ARG_ENCOUNTER_ENTITY = "encounter_entity";
   public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
-  public static final String DATASTAMPS_ROOT = "DataStamps";
+  public static final String DATA_STAMPS_ROOT = "DataStamps";
   public static final String ENCOUNTER_ROOT = "Encounters";
   public static final String TASK_ROOT = "Tasks";
   public static final String UNKNOWN_ID = "000000000-0000-0000-0000-000000000000";
@@ -128,13 +127,6 @@ public class Utils {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String prefKey = context.getString(prefKeyId);
     return sharedPreferences.getBoolean(prefKey, defaultValue);
-  }
-
-  private static int getIntPref(Context context, @StringRes int prefKeyId, int defaultValue) {
-
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    String prefKey = context.getString(prefKeyId);
-    return sharedPreferences.getInt(prefKey, defaultValue);
   }
 
   private static String getStringPref(Context context, @StringRes int preferenceKeyId, String defaultValue) {

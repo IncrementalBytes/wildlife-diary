@@ -95,10 +95,10 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
 
     // Room
-    implementation "androidx.room:room-runtime:2.2.6"
+    implementation "androidx.room:room-runtime:2.3.0"
     implementation 'com.google.firebase:firebase-messaging:21.1.0'
-    annotationProcessor "androidx.room:room-compiler:2.2.6"
-    androidTestImplementation "androidx.room:room-testing:2.2.6"
+    annotationProcessor "androidx.room:room-compiler:2.3.0"
+    androidTestImplementation "androidx.room:room-testing:2.3.0"
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:26.7.0')

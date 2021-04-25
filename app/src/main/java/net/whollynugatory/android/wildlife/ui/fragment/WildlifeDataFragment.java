@@ -42,6 +42,8 @@ public class WildlifeDataFragment  extends Fragment {
 
   public interface OnWildlifeDataListener {
 
+    void onWildlifeDataFailure(String message);
+
     void onWildlifeDataMissing();
 
     void onWildlifeDataPopulated();
@@ -60,26 +62,36 @@ public class WildlifeDataFragment  extends Fragment {
     super.onActivityCreated(savedInstanceState);
 
     Log.d(TAG, "++onActivityCreated(Bundle)");
-    FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).get().addOnCompleteListener(
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).get().addOnCompleteListener(
       task -> {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Checking data stamp for Wildlife was unsuccessful.", task.getException());
+          mCallback.onWildlifeDataFailure("Unable to retrieve Wildlife data stamp.");
         } else {
           String remoteStamp = Utils.UNKNOWN_ID;
-          for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-            if (dataSnapshot.getKey().equals(Utils.WILDLIFE_ROOT)) {
-              remoteStamp = dataSnapshot.getValue().toString();
-              break;
+          DataSnapshot resultSnapshot = task.getResult();
+          if (resultSnapshot != null) {
+            for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
+              String id = dataSnapshot.getKey();
+              if (id != null && id.equals(Utils.WILDLIFE_ROOT)) {
+                Object valueObject = dataSnapshot.getValue();
+                if (valueObject != null) {
+                  remoteStamp = valueObject.toString();
+                  break;
+                }
+              }
             }
-          }
 
-          String wildlifeStamp = Utils.getWildlifeStamp(getActivity());
-          if (wildlifeStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !wildlifeStamp.equalsIgnoreCase(remoteStamp)) {
-            populateWildlifeTable(remoteStamp);
+            String wildlifeStamp = Utils.getWildlifeStamp(getActivity());
+            if (wildlifeStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !wildlifeStamp.equalsIgnoreCase(remoteStamp)) {
+              populateWildlifeTable(remoteStamp);
+            } else {
+              Log.d(TAG, "Wildlife data in-sync.");
+              mCallback.onWildlifeDataPopulated();
+            }
           } else {
-            Log.d(TAG, "Wildlife data in-sync.");
-            mCallback.onWildlifeDataPopulated();
+            mCallback.onWildlifeDataFailure("Wildlife data stamp not found.");
           }
         }
       });
@@ -112,19 +124,44 @@ public class WildlifeDataFragment  extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data", task.getException());
+          mCallback.onWildlifeDataFailure("Could not retrieve Wildlife data.");
         } else {
-          if (task.getResult().getChildrenCount() > 0) {
-            WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
-            for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-              WildlifeEntity wildlifeEntity = dataSnapshot.getValue(WildlifeEntity.class);
-              wildlifeEntity.Id = dataSnapshot.getKey();
-              wildlifeViewModel.insertWildlife(wildlifeEntity);
-            }
+          DataSnapshot resultSnapshot = task.getResult();
+          if (resultSnapshot != null) {
+            if (resultSnapshot.getChildrenCount() > 0) {
+              Log.d(TAG, "Attempting Wildlife inserts: " + resultSnapshot.getChildrenCount());
+              if (getActivity() != null) {
+                WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
+                boolean hadErrors = false;
+                for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
+                  WildlifeEntity wildlifeEntity = dataSnapshot.getValue(WildlifeEntity.class);
+                  String id = dataSnapshot.getKey();
+                  if (wildlifeEntity != null && id != null) {
+                    wildlifeEntity.Id = id;
+                    if (wildlifeEntity.isValid()) {
+                      wildlifeViewModel.insertWildlife(wildlifeEntity);
+                    } else {
+                      Log.w(TAG, "Wildlife entity was invalid, not adding: " + wildlifeEntity.Id);
+                    }
+                  } else {
+                    hadErrors = true;
+                  }
+                }
 
-            Utils.setWildlifeStamp(getActivity(), dataStamp);
-            mCallback.onWildlifeDataPopulated();
+                if (hadErrors) {
+                  mCallback.onWildlifeDataFailure("Populating local Wildlife database failed.");
+                } else {
+                  Utils.setWildlifeStamp(getActivity(), dataStamp);
+                  mCallback.onWildlifeDataPopulated();
+                }
+              } else {
+                mCallback.onWildlifeDataFailure("App was not ready for operation at this time.");
+              }
+            } else {
+              mCallback.onWildlifeDataMissing();
+            }
           } else {
-            mCallback.onWildlifeDataMissing();
+            mCallback.onWildlifeDataFailure("Wildlife results not found.");
           }
         }
       });

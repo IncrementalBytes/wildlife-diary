@@ -42,6 +42,7 @@ public class EncounterDataFragment  extends Fragment {
 
   public interface OnEncounterDataListener {
 
+    void onEncounterDataFailure(String message);
     void onEncounterDataMissing();
     void onEncounterDataPopulated();
   }
@@ -59,26 +60,36 @@ public class EncounterDataFragment  extends Fragment {
     super.onActivityCreated(savedInstanceState);
 
     Log.d(TAG, "++onActivityCreated(Bundle)");
-    FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).get().addOnCompleteListener(
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).get().addOnCompleteListener(
       task -> {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Checking data stamp for Encounters was unsuccessful.", task.getException());
+          mCallback.onEncounterDataFailure("Unable to retrieve Wildlife data stamp.");
         } else {
           String remoteStamp = Utils.UNKNOWN_ID;
-          for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-            if (dataSnapshot.getKey().equals(Utils.ENCOUNTER_ROOT)) {
-              remoteStamp = dataSnapshot.getValue().toString();
-              break;
+          DataSnapshot resultSnapshot = task.getResult();
+          if (resultSnapshot != null) {
+            for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+              String id = dataSnapshot.getKey();
+              if (id != null && id.equals(Utils.ENCOUNTER_ROOT)) {
+                Object valueObject = dataSnapshot.getValue();
+                if (valueObject != null) {
+                  remoteStamp = dataSnapshot.getValue().toString();
+                  break;
+                }
+              }
             }
-          }
 
-          String encounterStamp = Utils.getEncountersStamp(getActivity());
-          if (encounterStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !encounterStamp.equalsIgnoreCase(remoteStamp)) {
-            populateEncounterTable(remoteStamp);
+            String encounterStamp = Utils.getEncountersStamp(getActivity());
+            if (encounterStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !encounterStamp.equalsIgnoreCase(remoteStamp)) {
+              populateEncounterTable(remoteStamp);
+            } else {
+              Log.d(TAG, "Encounter data in-sync.");
+              mCallback.onEncounterDataPopulated();
+            }
           } else {
-            Log.d(TAG, "Encounter data in-sync.");
-            mCallback.onEncounterDataPopulated();
+            mCallback.onEncounterDataFailure("Encounter data stamp not found.");
           }
         }
       });
@@ -111,20 +122,44 @@ public class EncounterDataFragment  extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data", task.getException());
-          mCallback.onEncounterDataMissing();
+          mCallback.onEncounterDataFailure("Could not retrieve Encounter data.");
         } else {
-          if (task.getResult().getChildrenCount() > 0) {
-            WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
-            for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-              EncounterEntity encounterEntity = dataSnapshot.getValue(EncounterEntity.class);
-              encounterEntity.Id = dataSnapshot.getKey();
-              wildlifeViewModel.insertEncounter(encounterEntity);
-            }
+          DataSnapshot resultSnapshot = task.getResult();
+          if (resultSnapshot != null) {
+            if (resultSnapshot.getChildrenCount() > 0) {
+              Log.d(TAG, "Attempting Encounter inserts: " + resultSnapshot.getChildrenCount());
+              if (getActivity() != null) {
+                WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
+                boolean hadErrors = false;
+                for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
+                  EncounterEntity encounterEntity = dataSnapshot.getValue(EncounterEntity.class);
+                  String id = dataSnapshot.getKey();
+                  if (encounterEntity != null && id != null) {
+                    encounterEntity.Id = id;
+                    if (encounterEntity.isValid()) {
+                      wildlifeViewModel.insertEncounter(encounterEntity);
+                    } else {
+                      Log.w(TAG, "Encounter entity was invalid, not adding: " + encounterEntity.Id);
+                    }
+                  } else {
+                    hadErrors = true;
+                  }
+                }
 
-            Utils.setEncountersStamp(getActivity(), dataStamp);
-            mCallback.onEncounterDataPopulated();
+                if (hadErrors) {
+                  mCallback.onEncounterDataFailure("Populating local Encounter database failed.");
+                } else {
+                  Utils.setEncountersStamp(getActivity(), dataStamp);
+                  mCallback.onEncounterDataPopulated();
+                }
+              } else {
+                mCallback.onEncounterDataFailure("App was not ready for operation at this time.");
+              }
+            } else {
+              mCallback.onEncounterDataMissing();
+            }
           } else {
-            mCallback.onEncounterDataMissing();
+            mCallback.onEncounterDataFailure("Encounter results not found.");
           }
         }
       });

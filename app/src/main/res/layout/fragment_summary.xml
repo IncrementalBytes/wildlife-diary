@@ -8,371 +8,593 @@
     <variable name="summary" type="net.whollynugatory.android.wildlife.db.entity.SummaryDetails"/>
   </data>
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <TableLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
+      android:layout_height="wrap_content">
 
-      <TableRow
-        android:id="@+id/summary_row_total_encounters"
+      <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/summary_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent=".5"
+        android:orientation="vertical"/>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_total_encounters"
+        style="@style/SummaryCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-          android:id="@+id/summary_text_total_encounters"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_total_encounters"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_total_encounters_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalEncounters)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_total_encounters"
+            style="@style/SummaryHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/header_total_encounters"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_unique_encounters"
+          <TextView
+            android:id="@+id/summary_text_total_encounters_value"
+            style="@style/SummaryValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalEncounters)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_total_encounters" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_unique_encounters"
+        style="@style/SummaryCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_total_encounters">
 
-        <TextView
-          android:id="@+id/summary_text_unique_encounters"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_unique_encounters"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_unique_encounters_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalSpeciesEncountered)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_unique_encounters"
+            style="@style/SummaryHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/header_unique_encounters"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_most_encountered"
+          <TextView
+            android:id="@+id/summary_text_unique_encounters_value"
+            style="@style/SummaryValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalSpeciesEncountered)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_unique_encounters" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_most_encountered"
+        style="@style/SummaryCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_unique_encounters">
 
-        <TextView
-          android:id="@+id/summary_text_most_encountered"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_most_encountered"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_most_encountered_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{summary.MostEncountered}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_most_encountered"
+            style="@style/SummaryHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/header_most_encountered"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-          android:layout_height="18dp"
-          android:layout_width="match_parent"/>
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_most_encountered_value"
+            style="@style/SummaryValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{summary.MostEncountered}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_most_encountered" />
 
-      <TableRow
-        android:id="@+id/summary_row_banded"
-        android:layout_width="match_parent"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_banded"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_most_encountered">
 
-        <TextView
-          android:id="@+id/summary_text_banded"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_banded"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_banded_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalBanded)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_banded"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_banded"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_handled_euthanasia"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_banded_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalBanded)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_banded"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_handled_euthanasia"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="@{Utils.getShowSensitive(context) ? View.VISIBLE : View.GONE}"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/summary_guideline"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_most_encountered">
 
-        <TextView
-          android:id="@+id/summary_text_handled_euthanasia"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_handled_euthanasia"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_handled_euthanasia_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalHandledEuthanasia)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_handled_euthanasia"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_handled_euthanasia"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_handled_exam"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_handled_euthanasia_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalHandledEuthanasia)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_handled_euthanasia" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_handled_exam"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_banded">
 
-        <TextView
-          android:id="@+id/summary_text_handled_exam"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_handled_exam"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_handled_exam_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalHandledExam)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_handled_exam"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_handled_exam"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_handled_force_fed"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_handled_exam_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalHandledExam)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_handled_exam" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_handled_force_fed"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/summary_guideline"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_euthanasia">
 
-        <TextView
-          android:id="@+id/summary_text_handled_force_fed"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_handled_force_fed"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_handled_force_fed_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalHandledForceFed)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_handled_force_fed"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_handled_force_fed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_handled_gavage"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_handled_force_fed_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalHandledForceFed)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_handled_force_fed" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_handled_gavage"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_exam">
 
-        <TextView
-          android:id="@+id/summary_text_handled_gavage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_handled_gavage"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_handled_gavage_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalHandledGavage)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_handled_gavage"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_handled_gavage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_handled_medication"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_handled_gavage_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalHandledGavage)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_handled_gavage" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_handled_medication"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/summary_guideline"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_force_fed">
 
-        <TextView
-          android:id="@+id/summary_text_handled_medication"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_handled_medication"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_handled_medication_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalHandledMedication)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_handled_medication"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_handled_medication"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_handled_subcutaneous"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_handled_medication_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalHandledMedication)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_handled_medication" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_handled_subcutaneous"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_gavage">
 
-        <TextView
-          android:id="@+id/summary_text_handled_subcutaneous"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_handled_subcutaneous"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_handled_subcutaneous_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalHandledSubcutaneous)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_handled_subcutaneous"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_handled_subcutaneous"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_gavage"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_handled_subcutaneous_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalHandledSubcutaneous)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_handled_subcutaneous" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_force_fed"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/summary_guideline"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_medication">
 
-        <TextView
-          android:id="@+id/summary_text_gavage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_gavage"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_gavage_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalGavage)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_force_fed"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_force_fed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_force_fed"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_force_fed_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalForceFed)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_force_fed" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_gavage"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_subcutaneous">
 
-        <TextView
-          android:id="@+id/summary_text_force_fed"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_force_fed"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_force_fed_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalForceFed)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_gavage"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_gavage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_medication_ocular"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_gavage_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalGavage)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_gavage" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_medication_ocular"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/summary_guideline"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_force_fed">
 
-        <TextView
-          android:id="@+id/summary_text_medication_ocular"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_ocular_medication"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_medication_ocular_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalOcularMedicated)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_medication_ocular"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_ocular_medication"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_medication_oral"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_medication_ocular_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalOcularMedicated)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_medication_ocular" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_medication_oral"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_gavage">
 
-        <TextView
-          android:id="@+id/summary_text_medication_oral"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_oral_medication"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_medication_oral_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalOralMedicated)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_medication_oral"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_oral_medication"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-      <TableRow
-        android:id="@+id/summary_row_subcutaneous"
-        android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/summary_text_medication_oral_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalOralMedicated)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_medication_oral" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+      <androidx.cardview.widget.CardView
+        android:id="@+id/summary_card_subcutaneous"
+        style="@style/SummaryCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/summary_guideline"
+        app:layout_constraintTop_toBottomOf="@id/summary_card_medication_ocular">
 
-        <TextView
-          android:id="@+id/summary_text_subcutaneous"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/default_view_margin"
-          android:text="@string/header_subcutaneous"
-          android:textColor="@color/white"
-          android:textSize="18sp"
-          android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/summary_text_subcutaneous_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@{String.valueOf(summary.TotalSubcutaneous)}" />
-      </TableRow>
+          <TextView
+            android:id="@+id/summary_text_subcutaneous"
+            style="@style/SummaryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_subcutaneous"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </TableLayout>
+          <TextView
+            android:id="@+id/summary_text_subcutaneous_value"
+            style="@style/SummaryValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(summary.TotalSubcutaneous)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summary_text_subcutaneous" />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.core.widget.NestedScrollView>
+
 </layout>

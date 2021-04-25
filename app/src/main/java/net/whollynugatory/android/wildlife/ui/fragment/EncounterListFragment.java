@@ -46,7 +46,7 @@ public class EncounterListFragment extends Fragment {
 
   public interface OnEncounterListListener {
 
-    void onEncounterListPopulated(int size);
+    void onEncounterListPopulated();
     void onEncounterDetailsClicked(String encounterId);
   }
 
@@ -79,7 +79,7 @@ public class EncounterListFragment extends Fragment {
     mEncounterAdapter = new EncounterAdapter(getContext());
     mRecyclerView.setAdapter(mEncounterAdapter);
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    wildlifeViewModel.getEncounterSummaries().observe(getViewLifecycleOwner(), encounterSummaries -> {
+    wildlifeViewModel.getEncounterSummaries(mUserId).observe(getViewLifecycleOwner(), encounterSummaries -> {
 
       HashMap<String, EncounterSummary> encounterSummaryHashMap = new HashMap<>();
       for (EncounterSummary encounterSummary : encounterSummaries) {
@@ -89,7 +89,7 @@ public class EncounterListFragment extends Fragment {
       }
 
       mEncounterAdapter.setEncounterSummaryList(encounterSummaryHashMap.values());
-      mCallback.onEncounterListPopulated(encounterSummaryHashMap.size());
+      mCallback.onEncounterListPopulated();
     });
   }
 
@@ -180,7 +180,7 @@ public class EncounterListFragment extends Fragment {
         EncounterSummary encounterSummary = mEncounterSummaries.get(position);
         holder.bind(encounterSummary);
       } else {
-        mCallback.onEncounterListPopulated(0);
+        Log.w(TAG, "Encounter Summaries is empty at this time.");
       }
     }
 

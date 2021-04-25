@@ -15,6 +15,8 @@
  */
 package net.whollynugatory.android.wildlife.db.entity;
 
+import net.whollynugatory.android.wildlife.Utils;
+
 /**
  * Class containing total tasks and other overall details for all encounters.
  */
@@ -52,7 +54,7 @@ public class SummaryDetails {
 
   public SummaryDetails() {
 
-    MostEncountered = "";
+    MostEncountered = Utils.UNKNOWN_ID;
     TotalBanded = 0;
     TotalForceFed = 0;
     TotalGavage = 0;

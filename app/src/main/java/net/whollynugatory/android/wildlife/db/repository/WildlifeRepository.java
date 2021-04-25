@@ -22,7 +22,14 @@ import androidx.lifecycle.LiveData;
 
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
+import net.whollynugatory.android.wildlife.db.dao.EncounterDao;
+import net.whollynugatory.android.wildlife.db.dao.TaskDao;
 import net.whollynugatory.android.wildlife.db.dao.WildlifeDao;
+import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
+import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
+import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
+import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
+import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 
 import java.util.List;
@@ -31,24 +38,59 @@ public class WildlifeRepository {
 
   private static final String TAG = Utils.BASE_TAG + WildlifeRepository.class.getSimpleName();
 
-  private final WildlifeDao mDao;
-  private final LiveData<List<WildlifeEntity>> mAllWildlife;
+  private final EncounterDao mEncounterDao;
+  private final TaskDao mTaskDao;
+  private final WildlifeDao mWildlifeDao;
 
   public WildlifeRepository(Application application) {
 
     Log.d(TAG, "++WildlifeRepository(Application)");
     WildlifeDatabase db = WildlifeDatabase.getInstance(application);
-    mDao = db.wildlifeDao();
-    mAllWildlife = mDao.getAll();
+    mEncounterDao = db.encounterDao();
+    mTaskDao = db.taskDao();
+    mWildlifeDao = db.wildlifeDao();
   }
 
-  public LiveData<List<WildlifeEntity>> getAll() {
+  public LiveData<List<TaskEntity>> getAllTasks() {
 
-    return mAllWildlife;
+    return mTaskDao.getAll();
+  }
+
+  public LiveData<List<WildlifeEntity>> getAllWildlife() {
+
+    return mWildlifeDao.getAll();
+  }
+
+  public LiveData<EncounterDetails> getEncounterDetailsById(String encounterId) {
+
+    return mEncounterDao.getEncounterDetailsById(encounterId);
+  }
+
+  public LiveData<List<EncounterSummary>> getEncounterSummaries(String userId) {
+
+    return mEncounterDao.getEncounterSummaries(userId);
+  }
+
+  public LiveData<SummaryDetails> getSummaryDetails() {
+
+    return mEncounterDao.getSummaryDetails();
+  }
+
+  public void insert(EncounterEntity encounterEntity) {
+
+    Log.d(TAG, encounterEntity.toString());
+    WildlifeDatabase.databaseWriteExecutor.execute(() -> mEncounterDao.insert(encounterEntity));
+  }
+
+  public void insert(TaskEntity taskEntity) {
+
+    Log.d(TAG, taskEntity.toString());
+    WildlifeDatabase.databaseWriteExecutor.execute(() -> mTaskDao.insert(taskEntity));
   }
 
   public void insert(WildlifeEntity wildlifeEntity) {
 
-    WildlifeDatabase.databaseWriteExecutor.execute(() -> mDao.insert(wildlifeEntity));
+    Log.d(TAG, wildlifeEntity.toString());
+    WildlifeDatabase.databaseWriteExecutor.execute(() -> mWildlifeDao.insert(wildlifeEntity));
   }
 }

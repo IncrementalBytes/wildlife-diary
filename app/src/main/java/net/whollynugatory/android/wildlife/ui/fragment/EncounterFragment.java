@@ -60,6 +60,7 @@ public class EncounterFragment extends Fragment {
 
     void onEncounterAdded();
     void onEncounterClosed();
+    void onEncounterFailure(String message);
   }
 
   private OnEncounterListener mCallback;
@@ -142,16 +143,6 @@ public class EncounterFragment extends Fragment {
     return fragment;
   }
 
-  public static EncounterFragment newInstance(EncounterEntity encounterEntity) {
-
-    Log.d(TAG, "++newInstance(EncounterEntity)");
-    EncounterFragment fragment = new EncounterFragment();
-    Bundle arguments = new Bundle();
-    arguments.putSerializable(Utils.ARG_ENCOUNTER_ENTITY, encounterEntity);
-    fragment.setArguments(arguments);
-    return fragment;
-  }
-
   /*
     Fragment Override(s)
   */
@@ -230,7 +221,7 @@ public class EncounterFragment extends Fragment {
       if (mEncountersAdded > 0) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(Utils.ENCOUNTER_ROOT, UUID.randomUUID().toString());
-        FirebaseDatabase.getInstance().getReference().child(Utils.DATASTAMPS_ROOT).updateChildren(childUpdates)
+        FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).updateChildren(childUpdates)
           .addOnCompleteListener(task -> {
 
             if (!task.isSuccessful()) {
@@ -246,31 +237,43 @@ public class EncounterFragment extends Fragment {
     Button addButton = view.findViewById(R.id.encounter_button_add);
     addButton.setOnClickListener(v -> {
 
-      // TODO: validate
       EncounterEntity encounterEntity = new EncounterEntity();
       encounterEntity.Date = Utils.convertToLong(mDateEdit.getText().toString());
       encounterEntity.EncounterId = UUID.randomUUID().toString();
       encounterEntity.UserId = mUserId;
-      encounterEntity.WildlifeId = mWildlifeMap.get(mWildlifeText.getText().toString().toUpperCase());
+
+      String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
+      if (mWildlifeMap.containsKey(selectedWildlifeAbbreviation)) {
+        encounterEntity.WildlifeId = mWildlifeMap.get(selectedWildlifeAbbreviation);
+      } else {
+        encounterEntity.WildlifeId = Utils.UNKNOWN_ID;
+      }
+
       int totalItems = mTaskSpinner.getAdapter().getCount();
       for (int taskCount = 0; taskCount < totalItems; taskCount++) {
         SpinnerItemState item = (SpinnerItemState) mTaskSpinner.getAdapter().getItem(taskCount);
         if (item.isSelected()) {
           encounterEntity.Id = UUID.randomUUID().toString();
           encounterEntity.TaskId = item.getId();
-          item.setSelected(false);
-          FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).child(encounterEntity.Id).setValue(encounterEntity)
-            .addOnCompleteListener(task -> {
+          if (encounterEntity.isValid()) {
+            FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).child(encounterEntity.Id).setValue(encounterEntity)
+              .addOnCompleteListener(task -> {
 
-              if (!task.isSuccessful()) {
-                Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
-              } else {
-                mCallback.onEncounterAdded();
-                mDateEdit.setText("");
-                mWildlifeText.setText("");
-                mEncountersAdded++;
-              }
-            });
+                if (!task.isSuccessful()) {
+                  Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
+                  mCallback.onEncounterFailure("Failed to added encounter.");
+                } else {
+                  mCallback.onEncounterAdded();
+                  mDateEdit.setText("");
+                  mWildlifeText.setText("");
+                  mEncountersAdded++;
+                }
+              });
+          } else {
+            mCallback.onEncounterFailure("Encounter data was unknown.");
+          }
+
+          item.setSelected(false);
         }
       }
     });
@@ -307,7 +310,7 @@ public class EncounterFragment extends Fragment {
     mWildlifeViewModel.getWildlife().observe(getViewLifecycleOwner(), wildlifeEntityList -> {
 
       for (WildlifeEntity wildlifeEntity : wildlifeEntityList) {
-        mWildlifeMap.put(wildlifeEntity.Abbreviation, wildlifeEntity.Id);
+        mWildlifeMap.put(wildlifeEntity.Abbreviation.toUpperCase(), wildlifeEntity.Id);
       }
 
       AutoCompleteAdapter adapter = new AutoCompleteAdapter(
