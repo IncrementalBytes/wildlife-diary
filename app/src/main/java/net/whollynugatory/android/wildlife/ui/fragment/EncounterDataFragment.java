@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,8 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
-import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class EncounterDataFragment  extends Fragment {
@@ -43,7 +43,11 @@ public class EncounterDataFragment  extends Fragment {
   public interface OnEncounterDataListener {
 
     void onEncounterDataFailure(String message);
+
     void onEncounterDataMissing();
+
+    void onEncounterDataPopulate(List<EncounterEntity> encounterEntityList);
+
     void onEncounterDataPopulated();
   }
 
@@ -83,7 +87,8 @@ public class EncounterDataFragment  extends Fragment {
 
             String encounterStamp = Utils.getEncountersStamp(getActivity());
             if (encounterStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !encounterStamp.equalsIgnoreCase(remoteStamp)) {
-              populateEncounterTable(remoteStamp);
+              Utils.setEncountersStamp(getActivity(), remoteStamp);
+              populateEncounterTable();
             } else {
               Log.d(TAG, "Encounter data in-sync.");
               mCallback.onEncounterDataPopulated();
@@ -114,9 +119,9 @@ public class EncounterDataFragment  extends Fragment {
     return inflater.inflate(R.layout.fragment_encounter_data, container, false);
   }
 
-  private void populateEncounterTable(String dataStamp) {
+  private void populateEncounterTable() {
 
-    Log.d(TAG, "++populateEncounterTable(String)");
+    Log.d(TAG, "++populateEncounterTable()");
     FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).get()
       .addOnCompleteListener(task -> {
 
@@ -129,29 +134,21 @@ public class EncounterDataFragment  extends Fragment {
             if (resultSnapshot.getChildrenCount() > 0) {
               Log.d(TAG, "Attempting Encounter inserts: " + resultSnapshot.getChildrenCount());
               if (getActivity() != null) {
-                WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
-                boolean hadErrors = false;
+                List<EncounterEntity> encounterEntityList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
                   EncounterEntity encounterEntity = dataSnapshot.getValue(EncounterEntity.class);
                   String id = dataSnapshot.getKey();
                   if (encounterEntity != null && id != null) {
                     encounterEntity.Id = id;
                     if (encounterEntity.isValid()) {
-                      wildlifeViewModel.insertEncounter(encounterEntity);
+                      encounterEntityList.add(encounterEntity);
                     } else {
                       Log.w(TAG, "Encounter entity was invalid, not adding: " + encounterEntity.Id);
                     }
-                  } else {
-                    hadErrors = true;
                   }
                 }
 
-                if (hadErrors) {
-                  mCallback.onEncounterDataFailure("Populating local Encounter database failed.");
-                } else {
-                  Utils.setEncountersStamp(getActivity(), dataStamp);
-                  mCallback.onEncounterDataPopulated();
-                }
+                mCallback.onEncounterDataPopulate(encounterEntityList);
               } else {
                 mCallback.onEncounterDataFailure("App was not ready for operation at this time.");
               }

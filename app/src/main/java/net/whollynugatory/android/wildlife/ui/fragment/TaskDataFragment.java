@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,8 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
-import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class TaskDataFragment extends Fragment {
@@ -45,6 +45,8 @@ public class TaskDataFragment extends Fragment {
     void onTaskDataFailure(String message);
 
     void onTaskDataMissing();
+
+    void onTaskDataPopulate(List<TaskEntity> taskEntityList);
 
     void onTaskDataPopulated();
   }
@@ -85,7 +87,8 @@ public class TaskDataFragment extends Fragment {
 
             String taskStamp = Utils.getTasksStamp(getActivity());
             if (taskStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !taskStamp.equalsIgnoreCase(remoteStamp)) {
-              populateTaskTable(remoteStamp);
+              Utils.setTasksStamp(getActivity(), remoteStamp);
+              populateTaskTable();
             } else {
               Log.d(TAG, "Task data in-sync.");
               mCallback.onTaskDataPopulated();
@@ -116,9 +119,9 @@ public class TaskDataFragment extends Fragment {
     return inflater.inflate(R.layout.fragment_task_data, container, false);
   }
 
-  private void populateTaskTable(String dataStamp) {
+  private void populateTaskTable() {
 
-    Log.d(TAG, "++populateTaskTable(String)");
+    Log.d(TAG, "++populateTaskTable()");
     FirebaseDatabase.getInstance().getReference().child(Utils.TASK_ROOT).get()
       .addOnCompleteListener(task -> {
 
@@ -131,31 +134,21 @@ public class TaskDataFragment extends Fragment {
             if (resultSnapshot.getChildrenCount() > 0) {
               Log.d(TAG, "Attempting Task inserts: " + resultSnapshot.getChildrenCount());
               if (getActivity() != null) {
-                WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
-                boolean hadErrors = false;
+                List<TaskEntity> taskEntityList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
                   TaskEntity taskEntity = dataSnapshot.getValue(TaskEntity.class);
                   String id = dataSnapshot.getKey();
                   if (taskEntity != null && id != null) {
                     taskEntity.Id = id;
                     if (taskEntity.isValid()) {
-                      wildlifeViewModel.insertTask(taskEntity);
+                      taskEntityList.add(taskEntity);
                     } else {
                       Log.w(TAG, "Task entity was invalid, not adding: " + taskEntity.Id);
                     }
-                  } else {
-                    Log.w(TAG, "Failed to create Task entity.");
-                    hadErrors = true;
-                    break;
                   }
                 }
 
-                if (hadErrors) {
-                  mCallback.onTaskDataFailure("Populating local Task database failed.");
-                } else {
-                  Utils.setTasksStamp(getActivity(), dataStamp);
-                  mCallback.onTaskDataPopulated();
-                }
+                mCallback.onTaskDataPopulate(taskEntityList);
               } else {
                 mCallback.onTaskDataFailure("App was not ready for operation at this time.");
               }

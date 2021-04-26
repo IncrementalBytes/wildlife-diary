@@ -66,10 +66,7 @@ public class SummaryFragment extends Fragment {
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false);
     View view = mBinding.getRoot();
-    wildlifeViewModel.getSummaryDetails().observe(getViewLifecycleOwner(), summaryDetails -> {
-
-      mBinding.setSummary(summaryDetails);
-    });
+    wildlifeViewModel.getSummaryDetails().observe(getViewLifecycleOwner(), summaryDetails -> mBinding.setSummary(summaryDetails));
     CardView euthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
     euthanasiaCard.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
     return view;

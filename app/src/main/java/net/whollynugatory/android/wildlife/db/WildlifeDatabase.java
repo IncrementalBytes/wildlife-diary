@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
 public abstract class WildlifeDatabase extends RoomDatabase {
 
   private static final String TAG = Utils.BASE_TAG + WildlifeDatabase.class.getSimpleName();
-  private static final int NUMBER_OF_THREADS = 1;
+  private static final int NUMBER_OF_THREADS = 2;
 
   public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 

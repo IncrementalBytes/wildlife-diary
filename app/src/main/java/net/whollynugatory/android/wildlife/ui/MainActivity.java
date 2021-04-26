@@ -41,8 +41,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import net.whollynugatory.android.wildlife.InsertEncountersAsync;
+import net.whollynugatory.android.wildlife.InsertTasksAsync;
+import net.whollynugatory.android.wildlife.InsertWildlifeAsync;
+import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
+import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
+import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.UserEntity;
 import net.whollynugatory.android.wildlife.R;
+import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment;
@@ -53,6 +60,7 @@ import net.whollynugatory.android.wildlife.ui.fragment.TaskDataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.WildlifeDataFragment;
 
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
@@ -256,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterDataFailure(String message) {
 
     Log.d(TAG, "++onEncounterDataFailure(String)");
+    Utils.setEncountersStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }
 
@@ -263,11 +272,19 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterDataMissing() {
 
     Log.d(TAG, "++onEncounterDataMissing()");
+    Utils.setEncountersStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(
       String.format(
         Locale.US,
         "No encounters found. %s",
         mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
+  }
+
+  @Override
+  public void onEncounterDataPopulate(List<EncounterEntity> encounterEntityList) {
+
+    Log.d(TAG, "++onEncounterDataPopulate(List<EncounterEntity>)");
+    new InsertEncountersAsync(MainActivity.this, WildlifeDatabase.getInstance(this).encounterDao(), encounterEntityList).execute();
   }
 
   @Override
@@ -295,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements
   public void onTaskDataFailure(String message) {
 
     Log.d(TAG, "++onTaskDataFailure(String)");
+    Utils.setTasksStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }
 
@@ -302,7 +320,15 @@ public class MainActivity extends AppCompatActivity implements
   public void onTaskDataMissing() {
 
     Log.d(TAG, "++onTaskDataMissing()");
+    Utils.setTasksStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar("Task data is missing from Firebase, cannot update local database.");
+  }
+
+  @Override
+  public void onTaskDataPopulate(List<TaskEntity> taskEntityList) {
+
+    Log.d(TAG, "++onTaskDataPopulate(List<TaskEntity>)");
+    new InsertTasksAsync(MainActivity.this, WildlifeDatabase.getInstance(this).taskDao(), taskEntityList).execute();
   }
 
   @Override
@@ -310,12 +336,14 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onTaskDataPopulated()");
     replaceFragment(WildlifeDataFragment.newInstance());
+
   }
 
   @Override
   public void onWildlifeDataFailure(String message) {
 
     Log.d(TAG, "++onWildlifeDataFailure(String)");
+    Utils.setWildlifeStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }
 
@@ -323,7 +351,15 @@ public class MainActivity extends AppCompatActivity implements
   public void onWildlifeDataMissing() {
 
     Log.d(TAG, "++onWildlifeDataMissing()");
+    Utils.setWildlifeStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar("Task data is missing from Firebase, cannot update local database.");
+  }
+
+  @Override
+  public void onWildlifeDataPopulate(List<WildlifeEntity> wildlifeEntityList) {
+
+    Log.d(TAG, "++onWildlifeDataPopulated(List<WildlifeEntity>)");
+    new InsertWildlifeAsync(MainActivity.this, WildlifeDatabase.getInstance(this).wildlifeDao(), wildlifeEntityList).execute();
   }
 
   @Override
@@ -334,16 +370,29 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   /*
-    Private Method(s)
+    Public Method(s)
    */
-  private void closeSnackbar() {
+  public void encounterInsertionComplete() {
 
-    Log.d(TAG, "++closeSnackbar()");
-    if (mSnackbar != null && mSnackbar.isShownOrQueued()) {
-      mSnackbar.dismiss();
-    }
+    Log.d(TAG, "++encounterInsertionComplete()");
+    replaceFragment(EncounterListFragment.newInstance(mUserEntity.Id));
   }
 
+  public void taskInsertionComplete() {
+
+    Log.d(TAG, "++taskInsertionComplete()");
+    replaceFragment(WildlifeDataFragment.newInstance());
+  }
+
+  public void wildlifeInsertionComplete() {
+
+    Log.d(TAG, "++wildlifeInsertionComplete()");
+    replaceFragment(EncounterDataFragment.newInstance());
+  }
+
+  /*
+    Private Method(s)
+   */
   private void manageNotificationChannel() {
 
     Log.d(TAG, "++manageNotificationChannel()");

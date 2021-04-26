@@ -264,7 +264,6 @@ public class EncounterFragment extends Fragment {
                   mCallback.onEncounterFailure("Failed to added encounter.");
                 } else {
                   mCallback.onEncounterAdded();
-                  mDateEdit.setText("");
                   mWildlifeText.setText("");
                   mEncountersAdded++;
                 }

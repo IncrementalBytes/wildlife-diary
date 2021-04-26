@@ -33,4 +33,7 @@ public interface WildlifeDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(WildlifeEntity wildlifeEntity);
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  void insertAll(List<WildlifeEntity> wildlifeEntityList);
 }

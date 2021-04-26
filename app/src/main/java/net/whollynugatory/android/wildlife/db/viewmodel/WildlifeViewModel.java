@@ -64,19 +64,4 @@ public class WildlifeViewModel extends AndroidViewModel {
 
     return mWildlifeRepository.getAllWildlife();
   }
-
-  public void insertEncounter(EncounterEntity encounterEntity) {
-
-    mWildlifeRepository.insert(encounterEntity);
-  }
-
-  public void insertTask(TaskEntity taskEntity) {
-
-    mWildlifeRepository.insert(taskEntity);
-  }
-
-  public void insertWildlife(WildlifeEntity wildlifeEntity) {
-
-    mWildlifeRepository.insert(wildlifeEntity);
-  }
 }

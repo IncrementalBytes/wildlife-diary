@@ -75,22 +75,4 @@ public class WildlifeRepository {
 
     return mEncounterDao.getSummaryDetails();
   }
-
-  public void insert(EncounterEntity encounterEntity) {
-
-    Log.d(TAG, encounterEntity.toString());
-    WildlifeDatabase.databaseWriteExecutor.execute(() -> mEncounterDao.insert(encounterEntity));
-  }
-
-  public void insert(TaskEntity taskEntity) {
-
-    Log.d(TAG, taskEntity.toString());
-    WildlifeDatabase.databaseWriteExecutor.execute(() -> mTaskDao.insert(taskEntity));
-  }
-
-  public void insert(WildlifeEntity wildlifeEntity) {
-
-    Log.d(TAG, wildlifeEntity.toString());
-    WildlifeDatabase.databaseWriteExecutor.execute(() -> mWildlifeDao.insert(wildlifeEntity));
-  }
 }

@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,8 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
-import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class WildlifeDataFragment  extends Fragment {
@@ -45,6 +45,8 @@ public class WildlifeDataFragment  extends Fragment {
     void onWildlifeDataFailure(String message);
 
     void onWildlifeDataMissing();
+
+    void onWildlifeDataPopulate(List<WildlifeEntity> wildlifeEntityList);
 
     void onWildlifeDataPopulated();
   }
@@ -85,7 +87,8 @@ public class WildlifeDataFragment  extends Fragment {
 
             String wildlifeStamp = Utils.getWildlifeStamp(getActivity());
             if (wildlifeStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !wildlifeStamp.equalsIgnoreCase(remoteStamp)) {
-              populateWildlifeTable(remoteStamp);
+              Utils.setWildlifeStamp(getActivity(), remoteStamp);
+              populateWildlifeTable();
             } else {
               Log.d(TAG, "Wildlife data in-sync.");
               mCallback.onWildlifeDataPopulated();
@@ -116,9 +119,9 @@ public class WildlifeDataFragment  extends Fragment {
     return inflater.inflate(R.layout.fragment_wildlife_data, container, false);
   }
 
-  private void populateWildlifeTable(String dataStamp) {
+  private void populateWildlifeTable() {
 
-    Log.d(TAG, "++populateWildlifeTable(String)");
+    Log.d(TAG, "++populateWildlifeTable()");
     FirebaseDatabase.getInstance().getReference().child(Utils.WILDLIFE_ROOT).get()
       .addOnCompleteListener(task -> {
 
@@ -131,29 +134,21 @@ public class WildlifeDataFragment  extends Fragment {
             if (resultSnapshot.getChildrenCount() > 0) {
               Log.d(TAG, "Attempting Wildlife inserts: " + resultSnapshot.getChildrenCount());
               if (getActivity() != null) {
-                WildlifeViewModel wildlifeViewModel = new ViewModelProvider(getActivity()).get(WildlifeViewModel.class);
-                boolean hadErrors = false;
+                List<WildlifeEntity> wildlifeEntityList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
                   WildlifeEntity wildlifeEntity = dataSnapshot.getValue(WildlifeEntity.class);
                   String id = dataSnapshot.getKey();
                   if (wildlifeEntity != null && id != null) {
                     wildlifeEntity.Id = id;
                     if (wildlifeEntity.isValid()) {
-                      wildlifeViewModel.insertWildlife(wildlifeEntity);
+                      wildlifeEntityList.add(wildlifeEntity);
                     } else {
                       Log.w(TAG, "Wildlife entity was invalid, not adding: " + wildlifeEntity.Id);
                     }
-                  } else {
-                    hadErrors = true;
                   }
                 }
 
-                if (hadErrors) {
-                  mCallback.onWildlifeDataFailure("Populating local Wildlife database failed.");
-                } else {
-                  Utils.setWildlifeStamp(getActivity(), dataStamp);
-                  mCallback.onWildlifeDataPopulated();
-                }
+                mCallback.onWildlifeDataPopulate(wildlifeEntityList);
               } else {
                 mCallback.onWildlifeDataFailure("App was not ready for operation at this time.");
               }

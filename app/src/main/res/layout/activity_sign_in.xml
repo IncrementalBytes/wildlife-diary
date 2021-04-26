@@ -9,7 +9,6 @@
   tools:context="net.whollynugatory.android.wildlife.ui.SignInActivity">
 
   <TextView
-    android:id="@+id/sign_in_text_welcome"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/default_view_margin"

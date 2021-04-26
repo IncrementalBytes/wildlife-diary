@@ -109,4 +109,7 @@ public interface EncounterDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(EncounterEntity encounterEntity);
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  void insertAll(List<EncounterEntity> encounterEntityList);
 }
