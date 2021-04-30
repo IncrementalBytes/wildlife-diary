@@ -54,7 +54,6 @@ public class WildlifeMessagingService extends FirebaseMessagingService {
   public void onNewToken(@NonNull String token) {
     super.onNewToken(token);
 
-    Log.d(TAG,"Token: " +  token);
     sendRegistrationToServer(token);
   }
 

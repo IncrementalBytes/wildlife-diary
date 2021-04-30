@@ -20,34 +20,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import net.whollynugatory.android.wildlife.R;
-import net.whollynugatory.android.wildlife.SpinnerItemState;
+import net.whollynugatory.android.wildlife.TaskItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomAdapter extends ArrayAdapter<SpinnerItemState> {
+public class TaskListItemAdapter extends ArrayAdapter<TaskItem> {
 
   private final Context mContext;
-  private final ArrayList<SpinnerItemState> mListState;
-  private boolean isFromView = false;
+  private final ArrayList<TaskItem> mList;
 
-  public CustomAdapter(Context context, int resource, List<SpinnerItemState> objects) {
+  public TaskListItemAdapter(Context context, int resource, List<TaskItem> objects) {
     super(context, resource, objects);
 
     mContext = context;
-    mListState = (ArrayList<SpinnerItemState>) objects;
-  }
-
-  @Override
-  public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-
-    return getCustomView(position, convertView);
+    mList = (ArrayList<TaskItem>) objects;
   }
 
   @Override
@@ -61,42 +51,23 @@ public class CustomAdapter extends ArrayAdapter<SpinnerItemState> {
     final ViewHolder holder;
     if (convertView == null) {
       LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-      convertView = layoutInflater.inflate(R.layout.spinner_item, null);
+      convertView = layoutInflater.inflate(R.layout.task_list_item, null);
       holder = new ViewHolder();
-      holder.NameText = convertView.findViewById(R.id.spinner_text_name);
-      holder.ItemCheckBox = convertView.findViewById(R.id.spinner_check);
+      holder.NameText = convertView.findViewById(R.id.task_list_item_text_name);
+      holder.DescriptionText = convertView.findViewById(R.id.task_list_item_text_desc);
       convertView.setTag(holder);
     } else {
       holder = (ViewHolder) convertView.getTag();
     }
 
-    holder.NameText.setText(mListState.get(position).getTitle());
-
-    isFromView = true;
-    holder.ItemCheckBox.setChecked(mListState.get(position).isSelected());
-    isFromView = false;
-
-    if ((position == 0)) {
-      holder.ItemCheckBox.setVisibility(View.INVISIBLE);
-    } else {
-      holder.ItemCheckBox.setVisibility(View.VISIBLE);
-    }
-
-    holder.ItemCheckBox.setTag(position);
-    holder.ItemCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
-      int getPosition = (Integer) buttonView.getTag();
-      if (!isFromView) {
-        mListState.get(position).setSelected(isChecked);
-      }
-    });
-
+    holder.NameText.setText(mList.get(position).getName());
+    holder.DescriptionText.setText(mList.get(position).getDescription());
     return convertView;
   }
 
   private static class ViewHolder {
 
     private TextView NameText;
-    private CheckBox ItemCheckBox;
+    private TextView DescriptionText;
   }
 }

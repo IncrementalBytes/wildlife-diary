@@ -6,6 +6,7 @@
     <import type="android.view.View"/>
     <import type="net.whollynugatory.android.wildlife.Utils"/>
     <variable name="summary" type="net.whollynugatory.android.wildlife.db.entity.SummaryDetails"/>
+    <variable name="fragment" type="net.whollynugatory.android.wildlife.ui.fragment.SummaryFragment" />
   </data>
 
   <androidx.core.widget.NestedScrollView
@@ -30,7 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -68,7 +70,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_total_encounters">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_total_encounters"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -106,7 +109,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_unique_encounters">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_unique_encounters"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -144,7 +148,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/summary_guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_most_encountered">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_most_encountered"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -182,7 +187,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/summary_guideline"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_most_encountered">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_most_encountered"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -220,7 +226,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/summary_guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_banded">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_banded"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -258,7 +265,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/summary_guideline"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_euthanasia">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_euthanasia"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -296,7 +304,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/summary_guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_exam">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_exam"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -334,7 +343,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/summary_guideline"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_force_fed">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_force_fed"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -372,7 +382,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/summary_guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_gavage">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_gavage"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -410,7 +421,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/summary_guideline"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_medication">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_medication"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -448,7 +460,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/summary_guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_subcutaneous">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_handled_subcutaneous"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -486,7 +499,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/summary_guideline"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_force_fed">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_force_fed"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -524,7 +538,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/summary_guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_gavage">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_gavage"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -562,7 +577,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/summary_guideline"
-        app:layout_constraintTop_toBottomOf="@id/summary_card_medication_ocular">
+        app:layout_constraintTop_toBottomOf="@id/summary_card_medication_ocular"
+        android:onClick="@{(view) -> fragment.onCardClick(view)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"

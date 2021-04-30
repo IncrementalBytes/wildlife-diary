@@ -52,6 +52,14 @@ public class TaskEntity implements Serializable {
     Name = Utils.UNKNOWN_STRING;
   }
 
+  public TaskEntity(@NonNull String id, @NonNull String name, String description, boolean isSensitive) {
+
+    Description = description;
+    Id = id;
+    IsSensitive = isSensitive;
+    Name = name;
+  }
+
   @NonNull
   @Override
   public String toString() {

@@ -35,7 +35,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-import net.whollynugatory.android.wildlife.ui.CustomAdapter;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.SpinnerItemState;
 import net.whollynugatory.android.wildlife.Utils;
@@ -44,6 +43,7 @@ import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 import net.whollynugatory.android.wildlife.ui.AutoCompleteAdapter;
+import net.whollynugatory.android.wildlife.ui.SpinnerItemAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,7 +70,7 @@ public class EncounterFragment extends Fragment {
   private AutoCompleteTextView mWildlifeText;
 
   private int mEncountersAdded;
-  private String mUserId;
+  private String mFollowingUserId;
   private HashMap<String, String> mWildlifeMap;
   private WildlifeViewModel mWildlifeViewModel;
 
@@ -133,12 +133,12 @@ public class EncounterFragment extends Fragment {
     }
   };
 
-  public static EncounterFragment newInstance(String userId) {
+  public static EncounterFragment newInstance(String followingUserId) {
 
     Log.d(TAG, "++newInstance(String)");
     EncounterFragment fragment = new EncounterFragment();
     Bundle arguments = new Bundle();
-    arguments.putString(Utils.ARG_FIREBASE_USER_ID, userId);
+    arguments.putString(Utils.ARG_FOLLOWING_USER_ID, followingUserId);
     fragment.setArguments(arguments);
     return fragment;
   }
@@ -160,10 +160,10 @@ public class EncounterFragment extends Fragment {
     Log.d(TAG, "++onAttach(Context)");
     Bundle arguments = getArguments();
     if (arguments != null) {
-      if (arguments.containsKey(Utils.ARG_FIREBASE_USER_ID)) {
-        mUserId = arguments.getString(Utils.ARG_FIREBASE_USER_ID);
+      if (arguments.containsKey(Utils.ARG_FOLLOWING_USER_ID)) {
+        mFollowingUserId = arguments.getString(Utils.ARG_FOLLOWING_USER_ID);
       } else {
-        mUserId = Utils.UNKNOWN_USER_ID;
+        mFollowingUserId = Utils.UNKNOWN_USER_ID;
       }
     } else {
       Log.e(TAG, "Arguments were null.");
@@ -209,7 +209,7 @@ public class EncounterFragment extends Fragment {
       }
 
       itemStates.sort(new Utils.SortByName());
-      CustomAdapter customAdapter = new CustomAdapter(getActivity(), 0, itemStates);
+      SpinnerItemAdapter customAdapter = new SpinnerItemAdapter(getActivity(), 0, itemStates);
       mTaskSpinner.setAdapter(customAdapter);
       prepareWildlifeList();
     });
@@ -240,7 +240,7 @@ public class EncounterFragment extends Fragment {
       EncounterEntity encounterEntity = new EncounterEntity();
       encounterEntity.Date = Utils.convertToLong(mDateEdit.getText().toString());
       encounterEntity.EncounterId = UUID.randomUUID().toString();
-      encounterEntity.UserId = mUserId;
+      encounterEntity.UserId = mFollowingUserId;
 
       String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
       if (mWildlifeMap.containsKey(selectedWildlifeAbbreviation)) {

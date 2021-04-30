@@ -33,7 +33,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
   EncounterDataFragment.OnEncounterDataListener,
   EncounterFragment.OnEncounterListener,
   EncounterListFragment.OnEncounterListListener,
+  SummaryFragment.OnSummaryListListener,
   TaskDataFragment.OnTaskDataListener,
   WildlifeDataFragment.OnWildlifeDataListener {
 
@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements
     mAddEncounterButton = findViewById(R.id.main_fab_add);
     mAddEncounterButton.setVisibility(View.INVISIBLE);
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
-    BottomNavigationView navigationView = findViewById(R.id.main_nav_bottom);
     setSupportActionBar(mainToolbar);
 
     getSupportFragmentManager().addOnBackStackChangedListener(() -> {
@@ -108,23 +107,6 @@ public class MainActivity extends AppCompatActivity implements
       }
     });
 
-    navigationView.setOnNavigationItemSelectedListener(menuItem -> {
-
-      Log.d(TAG, "++onNavigationItemSelectedListener(MenuItem)");
-      if (menuItem.getItemId() == R.id.navigation_encounters) {
-        replaceFragment(EncounterListFragment.newInstance(mUserEntity.Id));
-        return true;
-      } else if (menuItem.getItemId() == R.id.navigation_summary) {
-        replaceFragment(SummaryFragment.newInstance());
-        return true;
-      } else if (menuItem.getItemId() == R.id.navigation_settings) {
-        replaceFragment(UserSettingsFragment.newInstance());
-        return true;
-      } else {
-        return false;
-      }
-    });
-
     FirebaseMessaging.getInstance().subscribeToTopic("wildlifeNotification");
 
     String userId = getIntent().getStringExtra(Utils.ARG_FIREBASE_USER_ID);
@@ -135,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements
     if (userId.isEmpty() || userId.equals(Utils.UNKNOWN_USER_ID)) {
       showMessageInSnackBar("Unable to determine user data. Please sign out of app and try again.");
     } else {
-      Log.d(TAG, "Firebase UID: " + userId);
       String finalUserId = userId;
       FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
         .addOnCompleteListener(task -> {
@@ -158,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements
                 mUserEntity.Id = finalUserId;
                 if (mUserEntity.CanAdd) {
                   mAddEncounterButton.setVisibility(View.VISIBLE);
-                  mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance(mUserEntity.Id)));
+                  mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance(mUserEntity.FollowingId)));
                 }
               }
 
@@ -191,7 +172,9 @@ public class MainActivity extends AppCompatActivity implements
   public boolean onOptionsItemSelected(MenuItem item) {
 
     Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
-    if (item.getItemId() == R.id.menu_settings) {
+    if (item.getItemId() == R.id.menu_home) {
+      replaceFragment(SummaryFragment.newInstance(mUserEntity.FollowingId));
+    } else if (item.getItemId() == R.id.menu_settings) {
       replaceFragment(UserSettingsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_logout) {
       AlertDialog dialog = new AlertDialog.Builder(this)
@@ -291,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterDataPopulated() {
 
     Log.d(TAG, "++onEncounterDataPopulated()");
-    replaceFragment(EncounterListFragment.newInstance(mUserEntity.Id));
+    replaceFragment(SummaryFragment.newInstance(mUserEntity.FollowingId));
   }
 
   @Override
@@ -306,6 +289,12 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onEncounterListPopulated(int)");
     // TODO: what to do when list is ready?
+  }
+
+  @Override
+  public void onMostEncountered() {
+
+    Log.d(TAG, "onMostEncountered()");
   }
 
   @Override
@@ -336,7 +325,19 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onTaskDataPopulated()");
     replaceFragment(WildlifeDataFragment.newInstance());
+  }
 
+  @Override
+  public void onTotalEncounters() {
+
+    Log.d(TAG, "++onTotalEncounters()");
+    replaceFragment(EncounterListFragment.newInstance(mUserEntity.FollowingId));
+  }
+
+  @Override
+  public void onUniqueEncounters() {
+
+    Log.d(TAG, "++onUniqueEncounters()");
   }
 
   @Override
@@ -375,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements
   public void encounterInsertionComplete() {
 
     Log.d(TAG, "++encounterInsertionComplete()");
-    replaceFragment(EncounterListFragment.newInstance(mUserEntity.Id));
+    replaceFragment(SummaryFragment.newInstance(mUserEntity.FollowingId));
   }
 
   public void taskInsertionComplete() {

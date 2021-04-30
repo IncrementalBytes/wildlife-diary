@@ -69,17 +69,18 @@ public interface EncounterDao {
   LiveData<EncounterDetails> getEncounterDetailsById(String encounterId);
 
   @Query("SELECT Encounter.date AS Date, " +
-    "Encounter.user_id AS UserId, " +
     "Encounter.encounter_id AS EncounterId, " +
-    "Wildlife.id AS WildlifeId, " +
     "Wildlife.friendly_name AS WildlifeSpecies, " +
-    "Wildlife.abbreviation AS WildlifeAbbreviation " +
+    "Wildlife.abbreviation AS WildlifeAbbreviation, " +
+    "Tasks.name AS TaskName, " +
+    "Tasks.description AS TaskDescription, " +
+    "Tasks.is_sensitive AS TaskIsSensitive " +
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
+    "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
     "WHERE user_id == :userId " +
     "GROUP BY Encounter.encounter_id " +
-    "ORDER BY Date DESC " +
-    "LIMIT 50")
+    "ORDER BY Date DESC, EncounterId")
   LiveData<List<EncounterSummary>> getEncounterSummaries(String userId);
 
   @Query("SELECT COUNT(DISTINCT encounter_id) AS TotalEncounters, " +
@@ -100,15 +101,17 @@ public interface EncounterDao {
     "        (SELECT wt.friendly_name AS FriendlyName, wildlife_id, COUNT(*) AS Count " +
     "            FROM encounter_table " +
     "            INNER JOIN wildlife_table AS wt ON wt.id == encounter_table.wildlife_id " +
+    "            WHERE user_id == :userId " +
     "            GROUP BY wildlife_id " +
     "            ORDER BY Count DESC) " +
     "            LIMIT 1) AS MostEncountered " +
     "    FROM encounter_table " +
-    "    INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id")
-  LiveData<SummaryDetails> getSummaryDetails();
+    "    INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
+    "    WHERE user_id == :userId")
+  LiveData<SummaryDetails> getSummary(String userId);
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insert(EncounterEntity encounterEntity);
+//  @Query("SELECT * FROM encounter_table")
+//  LiveData<SummaryDetails> getSummaryDetailsById(String summaryId);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertAll(List<EncounterEntity> encounterEntityList);

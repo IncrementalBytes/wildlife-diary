@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -33,16 +34,31 @@ import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentSummaryBinding;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
+import java.util.Locale;
+
 public class SummaryFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + SummaryFragment.class.getSimpleName();
 
+  public interface OnSummaryListListener {
+
+    void onMostEncountered();
+    void onTotalEncounters();
+    void onUniqueEncounters();
+  }
+
   private FragmentSummaryBinding mBinding;
+  private OnSummaryListListener mCallback;
+  private String mFollowingUserId;
 
-  public static SummaryFragment newInstance() {
+  public static SummaryFragment newInstance(String followingUserId) {
 
-    Log.d(TAG, "++newInstance()");
-    return new SummaryFragment();
+    Log.d(TAG, "++newInstance(String)");
+    SummaryFragment fragment = new SummaryFragment();
+    Bundle arguments = new Bundle();
+    arguments.putSerializable(Utils.ARG_FOLLOWING_USER_ID, followingUserId);
+    fragment.setArguments(arguments);
+    return fragment;
   }
 
   @Override
@@ -57,18 +73,37 @@ public class SummaryFragment extends Fragment {
     super.onAttach(context);
 
     Log.d(TAG, "++onAttach(Context)");
+    try {
+      mCallback = (OnSummaryListListener) context;
+    } catch (ClassCastException e) {
+      throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
+    }
+
+    Bundle arguments = getArguments();
+    if (arguments != null) {
+      if (arguments.containsKey(Utils.ARG_FOLLOWING_USER_ID)) {
+        mFollowingUserId = (String) arguments.getSerializable(Utils.ARG_FOLLOWING_USER_ID);
+      } else {
+        mFollowingUserId = Utils.UNKNOWN_USER_ID;
+      }
+    } else {
+      Log.e(TAG, "Arguments were null.");
+    }
   }
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false);
+    mBinding.setFragment(this);
+
     View view = mBinding.getRoot();
-    wildlifeViewModel.getSummaryDetails().observe(getViewLifecycleOwner(), summaryDetails -> mBinding.setSummary(summaryDetails));
     CardView euthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
     euthanasiaCard.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
+
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    wildlifeViewModel.getSummary(mFollowingUserId).observe(getViewLifecycleOwner(), summaryDetails -> mBinding.setSummary(summaryDetails));
     return view;
   }
 
@@ -78,5 +113,45 @@ public class SummaryFragment extends Fragment {
 
     Log.d(TAG, "++onDestroy()");
     mBinding = null;
+  }
+
+  public void onCardClick(View view) {
+
+    TextView targetDescription = null;
+    if (view.getId() == R.id.summary_card_total_encounters) {
+      mCallback.onTotalEncounters();
+    } else if (view.getId() == R.id.summary_card_unique_encounters) {
+      mCallback.onUniqueEncounters();
+    } else if (view.getId() == R.id.summary_card_most_encountered) {
+      mCallback.onMostEncountered();
+    } else if (view.getId() == R.id.summary_card_banded) {
+      // TODO: list of wildlife banded
+    } else if (view.getId() == R.id.summary_card_handled_euthanasia) {
+      // TODO: list of wildlife handled for euthanasia
+    } else if (view.getId() == R.id.summary_card_handled_exam) {
+      // TODO: list of wildlife handled for exam
+    } else if (view.getId() == R.id.summary_card_handled_force_fed) {
+      // TODO: list of wildlife handled for force fed
+    } else if (view.getId() == R.id.summary_card_handled_gavage) {
+      // TODO: list of wildlife handled for gavage
+    } else if (view.getId() == R.id.summary_card_handled_medication) {
+      // TODO: list of wildlife handled for medication
+    } else if (view.getId() == R.id.summary_card_handled_subcutaneous) {
+      // TODO: list of wildlife handled for subcutaneous
+    } else if (view.getId() == R.id.summary_card_force_fed) {
+      // TODO: list of wildlife force fed
+    } else if (view.getId() == R.id.summary_card_gavage) {
+      // TODO: list of wildlife handled for gavage
+    } else if (view.getId() == R.id.summary_card_medication_ocular) {
+      // TODO: list of wildlife medicated ocular
+    } else if (view.getId() == R.id.summary_card_medication_oral) {
+      // TODO: list of wildlife medicated oral
+    } else if (view.getId() == R.id.summary_card_subcutaneous) {
+      // TODO: list of wildlife given subcutaneous fluids
+    }
+
+    if (targetDescription != null) {
+      targetDescription.setVisibility(targetDescription.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
   }
 }

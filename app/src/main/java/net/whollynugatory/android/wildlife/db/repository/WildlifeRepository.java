@@ -26,7 +26,6 @@ import net.whollynugatory.android.wildlife.db.dao.EncounterDao;
 import net.whollynugatory.android.wildlife.db.dao.TaskDao;
 import net.whollynugatory.android.wildlife.db.dao.WildlifeDao;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
-import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
 import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
@@ -71,8 +70,13 @@ public class WildlifeRepository {
     return mEncounterDao.getEncounterSummaries(userId);
   }
 
-  public LiveData<SummaryDetails> getSummaryDetails() {
+  public LiveData<SummaryDetails> getSummary(String userId) {
 
-    return mEncounterDao.getSummaryDetails();
+    return mEncounterDao.getSummary(userId);
   }
+
+//  public LiveData<SummaryDetails> getSummaryDetails(String summaryId) {
+//
+//    return mEncounterDao.getSummaryDetailsById(summaryId);
+//  }
 }

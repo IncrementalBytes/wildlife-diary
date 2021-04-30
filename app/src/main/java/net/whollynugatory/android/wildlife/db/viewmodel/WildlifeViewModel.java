@@ -20,7 +20,6 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
 import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
@@ -50,10 +49,15 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getEncounterSummaries(userId);
   }
 
-  public LiveData<SummaryDetails> getSummaryDetails() {
+  public LiveData<SummaryDetails> getSummary(String userId) {
 
-    return mWildlifeRepository.getSummaryDetails();
+    return mWildlifeRepository.getSummary(userId);
   }
+
+//  public LiveData<SummaryDetails> getSummaryDetailsById(String summaryId) {
+//
+//    return mWildlifeRepository.getSummaryDetails(summaryId);
+//  }
 
   public LiveData<List<TaskEntity>> getTasks() {
 

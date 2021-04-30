@@ -49,4 +49,5 @@
   <string name="header_banded">Banded</string>
   <string name="header_most_encountered">Most Encountered</string>
   <string name="desc_task_completed">Shows whether or not task was completed during this encounter</string>
+  <string name="menu_home">Home</string>
 </resources>

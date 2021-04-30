@@ -32,8 +32,5 @@ public interface WildlifeDao {
   LiveData<List<WildlifeEntity>> getAll();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insert(WildlifeEntity wildlifeEntity);
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertAll(List<WildlifeEntity> wildlifeEntityList);
 }

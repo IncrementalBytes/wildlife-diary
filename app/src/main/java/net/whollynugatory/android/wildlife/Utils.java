@@ -30,10 +30,13 @@ public class Utils {
 
   public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
+  public static final String ARG_FOLLOWING_USER_ID = "following-id";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String DATA_STAMPS_ROOT = "DataStamps";
+  public static final String DEFAULT_FOLLOWING_USER_ID = "leqPZhhUQ1dMcwiGLxpr1fOv9d63";
   public static final String ENCOUNTER_ROOT = "Encounters";
+  public static final String ARG_SUMMARY_ID = "summary_id";
   public static final String TASK_ROOT = "Tasks";
   public static final String UNKNOWN_ID = "000000000-0000-0000-0000-000000000000";
   public static final String UNKNOWN_STRING = "UNKNOWN";

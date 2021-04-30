@@ -28,9 +28,12 @@ public class UserEntity implements Serializable {
 
   public boolean CanAdd;
 
+  public String FollowingId;
+
   public UserEntity() {
 
-    Id = Utils.UNKNOWN_USER_ID;
     CanAdd = false;
+    FollowingId = Utils.DEFAULT_FOLLOWING_USER_ID;
+    Id = Utils.UNKNOWN_USER_ID;
   }
 }
