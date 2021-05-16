@@ -29,7 +29,7 @@
     android:layout_marginBottom="@dimen/default_view_margin"
     android:singleLine="true"
     android:text="@string/placeholder"
-    android:textColor="@color/blue"
+    android:textColor="@color/lite_blue"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/encounter_item_wildlife"/>
 

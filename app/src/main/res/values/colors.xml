@@ -2,10 +2,13 @@
 <resources>
   <color name="black">#FF000000</color>
   <color name="white">#FFFFFFFF</color>
-  <color name="green">#FF4CAF50</color>
-  <color name="dark_green">#FF087F23</color>
-  <color name="background_green">#FF1B5E20</color>
-  <color name="lite_blue">#FF8BF6FF</color>
-  <color name="blue">#FF4FC3F7</color>
-  <color name="bright_orange">#FFF57F17</color>
+  <color name="green">#00C853</color> <!-- Material A700 -->
+  <color name="lite_green">#64DD17</color> <!-- Material A700 -->
+  <color name="dark_green">#33691E</color> <!-- Material 900 -->
+  <color name="background_green">#1B5E20</color> <!-- Material 900 -->
+  <color name="blue">#2962FF</color> <!-- Material A700 -->
+  <color name="lite_blue">#00B8D4</color> <!-- Material A700 -->
+  <color name="dark_blue">#0D47A1</color> <!-- Material 900 -->
+  <color name="background_blue">#1A237E</color> <!-- Material 900 -->
+  <color name="bright_orange">#FF6F00</color> <!-- Material 900 -->
 </resources>
