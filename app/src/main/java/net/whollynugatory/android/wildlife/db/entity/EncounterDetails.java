@@ -17,68 +17,20 @@ package net.whollynugatory.android.wildlife.db.entity;
 
 import net.whollynugatory.android.wildlife.Utils;
 
+import java.io.Serializable;
+
 /**
  * Class defining what tasks were performed during an encounter.
  */
-public class EncounterDetails {
+public class EncounterDetails implements Serializable {
 
   public long Date;
 
-  public String DescriptionBanded;
-
-  public String DescriptionForceFed;
-
-  public String DescriptionGavage;
-
-  public String DescriptionHandledEuthanasia;
-
-  public String DescriptionHandledExam;
-
-  public String DescriptionHandledForceFed;
-
-  public String DescriptionHandledGavage;
-
-  public String DescriptionHandledMedication;
-
-  public String DescriptionHandledSubcutaneous;
-
-  public String DescriptionOcularMedication;
-
-  public String DescriptionOralMedication;
-
-  public String DescriptionSubcutaneous;
-
   public String EncounterId;
 
-  public boolean IsBanded;
-
-  public boolean IsForceFed;
-
-  public boolean IsGavage;
-
-  public boolean IsHandledEuthanasia;
-
-  public boolean IsHandledExam;
-
-  public boolean IsHandledForceFed;
-
-  public boolean IsHandledGavage;
-
-  public boolean IsHandledMedication;
-
-  public boolean IsHandledSubcutaneous;
-
-  public boolean IsOcularMedication;
-
-  public boolean IsOralMedication;
-
-  public boolean IsSubcutaneous;
-
-  public String UserId;
+  public String TaskIds;
 
   public String WildlifeAbbreviation;
-
-  public String WildlifeId;
 
   public String WildlifeSpecies;
 
@@ -86,34 +38,9 @@ public class EncounterDetails {
   public EncounterDetails() {
 
     Date = 0;
-    DescriptionBanded = "";
-    DescriptionForceFed = "";
-    DescriptionGavage = "";
-    DescriptionHandledEuthanasia = "";
-    DescriptionHandledExam = "";
-    DescriptionHandledForceFed = "";
-    DescriptionHandledGavage = "";
-    DescriptionHandledMedication = "";
-    DescriptionHandledSubcutaneous = "";
-    DescriptionOcularMedication = "";
-    DescriptionOralMedication = "";
-    DescriptionSubcutaneous = "";
     EncounterId = Utils.UNKNOWN_ID;
-    IsBanded = false;
-    IsForceFed = false;
-    IsGavage = false;
-    IsHandledEuthanasia = false;
-    IsHandledExam = false;
-    IsHandledForceFed = false;
-    IsHandledGavage = false;
-    IsHandledMedication = false;
-    IsHandledSubcutaneous = false;
-    IsOcularMedication = false;
-    IsOralMedication = false;
-    IsSubcutaneous = false;
-    UserId = Utils.UNKNOWN_USER_ID;
+    TaskIds = Utils.UNKNOWN_ID;
     WildlifeAbbreviation = Utils.UNKNOWN_STRING;
-    WildlifeId = Utils.UNKNOWN_ID;
     WildlifeSpecies = Utils.UNKNOWN_STRING;
   }
 }

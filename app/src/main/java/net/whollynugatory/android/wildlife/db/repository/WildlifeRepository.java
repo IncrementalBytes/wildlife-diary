@@ -26,10 +26,10 @@ import net.whollynugatory.android.wildlife.db.dao.EncounterDao;
 import net.whollynugatory.android.wildlife.db.dao.TaskDao;
 import net.whollynugatory.android.wildlife.db.dao.WildlifeDao;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
-import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
 import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
+import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
 
 import java.util.List;
 
@@ -60,14 +60,9 @@ public class WildlifeRepository {
     return mWildlifeDao.getAll();
   }
 
-  public LiveData<EncounterDetails> getEncounterDetailsById(String encounterId) {
+  public LiveData<List<WildlifeSummary>> getMostEncountered(String userId) {
 
-    return mEncounterDao.getEncounterDetailsById(encounterId);
-  }
-
-  public LiveData<List<EncounterSummary>> getEncounterSummaries(String userId) {
-
-    return mEncounterDao.getEncounterSummaries(userId);
+    return mEncounterDao.getMostEncountered(userId);
   }
 
   public LiveData<SummaryDetails> getSummary(String userId) {
@@ -75,8 +70,13 @@ public class WildlifeRepository {
     return mEncounterDao.getSummary(userId);
   }
 
-//  public LiveData<SummaryDetails> getSummaryDetails(String summaryId) {
-//
-//    return mEncounterDao.getSummaryDetailsById(summaryId);
-//  }
+  public LiveData<List<EncounterDetails>> getTotalEncounters(String userId) {
+
+    return mEncounterDao.getTotalEncounters(userId);
+  }
+
+  public LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId) {
+
+    return mEncounterDao.getUniqueEncountered(userId);
+  }
 }

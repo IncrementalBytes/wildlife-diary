@@ -46,9 +46,12 @@ public class TaskDataFragment extends Fragment {
 
     void onTaskDataMissing();
 
+    /*
+      Instructs caller to update local db with passed data.
+     */
     void onTaskDataPopulate(List<TaskEntity> taskEntityList);
 
-    void onTaskDataPopulated();
+    void onTaskDataSynced();
   }
 
   private OnTaskDataListener mCallback;
@@ -91,7 +94,7 @@ public class TaskDataFragment extends Fragment {
               populateTaskTable();
             } else {
               Log.d(TAG, "Task data in-sync.");
-              mCallback.onTaskDataPopulated();
+              mCallback.onTaskDataSynced();
             }
           } else {
             mCallback.onTaskDataFailure("Task data stamp not found.");

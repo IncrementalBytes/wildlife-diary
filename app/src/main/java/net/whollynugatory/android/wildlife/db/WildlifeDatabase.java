@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import net.whollynugatory.android.wildlife.Utils;
@@ -39,6 +40,7 @@ import java.util.concurrent.Executors;
   entities = {EncounterEntity.class, TaskEntity.class, WildlifeEntity.class},
   version = 1,
   exportSchema = false)
+@TypeConverters({Utils.class})
 public abstract class WildlifeDatabase extends RoomDatabase {
 
   private static final String TAG = Utils.BASE_TAG + WildlifeDatabase.class.getSimpleName();

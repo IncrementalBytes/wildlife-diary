@@ -46,9 +46,12 @@ public class EncounterDataFragment  extends Fragment {
 
     void onEncounterDataMissing();
 
+    /*
+      Instructs caller to update local db with passed data.
+     */
     void onEncounterDataPopulate(List<EncounterEntity> encounterEntityList);
 
-    void onEncounterDataPopulated();
+    void onEncounterDataSynced();
   }
 
   private OnEncounterDataListener mCallback;
@@ -91,7 +94,7 @@ public class EncounterDataFragment  extends Fragment {
               populateEncounterTable();
             } else {
               Log.d(TAG, "Encounter data in-sync.");
-              mCallback.onEncounterDataPopulated();
+              mCallback.onEncounterDataSynced();
             }
           } else {
             mCallback.onEncounterDataFailure("Encounter data stamp not found.");

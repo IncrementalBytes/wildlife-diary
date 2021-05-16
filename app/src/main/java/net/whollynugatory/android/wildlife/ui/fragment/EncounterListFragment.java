@@ -21,31 +21,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.whollynugatory.android.wildlife.R;
-import net.whollynugatory.android.wildlife.SpinnerItemState;
-import net.whollynugatory.android.wildlife.TaskItem;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
-import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
+import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.SpinnerItemAdapter;
-import net.whollynugatory.android.wildlife.ui.TaskListItemAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,7 +47,7 @@ public class EncounterListFragment extends Fragment {
 
     void onEncounterListPopulated();
 
-    void onEncounterDetailsClicked(String encounterId);
+    void onEncounterDetailsClicked(EncounterDetails encounterDetails);
   }
 
   private OnEncounterListListener mCallback;
@@ -65,16 +55,10 @@ public class EncounterListFragment extends Fragment {
   private EncounterAdapter mEncounterAdapter;
   private RecyclerView mRecyclerView;
 
-  private String mFollowingUserId;
+  public static EncounterListFragment newInstance() {
 
-  public static EncounterListFragment newInstance(String followingUserId) {
-
-    Log.d(TAG, "++newInstance(String)");
-    EncounterListFragment fragment = new EncounterListFragment();
-    Bundle arguments = new Bundle();
-    arguments.putSerializable(Utils.ARG_FOLLOWING_USER_ID, followingUserId);
-    fragment.setArguments(arguments);
-    return fragment;
+    Log.d(TAG, "++newInstance()");
+    return new EncounterListFragment();
   }
 
   /*
@@ -89,25 +73,12 @@ public class EncounterListFragment extends Fragment {
     mEncounterAdapter = new EncounterAdapter(getContext());
     mRecyclerView.setAdapter(mEncounterAdapter);
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    wildlifeViewModel.getEncounterSummaries(mFollowingUserId).observe(getViewLifecycleOwner(), encounterSummaries -> {
+    String followingUserId = Utils.getFollowingUserId(getContext());
+    wildlifeViewModel.getTotalEncounters(followingUserId).observe(getViewLifecycleOwner(), totalEncounters -> {
 
-      HashMap<String, EncounterSummary> encounterSummaryHashMap = new HashMap<>();
-      for (EncounterSummary encounterSummary : encounterSummaries) {
-        if (encounterSummaryHashMap.containsKey(encounterSummary.EncounterId)) {
-          if (!encounterSummaryHashMap.get(encounterSummary.EncounterId).Tasks.containsKey(encounterSummary.TaskId)) {
-            encounterSummaryHashMap.get(encounterSummary.EncounterId).Tasks.put(
-              encounterSummary.TaskId,
-              new TaskEntity(encounterSummary.TaskId, encounterSummary.TaskName, encounterSummary.TaskDescription, encounterSummary.TaskIsSensitive));
-          }
-        } else {
-          encounterSummaryHashMap.put(encounterSummary.EncounterId, encounterSummary);
-          encounterSummaryHashMap.get(encounterSummary.EncounterId).Tasks.put(
-            encounterSummary.TaskId,
-            new TaskEntity(encounterSummary.TaskId, encounterSummary.TaskName, encounterSummary.TaskDescription, encounterSummary.TaskIsSensitive));
-        }
-      }
-
-      mEncounterAdapter.setEncounterSummaryList(encounterSummaryHashMap.values());
+      // TODO: exclude encounters that only have sensitive tasks
+      Log.d(TAG, "Encounter list is " + totalEncounters.size());
+      mEncounterAdapter.setEncounterDetailsList(totalEncounters);
       mCallback.onEncounterListPopulated();
     });
   }
@@ -121,17 +92,6 @@ public class EncounterListFragment extends Fragment {
       mCallback = (OnEncounterListListener) context;
     } catch (ClassCastException e) {
       throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
-
-    Bundle arguments = getArguments();
-    if (arguments != null) {
-      if (arguments.containsKey(Utils.ARG_FOLLOWING_USER_ID)) {
-        mFollowingUserId = (String) arguments.getSerializable(Utils.ARG_FOLLOWING_USER_ID);
-      } else {
-        mFollowingUserId = "";
-      }
-    } else {
-      Log.e(TAG, "Arguments were null.");
     }
   }
 
@@ -177,7 +137,7 @@ public class EncounterListFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + EncounterAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<EncounterSummary> mEncounterSummaries;
+    private List<EncounterDetails> mEncounterDetails;
 
     public EncounterAdapter(Context context) {
 
@@ -186,51 +146,46 @@ public class EncounterListFragment extends Fragment {
 
     @NonNull
     @Override
-    public EncounterAdapter.EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
       View itemView = mInflater.inflate(R.layout.encounter_item, parent, false);
-      return new EncounterAdapter.EncounterHolder(itemView);
+      return new EncounterHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EncounterAdapter.EncounterHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EncounterHolder holder, int position) {
 
-      if (mEncounterSummaries != null) {
-        EncounterSummary encounterSummary = mEncounterSummaries.get(position);
-        holder.bind(encounterSummary);
+      if (mEncounterDetails != null) {
+        EncounterDetails encounterDetails = mEncounterDetails.get(position);
+        holder.bind(encounterDetails);
       } else {
-        Log.w(TAG, "Encounter Summaries is empty at this time.");
+        Log.w(TAG, "EncounterDetails is empty at this time.");
       }
     }
 
     @Override
     public int getItemCount() {
 
-      if (mEncounterSummaries != null) {
-        return mEncounterSummaries.size();
-      } else {
-        return 0;
-      }
+      return mEncounterDetails != null ? mEncounterDetails.size() : 0;
     }
 
-    public void setEncounterSummaryList(Collection<EncounterSummary> encounterSummaryCollection) {
+    public void setEncounterDetailsList(Collection<EncounterDetails> encounterDetailsCollection) {
 
-      Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterSummary>)");
-      mEncounterSummaries = new ArrayList<>(encounterSummaryCollection);
-      mEncounterSummaries.sort((a, b) -> Long.compare(b.Date, a.Date));
+      Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterDetails>)");
+      mEncounterDetails = new ArrayList<>(encounterDetailsCollection);
+      mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
       notifyDataSetChanged();
     }
 
     class EncounterHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-      private final String TAG = Utils.BASE_TAG + EncounterAdapter.EncounterHolder.class.getSimpleName();
+      private final String TAG = Utils.BASE_TAG + EncounterHolder.class.getSimpleName();
 
       private final TextView mAbbreviationTextView;
       private final TextView mEncounterDateTextView;
       private final TextView mWildlifeTextView;
-      private final ListView mTaskListView;
 
-      private EncounterSummary mEncounterSummary;
+      private EncounterDetails mEncounterDetails;
 
       EncounterHolder(View itemView) {
         super(itemView);
@@ -238,42 +193,23 @@ public class EncounterListFragment extends Fragment {
         mAbbreviationTextView = itemView.findViewById(R.id.encounter_item_abbreviation);
         mEncounterDateTextView = itemView.findViewById(R.id.encounter_item_date);
         mWildlifeTextView = itemView.findViewById(R.id.encounter_item_wildlife);
-        mTaskListView = itemView.findViewById(R.id.encounter_item_list_tasks);
         itemView.setOnClickListener(this);
       }
 
-      void bind(EncounterSummary encounterSummary) {
+      void bind(EncounterDetails encounterDetails) {
 
-        mEncounterSummary = encounterSummary;
+        mEncounterDetails = encounterDetails;
 
-        mAbbreviationTextView.setText(mEncounterSummary.WildlifeAbbreviation);
-        mEncounterDateTextView.setText(Utils.displayDate(mEncounterSummary.Date));
-        mWildlifeTextView.setText(mEncounterSummary.WildlifeSpecies);
-        boolean showSensitive = Utils.getShowSensitive(getActivity());
-
-        ArrayList<TaskItem> taskItems = new ArrayList<>();
-        for (TaskEntity taskEntity : mEncounterSummary.Tasks.values()) {
-          if (taskEntity.IsSensitive && !showSensitive) {
-            Log.d(TAG, "Skipping task based on user setting.");
-            continue;
-          }
-
-          TaskItem item = new TaskItem();
-          item.setDescription(taskEntity.Description);
-          item.setName(taskEntity.Name);
-          taskItems.add(item);
-        }
-
-        Log.d(TAG, "Task list for " + mEncounterSummary.EncounterId + " is " + taskItems.size());
-        ListAdapter customAdapter = new TaskListItemAdapter(getActivity(), 0, taskItems);
-        mTaskListView.setAdapter(customAdapter);
+        mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
+        mEncounterDateTextView.setText(Utils.fromTimestamp(mEncounterDetails.Date));
+        mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
       }
 
       @Override
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        // TODO: either remove or try show/hide descriptions of tasks
+        mCallback.onEncounterDetailsClicked(mEncounterDetails);
       }
     }
   }

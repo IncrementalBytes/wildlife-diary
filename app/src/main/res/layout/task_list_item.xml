@@ -5,38 +5,90 @@
   android:layout_height="wrap_content"
   android:background="@color/dark_green">
 
-  <TextView
-    android:id="@+id/task_list_item_text_name"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/default_view_margin"
-    android:text="@string/placeholder"
-    android:textColor="@color/white"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
-
-  <androidx.appcompat.widget.AppCompatImageView
-    android:id="@+id/task_list_item_image"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/default_view_margin"
-    android:contentDescription="@string/desc_task_completed"
-    android:src="@drawable/ic_completed_dark"
-    app:layout_constraintBottom_toBottomOf="@id/task_list_item_text_name"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="@id/task_list_item_text_name" />
-
-  <TextView
-    android:id="@+id/task_list_item_text_desc"
+  <androidx.cardview.widget.CardView
+    android:id="@+id/task_item_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/default_view_margin"
-    android:text="@string/placeholder"
-    android:textColor="@color/white"
-    app:layout_constraintBottom_toBottomOf="parent"
+    app:cardCornerRadius="@dimen/default_card_corner"
+    app:cardBackgroundColor="@color/dark_green"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/task_list_item_text_name" />
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <TextView
+        android:id="@+id/task_item_text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/default_view_margin"
+        android:text="@string/placeholder"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/task_item_image"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/default_view_margin"
+        android:contentDescription="@string/desc_task_completed"
+        android:src="@drawable/ic_completed_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/task_item_text_name"
+        app:layout_constraintBottom_toBottomOf="@id/task_item_text_name"/>
+
+      <TextView
+        android:id="@+id/task_item_text_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_view_margin"
+        android:text="@string/placeholder"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/task_item_text_name"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.cardview.widget.CardView>
+
+<!--  <TextView-->
+<!--    android:id="@+id/task_list_item_text_name"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:layout_margin="@dimen/default_view_margin"-->
+<!--    android:text="@string/placeholder"-->
+<!--    android:textColor="@color/white"-->
+<!--    android:textSize="18sp"-->
+<!--    android:textStyle="bold"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--  <androidx.appcompat.widget.AppCompatImageView-->
+<!--    android:id="@+id/task_list_item_image"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:layout_margin="@dimen/default_view_margin"-->
+<!--    android:contentDescription="@string/desc_task_completed"-->
+<!--    android:src="@drawable/ic_completed_dark"-->
+<!--    app:layout_constraintBottom_toBottomOf="@id/task_list_item_text_name"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    app:layout_constraintTop_toTopOf="@id/task_list_item_text_name" />-->
+
+<!--  <TextView-->
+<!--    android:id="@+id/task_list_item_text_desc"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_margin="@dimen/default_view_margin"-->
+<!--    android:text="@string/placeholder"-->
+<!--    android:textColor="@color/white"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintTop_toBottomOf="@id/task_list_item_text_name" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

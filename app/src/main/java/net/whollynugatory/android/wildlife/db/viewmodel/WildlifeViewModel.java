@@ -20,10 +20,10 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import net.whollynugatory.android.wildlife.db.entity.EncounterSummary;
 import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
+import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
 import net.whollynugatory.android.wildlife.db.repository.WildlifeRepository;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 
@@ -39,14 +39,9 @@ public class WildlifeViewModel extends AndroidViewModel {
     mWildlifeRepository = new WildlifeRepository(application);
   }
 
-  public LiveData<EncounterDetails> getEncounterDetails(String encounterId) {
+  public LiveData<List<EncounterDetails>> getTotalEncounters(String userId) {
 
-    return mWildlifeRepository.getEncounterDetailsById(encounterId);
-  }
-
-  public LiveData<List<EncounterSummary>> getEncounterSummaries(String userId) {
-
-    return mWildlifeRepository.getEncounterSummaries(userId);
+    return mWildlifeRepository.getTotalEncounters(userId);
   }
 
   public LiveData<SummaryDetails> getSummary(String userId) {
@@ -54,14 +49,19 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getSummary(userId);
   }
 
-//  public LiveData<SummaryDetails> getSummaryDetailsById(String summaryId) {
-//
-//    return mWildlifeRepository.getSummaryDetails(summaryId);
-//  }
+  public LiveData<List<WildlifeSummary>> getMostEncountered(String userId) {
+
+    return mWildlifeRepository.getMostEncountered(userId);
+  }
 
   public LiveData<List<TaskEntity>> getTasks() {
 
     return mWildlifeRepository.getAllTasks();
+  }
+
+  public LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId) {
+
+    return mWildlifeRepository.getUniqueEncountered(userId);
   }
 
   public LiveData<List<WildlifeEntity>> getWildlife() {

@@ -15,3 +15,5 @@
 local.properties
 /keystore.properties
 /app/google-services.json
+/.idea/
+/app/release/

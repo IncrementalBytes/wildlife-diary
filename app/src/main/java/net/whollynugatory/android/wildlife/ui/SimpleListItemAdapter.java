@@ -23,21 +23,21 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import net.whollynugatory.android.wildlife.R;
-import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
+import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskListItemAdapter extends ArrayAdapter<TaskEntity> {
+public class SimpleListItemAdapter extends ArrayAdapter<WildlifeSummary> {
 
   private final Context mContext;
-  private final ArrayList<TaskEntity> mList;
+  private final ArrayList<WildlifeSummary> mList;
 
-  public TaskListItemAdapter(Context context, int resource, List<TaskEntity> objects) {
+  public SimpleListItemAdapter(Context context, int resource, List<WildlifeSummary> objects) {
     super(context, resource, objects);
 
     mContext = context;
-    mList = (ArrayList<TaskEntity>) objects;
+    mList = (ArrayList<WildlifeSummary>) objects;
   }
 
   @Override
@@ -48,26 +48,26 @@ public class TaskListItemAdapter extends ArrayAdapter<TaskEntity> {
 
   public View getCustomView(final int position, View convertView) {
 
-    final ViewHolder holder;
+    final SimpleListItemAdapter.ViewHolder holder;
     if (convertView == null) {
       LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-      convertView = layoutInflater.inflate(R.layout.task_list_item, null);
-      holder = new ViewHolder();
-      holder.NameText = convertView.findViewById(R.id.task_item_text_name);
-      holder.DescriptionText = convertView.findViewById(R.id.task_item_text_desc);
+      convertView = layoutInflater.inflate(R.layout.simple_list_item, null);
+      holder = new SimpleListItemAdapter.ViewHolder();
+      holder.NameText = convertView.findViewById(R.id.simple_list_item_text_name);
+      holder.CountText = convertView.findViewById(R.id.simple_list_item_text_desc);
       convertView.setTag(holder);
     } else {
-      holder = (ViewHolder) convertView.getTag();
+      holder = (SimpleListItemAdapter.ViewHolder) convertView.getTag();
     }
 
-    holder.NameText.setText(mList.get(position).Name);
-    holder.DescriptionText.setText(mList.get(position).Description);
+    holder.NameText.setText(mList.get(position).FriendlyName);
+    holder.CountText.setText(String.valueOf(mList.get(position).EncounterCount));
     return convertView;
   }
 
   private static class ViewHolder {
 
     private TextView NameText;
-    private TextView DescriptionText;
+    private TextView CountText;
   }
 }

@@ -33,13 +33,11 @@ import java.util.Locale;
 @Entity(
   tableName = "encounter_table",
   foreignKeys = {
-    @ForeignKey(entity = TaskEntity.class, parentColumns = "id", childColumns = "task_id"),
     @ForeignKey(entity = WildlifeEntity.class, parentColumns = "id", childColumns = "wildlife_id")
   },
   indices = {
     @Index(value = "id"),
     @Index(value = "encounter_id"),
-    @Index(value = "task_id"),
     @Index(value = "wildlife_id")
   }
 )
@@ -58,8 +56,8 @@ public class EncounterEntity implements Serializable {
   public long Date;
 
   @NonNull
-  @ColumnInfo(name = "task_id")
-  public String TaskId;
+  @ColumnInfo(name = "task_ids")
+  public String TaskIds;
 
   @NonNull
   @ColumnInfo(name = "user_id")
@@ -74,7 +72,7 @@ public class EncounterEntity implements Serializable {
     Id = Utils.UNKNOWN_ID;
     EncounterId = Utils.UNKNOWN_ID;
     Date = 0;
-    TaskId = Utils.UNKNOWN_ID;
+    TaskIds = Utils.UNKNOWN_ID;
     WildlifeId = Utils.UNKNOWN_ID;
     UserId = Utils.UNKNOWN_USER_ID;
   }
@@ -85,11 +83,11 @@ public class EncounterEntity implements Serializable {
 
     return String.format(
       Locale.US,
-      "{Date: %s, Id: %s, EncounterId: %s, TaskId: %s, WildlifeId: %s}",
+      "{Date: %s, Id: %s, EncounterId: %s, TaskIds: %s, WildlifeId: %s}",
       Date,
       Id,
       EncounterId,
-      TaskId,
+      TaskIds,
       WildlifeId);
   }
 
@@ -108,7 +106,7 @@ public class EncounterEntity implements Serializable {
       return false;
     }
 
-    if (TaskId.isEmpty() || TaskId.equals(Utils.UNKNOWN_ID)) {
+    if (TaskIds.isEmpty() || TaskIds.contains(Utils.UNKNOWN_ID)) {
       return false;
     }
 

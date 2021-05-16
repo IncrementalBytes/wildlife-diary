@@ -42,21 +42,22 @@ public class SummaryFragment extends Fragment {
 
   public interface OnSummaryListListener {
 
-    void onMostEncountered();
-    void onTotalEncounters();
-    void onUniqueEncounters();
+    void onSummaryMostEncountered();
+    void onSummaryTotalEncounters();
+    void onSummaryUniqueEncounters();
   }
 
   private FragmentSummaryBinding mBinding;
+
+  private CardView mEuthanasiaCard;
+
   private OnSummaryListListener mCallback;
-  private String mFollowingUserId;
 
-  public static SummaryFragment newInstance(String followingUserId) {
+  public static SummaryFragment newInstance() {
 
-    Log.d(TAG, "++newInstance(String)");
+    Log.d(TAG, "++newInstance()");
     SummaryFragment fragment = new SummaryFragment();
     Bundle arguments = new Bundle();
-    arguments.putSerializable(Utils.ARG_FOLLOWING_USER_ID, followingUserId);
     fragment.setArguments(arguments);
     return fragment;
   }
@@ -76,18 +77,8 @@ public class SummaryFragment extends Fragment {
     try {
       mCallback = (OnSummaryListListener) context;
     } catch (ClassCastException e) {
-      throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
-
-    Bundle arguments = getArguments();
-    if (arguments != null) {
-      if (arguments.containsKey(Utils.ARG_FOLLOWING_USER_ID)) {
-        mFollowingUserId = (String) arguments.getSerializable(Utils.ARG_FOLLOWING_USER_ID);
-      } else {
-        mFollowingUserId = Utils.UNKNOWN_USER_ID;
-      }
-    } else {
-      Log.e(TAG, "Arguments were null.");
+      throw new ClassCastException(
+        String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
     }
   }
 
@@ -99,11 +90,12 @@ public class SummaryFragment extends Fragment {
     mBinding.setFragment(this);
 
     View view = mBinding.getRoot();
-    CardView euthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
-    euthanasiaCard.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
+    mEuthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    wildlifeViewModel.getSummary(mFollowingUserId).observe(getViewLifecycleOwner(), summaryDetails -> mBinding.setSummary(summaryDetails));
+    String followingUserId = Utils.getFollowingUserId(getActivity());
+    wildlifeViewModel.getSummary(followingUserId).observe(getViewLifecycleOwner(), summaryDetails ->
+      mBinding.setSummary(summaryDetails));
     return view;
   }
 
@@ -115,15 +107,22 @@ public class SummaryFragment extends Fragment {
     mBinding = null;
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    updateUI();
+  }
+
   public void onCardClick(View view) {
 
     TextView targetDescription = null;
     if (view.getId() == R.id.summary_card_total_encounters) {
-      mCallback.onTotalEncounters();
+      mCallback.onSummaryTotalEncounters();
     } else if (view.getId() == R.id.summary_card_unique_encounters) {
-      mCallback.onUniqueEncounters();
+      mCallback.onSummaryUniqueEncounters();
     } else if (view.getId() == R.id.summary_card_most_encountered) {
-      mCallback.onMostEncountered();
+      mCallback.onSummaryMostEncountered();
     } else if (view.getId() == R.id.summary_card_banded) {
       // TODO: list of wildlife banded
     } else if (view.getId() == R.id.summary_card_handled_euthanasia) {
@@ -153,5 +152,10 @@ public class SummaryFragment extends Fragment {
     if (targetDescription != null) {
       targetDescription.setVisibility(targetDescription.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
+  }
+
+  private void updateUI() {
+
+    mEuthanasiaCard.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
   }
 }

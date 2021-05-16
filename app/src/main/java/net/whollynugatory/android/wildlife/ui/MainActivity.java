@@ -44,6 +44,7 @@ import net.whollynugatory.android.wildlife.InsertEncountersAsync;
 import net.whollynugatory.android.wildlife.InsertTasksAsync;
 import net.whollynugatory.android.wildlife.InsertWildlifeAsync;
 import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
+import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.UserEntity;
@@ -53,6 +54,7 @@ import net.whollynugatory.android.wildlife.ui.fragment.EncounterDataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterListFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.ListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.SummaryFragment;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.ui.fragment.TaskDataFragment;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements
   EncounterDataFragment.OnEncounterDataListener,
   EncounterFragment.OnEncounterListener,
   EncounterListFragment.OnEncounterListListener,
+  ListFragment.OnSimpleListListener,
   SummaryFragment.OnSummaryListListener,
   TaskDataFragment.OnTaskDataListener,
   WildlifeDataFragment.OnWildlifeDataListener {
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements
       Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
       if (fragment != null) {
         String fragmentClassName = fragment.getClass().getName();
-        if (fragmentClassName.equals(EncounterListFragment.class.getName())) {
+        if (fragmentClassName.equals(SummaryFragment.class.getName())) {
           mAddEncounterButton.setVisibility(View.VISIBLE);
         } else if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
           setTitle(getString(R.string.title_settings));
@@ -131,15 +134,19 @@ public class MainActivity extends AppCompatActivity implements
               mUserEntity = result.getValue(UserEntity.class);
               Utils.setUserId(this, finalUserId);
               if (mUserEntity == null) {
+                // TODO: default following user to ???
                 mUserEntity = new UserEntity();
                 mUserEntity.Id = finalUserId;
-                FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(finalUserId).setValue(mUserEntity)
+                String path = Utils.combine(Utils.USERS_ROOT, finalUserId);
+                FirebaseDatabase.getInstance().getReference().child(path).setValue(mUserEntity)
                   .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
               } else {
                 mUserEntity.Id = finalUserId;
+                Utils.setFollowingUserId(this, mUserEntity.FollowingId);
                 if (mUserEntity.CanAdd) {
                   mAddEncounterButton.setVisibility(View.VISIBLE);
-                  mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance(mUserEntity.FollowingId)));
+                  mAddEncounterButton.setOnClickListener(v ->
+                    replaceFragment(EncounterFragment.newInstance()));
                 }
               }
 
@@ -173,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
     if (item.getItemId() == R.id.menu_home) {
-      replaceFragment(SummaryFragment.newInstance(mUserEntity.FollowingId));
+      replaceFragment(SummaryFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_settings) {
       replaceFragment(UserSettingsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_logout) {
@@ -267,34 +274,58 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterDataPopulate(List<EncounterEntity> encounterEntityList) {
 
     Log.d(TAG, "++onEncounterDataPopulate(List<EncounterEntity>)");
-    new InsertEncountersAsync(MainActivity.this, WildlifeDatabase.getInstance(this).encounterDao(), encounterEntityList).execute();
+    new InsertEncountersAsync(
+      MainActivity.this,
+      WildlifeDatabase.getInstance(this).encounterDao(),
+      encounterEntityList).execute();
   }
 
   @Override
-  public void onEncounterDataPopulated() {
+  public void onEncounterDataSynced() {
 
-    Log.d(TAG, "++onEncounterDataPopulated()");
-    replaceFragment(SummaryFragment.newInstance(mUserEntity.FollowingId));
+    Log.d(TAG, "++onEncounterDataSynced()");
+    replaceFragment(SummaryFragment.newInstance());
   }
 
   @Override
-  public void onEncounterDetailsClicked(String encounterId) {
+  public void onEncounterDetailsClicked(EncounterDetails encounterDetails) {
 
-    Log.d(TAG, "++onEncounterDetailsClicked(String)");
-    replaceFragment(EncounterDetailFragment.newInstance(encounterId));
+    Log.d(TAG, "++onEncounterDetailsClicked(EncounterDetails)");
+    replaceFragment(EncounterDetailFragment.newInstance(encounterDetails));
+  }
+
+  @Override
+  public void onEncounterItemSelected(String encounterId) {
+
+    Log.d(TAG, "++onEncounterItemSelected(String)");
   }
 
   @Override
   public void onEncounterListPopulated() {
 
-    Log.d(TAG, "++onEncounterListPopulated(int)");
-    // TODO: what to do when list is ready?
+    Log.d(TAG, "++onEncounterListPopulated()");
+    // TODO: add notification about something/anything (or just delete this callback)
   }
 
   @Override
-  public void onMostEncountered() {
+  public void onSummaryMostEncountered() {
 
-    Log.d(TAG, "onMostEncountered()");
+    Log.d(TAG, "onSummaryMostEncountered()");
+    replaceFragment(ListFragment.newInstance(Utils.ListTypes.MostEncountered));
+  }
+
+  @Override
+  public void onSummaryTotalEncounters() {
+
+    Log.d(TAG, "++onSummaryTotalEncounters()");
+    replaceFragment(EncounterListFragment.newInstance());
+  }
+
+  @Override
+  public void onSummaryUniqueEncounters() {
+
+    Log.d(TAG, "++onSummaryUniqueEncounters()");
+    replaceFragment(ListFragment.newInstance(Utils.ListTypes.UniqueEncountered));
   }
 
   @Override
@@ -317,27 +348,30 @@ public class MainActivity extends AppCompatActivity implements
   public void onTaskDataPopulate(List<TaskEntity> taskEntityList) {
 
     Log.d(TAG, "++onTaskDataPopulate(List<TaskEntity>)");
-    new InsertTasksAsync(MainActivity.this, WildlifeDatabase.getInstance(this).taskDao(), taskEntityList).execute();
+    Utils.setTaskList(this, taskEntityList);
+    new InsertTasksAsync(
+      MainActivity.this,
+      WildlifeDatabase.getInstance(this).taskDao(),
+      taskEntityList).execute();
   }
 
   @Override
-  public void onTaskDataPopulated() {
+  public void onTaskDataSynced() {
 
-    Log.d(TAG, "++onTaskDataPopulated()");
+    Log.d(TAG, "++onTaskDataSynced()");
     replaceFragment(WildlifeDataFragment.newInstance());
   }
 
   @Override
-  public void onTotalEncounters() {
+  public void onTaskItemSelected(String taskId) {
 
-    Log.d(TAG, "++onTotalEncounters()");
-    replaceFragment(EncounterListFragment.newInstance(mUserEntity.FollowingId));
+    Log.d(TAG, "++onTaskItemSelected(String)");
   }
 
   @Override
-  public void onUniqueEncounters() {
+  public void onUnknownList() {
 
-    Log.d(TAG, "++onUniqueEncounters()");
+    Log.d(TAG, "onUnknownList()");
   }
 
   @Override
@@ -359,15 +393,24 @@ public class MainActivity extends AppCompatActivity implements
   @Override
   public void onWildlifeDataPopulate(List<WildlifeEntity> wildlifeEntityList) {
 
-    Log.d(TAG, "++onWildlifeDataPopulated(List<WildlifeEntity>)");
-    new InsertWildlifeAsync(MainActivity.this, WildlifeDatabase.getInstance(this).wildlifeDao(), wildlifeEntityList).execute();
+    Log.d(TAG, "++onWildlifeDataPopulate(List<WildlifeEntity>)");
+    new InsertWildlifeAsync(
+      MainActivity.this,
+      WildlifeDatabase.getInstance(this).wildlifeDao(),
+      wildlifeEntityList).execute();
   }
 
   @Override
-  public void onWildlifeDataPopulated() {
+  public void onWildlifeDataSynced() {
 
-    Log.d(TAG, "++onWildlifeDataPopulated()");
+    Log.d(TAG, "++onWildlifeDataSynced()");
     replaceFragment(EncounterDataFragment.newInstance());
+  }
+
+  @Override
+  public void onWildlifeItemSelected(String wildlifeId) {
+
+    Log.d(TAG, "++onWildlifeItemSelected(String)");
   }
 
   /*
@@ -376,7 +419,7 @@ public class MainActivity extends AppCompatActivity implements
   public void encounterInsertionComplete() {
 
     Log.d(TAG, "++encounterInsertionComplete()");
-    replaceFragment(SummaryFragment.newInstance(mUserEntity.FollowingId));
+    replaceFragment(SummaryFragment.newInstance());
   }
 
   public void taskInsertionComplete() {

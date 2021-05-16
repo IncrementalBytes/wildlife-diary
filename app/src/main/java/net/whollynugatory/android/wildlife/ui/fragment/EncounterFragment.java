@@ -48,6 +48,7 @@ import net.whollynugatory.android.wildlife.ui.SpinnerItemAdapter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -70,7 +71,6 @@ public class EncounterFragment extends Fragment {
   private AutoCompleteTextView mWildlifeText;
 
   private int mEncountersAdded;
-  private String mFollowingUserId;
   private HashMap<String, String> mWildlifeMap;
   private WildlifeViewModel mWildlifeViewModel;
 
@@ -133,12 +133,11 @@ public class EncounterFragment extends Fragment {
     }
   };
 
-  public static EncounterFragment newInstance(String followingUserId) {
+  public static EncounterFragment newInstance() {
 
-    Log.d(TAG, "++newInstance(String)");
+    Log.d(TAG, "++newInstance()");
     EncounterFragment fragment = new EncounterFragment();
     Bundle arguments = new Bundle();
-    arguments.putString(Utils.ARG_FOLLOWING_USER_ID, followingUserId);
     fragment.setArguments(arguments);
     return fragment;
   }
@@ -158,17 +157,6 @@ public class EncounterFragment extends Fragment {
     super.onAttach(context);
 
     Log.d(TAG, "++onAttach(Context)");
-    Bundle arguments = getArguments();
-    if (arguments != null) {
-      if (arguments.containsKey(Utils.ARG_FOLLOWING_USER_ID)) {
-        mFollowingUserId = arguments.getString(Utils.ARG_FOLLOWING_USER_ID);
-      } else {
-        mFollowingUserId = Utils.UNKNOWN_USER_ID;
-      }
-    } else {
-      Log.e(TAG, "Arguments were null.");
-    }
-
     try {
       mCallback = (OnEncounterListener) context;
     } catch (ClassCastException e) {
@@ -238,9 +226,10 @@ public class EncounterFragment extends Fragment {
     addButton.setOnClickListener(v -> {
 
       EncounterEntity encounterEntity = new EncounterEntity();
-      encounterEntity.Date = Utils.convertToLong(mDateEdit.getText().toString());
+      encounterEntity.Id = UUID.randomUUID().toString();
+      encounterEntity.Date = Utils.toTimestamp(mDateEdit.getText().toString());
       encounterEntity.EncounterId = UUID.randomUUID().toString();
-      encounterEntity.UserId = mFollowingUserId;
+      encounterEntity.UserId = Utils.getUserId(getActivity());
 
       String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
       if (mWildlifeMap.containsKey(selectedWildlifeAbbreviation)) {
@@ -250,30 +239,32 @@ public class EncounterFragment extends Fragment {
       }
 
       int totalItems = mTaskSpinner.getAdapter().getCount();
+      List<String> taskList = new ArrayList<>();
       for (int taskCount = 0; taskCount < totalItems; taskCount++) {
         SpinnerItemState item = (SpinnerItemState) mTaskSpinner.getAdapter().getItem(taskCount);
         if (item.isSelected()) {
-          encounterEntity.Id = UUID.randomUUID().toString();
-          encounterEntity.TaskId = item.getId();
-          if (encounterEntity.isValid()) {
-            FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).child(encounterEntity.Id).setValue(encounterEntity)
-              .addOnCompleteListener(task -> {
-
-                if (!task.isSuccessful()) {
-                  Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
-                  mCallback.onEncounterFailure("Failed to added encounter.");
-                } else {
-                  mCallback.onEncounterAdded();
-                  mWildlifeText.setText("");
-                  mEncountersAdded++;
-                }
-              });
-          } else {
-            mCallback.onEncounterFailure("Encounter data was unknown.");
-          }
-
-          item.setSelected(false);
+          taskList.add(item.getId());
         }
+
+        item.setSelected(false);
+      }
+
+      encounterEntity.TaskIds = Utils.fromTaskList(taskList);
+      if (encounterEntity.isValid()) {
+        FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).child(encounterEntity.Id).setValue(encounterEntity)
+          .addOnCompleteListener(task -> {
+
+            if (!task.isSuccessful()) {
+              Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
+              mCallback.onEncounterFailure("Failed to added encounter.");
+            } else {
+              mCallback.onEncounterAdded();
+              mWildlifeText.setText("");
+              mEncountersAdded++;
+            }
+          });
+      } else {
+        mCallback.onEncounterFailure("Encounter data was unknown: " + encounterEntity.toString());
       }
     });
 

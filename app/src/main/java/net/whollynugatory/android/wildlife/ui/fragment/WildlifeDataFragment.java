@@ -46,9 +46,12 @@ public class WildlifeDataFragment  extends Fragment {
 
     void onWildlifeDataMissing();
 
+    /*
+      Instructs caller to update local db with passed data.
+     */
     void onWildlifeDataPopulate(List<WildlifeEntity> wildlifeEntityList);
 
-    void onWildlifeDataPopulated();
+    void onWildlifeDataSynced();
   }
 
   private OnWildlifeDataListener mCallback;
@@ -91,7 +94,7 @@ public class WildlifeDataFragment  extends Fragment {
               populateWildlifeTable();
             } else {
               Log.d(TAG, "Wildlife data in-sync.");
-              mCallback.onWildlifeDataPopulated();
+              mCallback.onWildlifeDataSynced();
             }
           } else {
             mCallback.onWildlifeDataFailure("Wildlife data stamp not found.");
