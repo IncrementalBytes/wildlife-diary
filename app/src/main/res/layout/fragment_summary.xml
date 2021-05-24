@@ -12,6 +12,8 @@
   <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginEnd="4dp"
+    android:layout_marginStart="4dp"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -146,7 +148,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_banded"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardLeft"
         app:cardBackgroundColor="@{summary.TotalBanded > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -186,7 +188,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_force_fed"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardRight"
         app:cardBackgroundColor="@{summary.TotalForceFed > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -226,7 +228,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_gavage"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardLeft"
         app:cardBackgroundColor="@{summary.TotalGavage > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -266,7 +268,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_medication_ocular"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardRight"
         app:cardBackgroundColor="@{summary.TotalOcularMedicated > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -306,7 +308,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_medication_oral"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardLeft"
         app:cardBackgroundColor="@{summary.TotalOralMedicated > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -346,7 +348,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_subcutaneous"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardRight"
         app:cardBackgroundColor="@{summary.TotalSubcutaneous > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -386,7 +388,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_syringe_fed"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardLeft"
         app:cardBackgroundColor="@{summary.TotalSyringeFed > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -426,7 +428,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_handled_exam"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardRight"
         app:cardBackgroundColor="@{summary.TotalHandledExam > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -466,7 +468,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_handled_force_fed"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardLeft"
         app:cardBackgroundColor="@{summary.TotalHandledForceFed > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -506,7 +508,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_handled_gavage"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardRight"
         app:cardBackgroundColor="@{summary.TotalHandledGavage > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -546,7 +548,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_handled_medication"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardLeft"
         app:cardBackgroundColor="@{summary.TotalHandledMedication > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -586,7 +588,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_handled_subcutaneous"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardRight"
         app:cardBackgroundColor="@{summary.TotalHandledSubcutaneous > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -626,7 +628,7 @@
 
       <androidx.cardview.widget.CardView
         android:id="@+id/summary_card_handled_euthanasia"
-        style="@style/SummaryCard"
+        style="@style/SummaryCardLeft"
         app:cardBackgroundColor="@{summary.TotalHandledEuthanasia > 0 ? @color/green : @color/background_green}"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

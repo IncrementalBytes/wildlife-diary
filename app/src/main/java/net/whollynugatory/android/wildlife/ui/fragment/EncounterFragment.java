@@ -256,6 +256,7 @@ public class EncounterFragment extends Fragment {
                 } else {
                   mCallback.onEncounterAdded();
                   mWildlifeText.setText("");
+                  mNumberInGroupPicker.setValue(1);
                   mEncountersAdded++;
                 }
               });

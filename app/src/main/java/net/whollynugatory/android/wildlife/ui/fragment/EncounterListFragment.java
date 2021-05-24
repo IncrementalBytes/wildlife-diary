@@ -45,8 +45,6 @@ public class EncounterListFragment extends Fragment {
 
   public interface OnEncounterListListener {
 
-    void onEncounterListPopulated();
-
     void onEncounterDetailsClicked(String encounterId);
   }
 
@@ -99,7 +97,6 @@ public class EncounterListFragment extends Fragment {
 
       Log.d(TAG, "Encounter list is " + condensedEncounters.size());
       mEncounterAdapter.setEncounterDetailsList(condensedEncounters);
-      mCallback.onEncounterListPopulated();
     });
 
     return view;

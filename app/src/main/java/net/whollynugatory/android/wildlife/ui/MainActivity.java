@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
     manageNotificationChannel();
 
     mAddEncounterButton = findViewById(R.id.main_fab_add);
-    mAddEncounterButton.setVisibility(View.INVISIBLE);
+    mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance()));
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
     setSupportActionBar(mainToolbar);
 
@@ -99,13 +99,12 @@ public class MainActivity extends AppCompatActivity implements
         String fragmentClassName = fragment.getClass().getName();
         if (fragmentClassName.equals(SummaryFragment.class.getName())) {
           setTitle(getString(R.string.app_name));
-          mAddEncounterButton.setVisibility(View.VISIBLE);
         } else if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
           setTitle(getString(R.string.title_settings));
-          mAddEncounterButton.setVisibility(View.INVISIBLE);
+          mAddEncounterButton.setVisibility(View.GONE);
         } else {
           setTitle(getString(R.string.app_name));
-          mAddEncounterButton.setVisibility(View.INVISIBLE);
+          mAddEncounterButton.setVisibility(View.GONE);
         }
       }
     });
@@ -124,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements
       FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
         .addOnCompleteListener(task -> {
 
-          mAddEncounterButton.setVisibility(View.INVISIBLE);
           if (!task.isSuccessful()) {
             Log.e(TAG, "Error getting data", task.getException());
             showMessageInSnackBar("There was a problem accessing data. Try again later.");
@@ -143,11 +141,6 @@ public class MainActivity extends AppCompatActivity implements
               } else {
                 mUserEntity.Id = finalUserId;
                 Utils.setFollowingUserId(this, mUserEntity.FollowingId);
-                if (mUserEntity.CanAdd) {
-                  mAddEncounterButton.setVisibility(View.VISIBLE);
-                  mAddEncounterButton.setOnClickListener(v ->
-                    replaceFragment(EncounterFragment.newInstance()));
-                }
               }
 
               // TODO: add animation/notification that work is happening
@@ -281,17 +274,19 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterListPopulated() {
-
-    Log.d(TAG, "++onEncounterListPopulated()");
-    // TODO: add notification about something/anything (or just delete this callback)
-  }
-
-  @Override
   public void onSummaryClicked(int summaryId) {
 
     Log.d(TAG, "++onSummaryClicked(int)");
     replaceFragment(ListFragment.newInstance(summaryId));
+  }
+
+  @Override
+  public void onSummarySet() {
+
+    Log.d(TAG, "++onSummarySet()");
+    if (mUserEntity.CanAdd) {
+      mAddEncounterButton.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override
