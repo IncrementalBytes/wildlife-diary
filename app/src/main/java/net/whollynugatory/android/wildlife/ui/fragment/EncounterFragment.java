@@ -27,6 +27,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -48,7 +49,6 @@ import net.whollynugatory.android.wildlife.ui.SpinnerItemAdapter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -67,6 +67,7 @@ public class EncounterFragment extends Fragment {
   private OnEncounterListener mCallback;
 
   private EditText mDateEdit;
+  private NumberPicker mNumberInGroupPicker;
   private Spinner mTaskSpinner;
   private AutoCompleteTextView mWildlifeText;
 
@@ -146,13 +147,6 @@ public class EncounterFragment extends Fragment {
     Fragment Override(s)
   */
   @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-
-    Log.d(TAG, "++onActivityCreated(Bundle)");
-  }
-
-  @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
 
@@ -180,10 +174,13 @@ public class EncounterFragment extends Fragment {
     final View view = inflater.inflate(R.layout.fragment_encounter, container, false);
 
     mDateEdit = view.findViewById(R.id.encounter_edit_date);
+    mNumberInGroupPicker = view.findViewById(R.id.encounter_picker_number_in_group);
     mTaskSpinner = view.findViewById(R.id.encounter_spinner_task);
     mWildlifeText = view.findViewById(R.id.encounter_auto_wildlife);
 
     mDateEdit.addTextChangedListener(mTextWatcher);
+    mNumberInGroupPicker.setMinValue(1);
+    mNumberInGroupPicker.setMaxValue(12);
     mWildlifeViewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> {
 
       ArrayList<SpinnerItemState> itemStates = new ArrayList<>();
@@ -226,45 +223,48 @@ public class EncounterFragment extends Fragment {
     addButton.setOnClickListener(v -> {
 
       EncounterEntity encounterEntity = new EncounterEntity();
-      encounterEntity.Id = UUID.randomUUID().toString();
       encounterEntity.Date = Utils.toTimestamp(mDateEdit.getText().toString());
       encounterEntity.EncounterId = UUID.randomUUID().toString();
-      encounterEntity.UserId = Utils.getUserId(getActivity());
+      encounterEntity.NumberInGroup = mNumberInGroupPicker.getValue();
+      encounterEntity.UserId = Utils.DEFAULT_FOLLOWING_USER_ID;
 
       String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
       if (mWildlifeMap.containsKey(selectedWildlifeAbbreviation)) {
-        encounterEntity.WildlifeId = mWildlifeMap.get(selectedWildlifeAbbreviation);
+        String wildlifeId = mWildlifeMap.get(selectedWildlifeAbbreviation);
+        if (wildlifeId == null || wildlifeId.isEmpty()) {
+          encounterEntity.WildlifeId = Utils.UNKNOWN_ID;
+        } else {
+          encounterEntity.WildlifeId = wildlifeId;
+        }
       } else {
         encounterEntity.WildlifeId = Utils.UNKNOWN_ID;
       }
 
       int totalItems = mTaskSpinner.getAdapter().getCount();
-      List<String> taskList = new ArrayList<>();
       for (int taskCount = 0; taskCount < totalItems; taskCount++) {
         SpinnerItemState item = (SpinnerItemState) mTaskSpinner.getAdapter().getItem(taskCount);
         if (item.isSelected()) {
-          taskList.add(item.getId());
+          encounterEntity.Id = UUID.randomUUID().toString(); // unique entry per task
+          encounterEntity.TaskId = item.getId();
+          if (encounterEntity.isValid()) {
+            FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).child(encounterEntity.Id).setValue(encounterEntity)
+              .addOnCompleteListener(task -> {
+
+                if (!task.isSuccessful()) {
+                  Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
+                  mCallback.onEncounterFailure("Failed to added encounter.");
+                } else {
+                  mCallback.onEncounterAdded();
+                  mWildlifeText.setText("");
+                  mEncountersAdded++;
+                }
+              });
+          } else {
+            mCallback.onEncounterFailure("Encounter data was unknown: " + encounterEntity.toString());
+          }
+
+          item.setSelected(false);
         }
-
-        item.setSelected(false);
-      }
-
-      encounterEntity.TaskIds = Utils.fromTaskList(taskList);
-      if (encounterEntity.isValid()) {
-        FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).child(encounterEntity.Id).setValue(encounterEntity)
-          .addOnCompleteListener(task -> {
-
-            if (!task.isSuccessful()) {
-              Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
-              mCallback.onEncounterFailure("Failed to added encounter.");
-            } else {
-              mCallback.onEncounterAdded();
-              mWildlifeText.setText("");
-              mEncountersAdded++;
-            }
-          });
-      } else {
-        mCallback.onEncounterFailure("Encounter data was unknown: " + encounterEntity.toString());
       }
     });
 

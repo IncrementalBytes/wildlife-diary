@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -42,9 +41,8 @@ public class SummaryFragment extends Fragment {
 
   public interface OnSummaryListListener {
 
-    void onSummaryMostEncountered();
+    void onSummaryClicked(int summaryId);
     void onSummaryTotalEncounters();
-    void onSummaryUniqueEncounters();
   }
 
   private FragmentSummaryBinding mBinding;
@@ -60,13 +58,6 @@ public class SummaryFragment extends Fragment {
     Bundle arguments = new Bundle();
     fragment.setArguments(arguments);
     return fragment;
-  }
-
-  @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-
-    Log.d(TAG, "++onActivityCreated(Bundle)");
   }
 
   @Override
@@ -116,42 +107,46 @@ public class SummaryFragment extends Fragment {
 
   public void onCardClick(View view) {
 
-    TextView targetDescription = null;
-    if (view.getId() == R.id.summary_card_total_encounters) {
+    if (view == null) {
+      Log.d(TAG, "No-op");
+    } else if (view.getId() == R.id.summary_card_total_encounters) {
       mCallback.onSummaryTotalEncounters();
-    } else if (view.getId() == R.id.summary_card_unique_encounters) {
-      mCallback.onSummaryUniqueEncounters();
-    } else if (view.getId() == R.id.summary_card_most_encountered) {
-      mCallback.onSummaryMostEncountered();
-    } else if (view.getId() == R.id.summary_card_banded) {
-      // TODO: list of wildlife banded
-    } else if (view.getId() == R.id.summary_card_handled_euthanasia) {
-      // TODO: list of wildlife handled for euthanasia
-    } else if (view.getId() == R.id.summary_card_handled_exam) {
-      // TODO: list of wildlife handled for exam
-    } else if (view.getId() == R.id.summary_card_handled_force_fed) {
-      // TODO: list of wildlife handled for force fed
-    } else if (view.getId() == R.id.summary_card_handled_gavage) {
-      // TODO: list of wildlife handled for gavage
-    } else if (view.getId() == R.id.summary_card_handled_medication) {
-      // TODO: list of wildlife handled for medication
-    } else if (view.getId() == R.id.summary_card_handled_subcutaneous) {
-      // TODO: list of wildlife handled for subcutaneous
-    } else if (view.getId() == R.id.summary_card_force_fed) {
-      // TODO: list of wildlife force fed
-    } else if (view.getId() == R.id.summary_card_gavage) {
-      // TODO: list of wildlife handled for gavage
-    } else if (view.getId() == R.id.summary_card_medication_ocular) {
-      // TODO: list of wildlife medicated ocular
-    } else if (view.getId() == R.id.summary_card_medication_oral) {
-      // TODO: list of wildlife medicated oral
-    } else if (view.getId() == R.id.summary_card_subcutaneous) {
-      // TODO: list of wildlife given subcutaneous fluids
+    } else {
+      mCallback.onSummaryClicked(view.getId());
     }
-
-    if (targetDescription != null) {
-      targetDescription.setVisibility(targetDescription.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-    }
+//    } else if (view.getId() == R.id.summary_card_total_encounters) {
+//      mCallback.onSummaryTotalEncounters();
+//    } else if (view.getId() == R.id.summary_card_unique_encounters) {
+//      mCallback.onSummaryUniqueEncounters();
+//    } else if (view.getId() == R.id.summary_card_most_encountered) {
+//      mCallback.onSummaryMostEncountered();
+//    } else if (view.getId() == R.id.summary_card_banded) {
+//      mCallback.onSummaryBanded();
+//    } else if (view.getId() == R.id.summary_card_handled_euthanasia) {
+//      // TODO: list of wildlife handled for euthanasia
+//    } else if (view.getId() == R.id.summary_card_handled_exam) {
+//      // TODO: list of wildlife handled for exam
+//    } else if (view.getId() == R.id.summary_card_handled_force_fed) {
+//      // TODO: list of wildlife handled for force fed
+//    } else if (view.getId() == R.id.summary_card_handled_gavage) {
+//      // TODO: list of wildlife handled for gavage
+//    } else if (view.getId() == R.id.summary_card_handled_medication) {
+//      // TODO: list of wildlife handled for medication
+//    } else if (view.getId() == R.id.summary_card_handled_subcutaneous) {
+//      // TODO: list of wildlife handled for subcutaneous
+//    } else if (view.getId() == R.id.summary_card_force_fed) {
+//      // TODO: list of wildlife force fed
+//    } else if (view.getId() == R.id.summary_card_gavage) {
+//      // TODO: list of wildlife handled for gavage
+//    } else if (view.getId() == R.id.summary_card_medication_ocular) {
+//      // TODO: list of wildlife medicated ocular
+//    } else if (view.getId() == R.id.summary_card_medication_oral) {
+//      // TODO: list of wildlife medicated oral
+//    } else if (view.getId() == R.id.summary_card_subcutaneous) {
+//      // TODO: list of wildlife given subcutaneous fluids
+//    } else if (view.getId() == R.id.summary_card_syringe_fed) {
+//      // TODO: list of wildlife given syringe fed
+//    }
   }
 
   private void updateUI() {

@@ -15,6 +15,8 @@
  */
 package net.whollynugatory.android.wildlife.db.entity;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -33,15 +35,21 @@ import java.util.Locale;
 @Entity(
   tableName = "encounter_table",
   foreignKeys = {
+    @ForeignKey(entity = TaskEntity.class, parentColumns = "id", childColumns = "task_id"),
     @ForeignKey(entity = WildlifeEntity.class, parentColumns = "id", childColumns = "wildlife_id")
   },
   indices = {
     @Index(value = "id"),
     @Index(value = "encounter_id"),
+    @Index(value = "task_id"),
     @Index(value = "wildlife_id")
   }
 )
 public class EncounterEntity implements Serializable {
+
+  @Ignore
+  @Exclude
+  private static final String TAG = Utils.BASE_TAG + EncounterEntity.class.getSimpleName();
 
   @NonNull
   @PrimaryKey
@@ -55,9 +63,12 @@ public class EncounterEntity implements Serializable {
   @ColumnInfo(name = "date")
   public long Date;
 
+  @ColumnInfo(name = "number_in_group")
+  public int NumberInGroup;
+
   @NonNull
-  @ColumnInfo(name = "task_ids")
-  public String TaskIds;
+  @ColumnInfo(name = "task_id")
+  public String TaskId;
 
   @NonNull
   @ColumnInfo(name = "user_id")
@@ -72,7 +83,8 @@ public class EncounterEntity implements Serializable {
     Id = Utils.UNKNOWN_ID;
     EncounterId = Utils.UNKNOWN_ID;
     Date = 0;
-    TaskIds = Utils.UNKNOWN_ID;
+    NumberInGroup = 0;
+    TaskId = Utils.UNKNOWN_ID;
     WildlifeId = Utils.UNKNOWN_ID;
     UserId = Utils.UNKNOWN_USER_ID;
   }
@@ -83,37 +95,48 @@ public class EncounterEntity implements Serializable {
 
     return String.format(
       Locale.US,
-      "{Date: %s, Id: %s, EncounterId: %s, TaskIds: %s, WildlifeId: %s}",
+      "{Date: %s, Id: %s, EncounterId: %s, TaskId: %s, WildlifeId: %s}",
       Date,
       Id,
       EncounterId,
-      TaskIds,
+      TaskId,
       WildlifeId);
   }
 
   @Ignore
+  @Exclude
   public boolean isValid() {
 
-    if (Id.isEmpty() || Id.equals(Utils.UNKNOWN_ID)) {
+    if (Id.isEmpty() || Id.contains(Utils.UNKNOWN_ID)) {
+      Log.e(TAG, "Unique identification missing.");
       return false;
     }
 
     if (Date < 1) {
+      Log.e(TAG, "Date is wrong.");
       return false;
     }
 
-    if (EncounterId.isEmpty() || EncounterId.equals(Utils.UNKNOWN_ID)) {
+    if (EncounterId.isEmpty() || EncounterId.contains(Utils.UNKNOWN_ID)) {
+      Log.e(TAG, "Encounter identification missing.");
       return false;
     }
 
-    if (TaskIds.isEmpty() || TaskIds.contains(Utils.UNKNOWN_ID)) {
+    if (NumberInGroup < 1) {
+      Log.e(TAG, "Number in group is not set.");
       return false;
     }
 
-    if (WildlifeId.isEmpty() || WildlifeId.equals(Utils.UNKNOWN_ID)) {
+    if (TaskId.isEmpty() || TaskId.contains(Utils.UNKNOWN_ID)) {
+      Log.e(TAG, "Task identification missing.");
       return false;
     }
 
-    return !UserId.isEmpty() && !UserId.equals(Utils.UNKNOWN_ID);
+    if (WildlifeId.isEmpty() || WildlifeId.contains(Utils.UNKNOWN_ID)) {
+      Log.e(TAG, "Wildlife identification missing.");
+      return false;
+    }
+
+    return !UserId.isEmpty() && !UserId.contains(Utils.UNKNOWN_ID);
   }
 }

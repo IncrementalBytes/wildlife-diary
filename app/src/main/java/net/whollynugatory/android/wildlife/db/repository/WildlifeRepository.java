@@ -60,6 +60,16 @@ public class WildlifeRepository {
     return mWildlifeDao.getAll();
   }
 
+  public LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId) {
+
+    return mEncounterDao.getEncounterDetails(userId, encounterId);
+  }
+
+  public LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName) {
+
+    return mEncounterDao.getEncountersByTaskName(userId, taskName);
+  }
+
   public LiveData<List<WildlifeSummary>> getMostEncountered(String userId) {
 
     return mEncounterDao.getMostEncountered(userId);

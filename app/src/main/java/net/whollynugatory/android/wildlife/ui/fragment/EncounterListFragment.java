@@ -47,13 +47,12 @@ public class EncounterListFragment extends Fragment {
 
     void onEncounterListPopulated();
 
-    void onEncounterDetailsClicked(EncounterDetails encounterDetails);
+    void onEncounterDetailsClicked(String encounterId);
   }
 
   private OnEncounterListListener mCallback;
 
   private EncounterAdapter mEncounterAdapter;
-  private RecyclerView mRecyclerView;
 
   public static EncounterListFragment newInstance() {
 
@@ -64,25 +63,6 @@ public class EncounterListFragment extends Fragment {
   /*
     Fragment Override(s)
   */
-  @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-
-    Log.d(TAG, "++onActivityCreated(Bundle)");
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    mEncounterAdapter = new EncounterAdapter(getContext());
-    mRecyclerView.setAdapter(mEncounterAdapter);
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    String followingUserId = Utils.getFollowingUserId(getContext());
-    wildlifeViewModel.getTotalEncounters(followingUserId).observe(getViewLifecycleOwner(), totalEncounters -> {
-
-      // TODO: exclude encounters that only have sensitive tasks
-      Log.d(TAG, "Encounter list is " + totalEncounters.size());
-      mEncounterAdapter.setEncounterDetailsList(totalEncounters);
-      mCallback.onEncounterListPopulated();
-    });
-  }
-
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
@@ -96,43 +76,36 @@ public class EncounterListFragment extends Fragment {
   }
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    Log.d(TAG, "++onCreate(Bundle)");
-  }
-
-  @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_encounter_list, container, false);
-    mRecyclerView = view.findViewById(R.id.encounter_list_view);
+    RecyclerView recyclerView = view.findViewById(R.id.encounter_list_view);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    mEncounterAdapter = new EncounterAdapter(getContext());
+    recyclerView.setAdapter(mEncounterAdapter);
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    String followingUserId = Utils.getFollowingUserId(getContext());
+    wildlifeViewModel.getTotalEncounters(followingUserId).observe(getViewLifecycleOwner(), totalEncounters -> {
+
+      List<String> encounterIds = new ArrayList<>();
+      List<EncounterDetails> condensedEncounters = new ArrayList<>();
+      for (EncounterDetails encounterDetails : totalEncounters) {
+        if (!encounterIds.contains(encounterDetails.EncounterId)) {
+          condensedEncounters.add(encounterDetails);
+          encounterIds.add(encounterDetails.EncounterId);
+        }
+      }
+
+      Log.d(TAG, "Encounter list is " + condensedEncounters.size());
+      mEncounterAdapter.setEncounterDetailsList(condensedEncounters);
+      mCallback.onEncounterListPopulated();
+    });
+
     return view;
   }
 
-  @Override
-  public void onDetach() {
-    super.onDetach();
-
-    Log.d(TAG, "++onDetach()");
-  }
-
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-
-    Log.d(TAG, "++onDestroy()");
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-
-    Log.d(TAG, "++onResume()");
-  }
-
-  public class EncounterAdapter extends RecyclerView.Adapter<EncounterAdapter.EncounterHolder> {
+  private class EncounterAdapter extends RecyclerView.Adapter<EncounterAdapter.EncounterHolder> {
 
     private final String TAG = Utils.BASE_TAG + EncounterAdapter.class.getSimpleName();
 
@@ -209,7 +182,7 @@ public class EncounterListFragment extends Fragment {
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        mCallback.onEncounterDetailsClicked(mEncounterDetails);
+        mCallback.onEncounterDetailsClicked(mEncounterDetails.EncounterId);
       }
     }
   }

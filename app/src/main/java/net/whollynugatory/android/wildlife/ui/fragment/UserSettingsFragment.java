@@ -15,11 +15,9 @@
  */
 package net.whollynugatory.android.wildlife.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
@@ -41,13 +39,6 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
   /*
     Fragment Override(s)
    */
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-  }
-
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 

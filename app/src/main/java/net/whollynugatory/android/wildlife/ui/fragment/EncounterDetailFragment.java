@@ -27,11 +27,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
+import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 import net.whollynugatory.android.wildlife.ui.TaskListItemAdapter;
 
 import java.util.ArrayList;
@@ -41,14 +43,14 @@ public class EncounterDetailFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + EncounterDetailFragment.class.getSimpleName();
 
-  private EncounterDetails mEncounterDetails;
+  private String mEncounterId;
 
-  public static EncounterDetailFragment newInstance(EncounterDetails encounterDetails) {
+  public static EncounterDetailFragment newInstance(String encounterId) {
 
-    Log.d(TAG, "++newInstance(EncounterDetails)");
+    Log.d(TAG, "++newInstance(String)");
     EncounterDetailFragment fragment = new EncounterDetailFragment();
     Bundle arguments = new Bundle();
-    arguments.putSerializable(Utils.ARG_ENCOUNTER_DETAILS, encounterDetails);
+    arguments.putString(Utils.ARG_ENCOUNTER_ID, encounterId);
     fragment.setArguments(arguments);
     return fragment;
   }
@@ -57,83 +59,57 @@ public class EncounterDetailFragment extends Fragment {
       Fragment Override(s)
     */
   @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-
-    Log.d(TAG, "++onActivityCreated(Bundle)");
-  }
-
-  @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
 
     Log.d(TAG, "++onAttach(Context)");
     Bundle arguments = getArguments();
-    if (arguments != null && arguments.containsKey(Utils.ARG_ENCOUNTER_DETAILS)) {
-      mEncounterDetails = (EncounterDetails) arguments.getSerializable(Utils.ARG_ENCOUNTER_DETAILS);
+    if (arguments != null && arguments.containsKey(Utils.ARG_ENCOUNTER_ID)) {
+      mEncounterId = arguments.getString(Utils.ARG_ENCOUNTER_ID);
+      Log.d(TAG, "EncounterId: " + mEncounterId);
     } else {
       Log.e(TAG, "Arguments were null.");
     }
   }
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    Log.d(TAG, "++onCreate(Bundle)");
-  }
-
-  @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    View view = inflater.inflate(R.layout.fragment_encounter_details, container, false);
+    return inflater.inflate(R.layout.fragment_encounter_details, container, false);
+  }
+
+  @Override
+  public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    Log.d(TAG, "onViewCreated()");
     TextView wildlifeTextView = view.findViewById(R.id.encounter_details_wildlife);
     TextView abbreviationTextView = view.findViewById(R.id.encounter_details_abbreviation);
     TextView dateTextView = view.findViewById(R.id.encounter_details_date);
     ListView taskListView = view.findViewById(R.id.encounter_details_list_tasks);
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    String followingUserId = Utils.getFollowingUserId(getContext());
+    wildlifeViewModel.getEncounterDetails(followingUserId, mEncounterId).observe(getViewLifecycleOwner(), encounters -> {
 
-    wildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
-    abbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
-    dateTextView.setText(Utils.fromTimestamp(mEncounterDetails.Date));
-
-    List<String> taskIds = Utils.toTaskList(mEncounterDetails.TaskIds);
-    List<TaskEntity> taskEntityList = Utils.getTaskList(getContext());
-    List<TaskEntity> completedTaskList = new ArrayList<>();
-    boolean showSensitive = Utils.getShowSensitive(getContext());
-    for(String taskId : taskIds) {
-      for (TaskEntity taskEntity : taskEntityList) {
-        if (taskId.equals(taskEntity.Id) && (!taskEntity.IsSensitive || showSensitive)) {
+      List<TaskEntity> completedTaskList = new ArrayList<>();
+      boolean showSensitive = Utils.getShowSensitive(getContext());
+      for (EncounterDetails encounterDetails : encounters) {
+        if (!encounterDetails.TaskIsSensitive || showSensitive) {
+          TaskEntity taskEntity = new TaskEntity();
+          taskEntity.Description = encounterDetails.TaskDescription;
+          taskEntity.IsSensitive = encounterDetails.TaskIsSensitive;
+          taskEntity.Name = encounterDetails.TaskName;
           completedTaskList.add(taskEntity);
-          break;
         }
       }
-    }
 
-    Log.d(TAG, "Task list is " + completedTaskList.size());
-    ListAdapter customAdapter = new TaskListItemAdapter(getActivity(), 0, completedTaskList);
-    taskListView.setAdapter(customAdapter);
-    return view;
-  }
-
-  @Override
-  public void onDetach() {
-    super.onDetach();
-
-    Log.d(TAG, "++onDetach()");
-  }
-
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-
-    Log.d(TAG, "++onDestroy()");
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-
-    Log.d(TAG, "++onResume()");
+      wildlifeTextView.setText(encounters.get(0).WildlifeSpecies);
+      abbreviationTextView.setText(encounters.get(0).WildlifeAbbreviation);
+      dateTextView.setText(Utils.fromTimestamp(encounters.get(0).Date));
+      Log.d(TAG, "Task list is " + completedTaskList.size());
+      ListAdapter customAdapter = new TaskListItemAdapter(getActivity(), 0, completedTaskList);
+      taskListView.setAdapter(customAdapter);
+    });
   }
 }

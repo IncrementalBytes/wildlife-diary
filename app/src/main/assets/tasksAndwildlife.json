@@ -2,8 +2,7 @@
   "Tasks": {
     "d91114ce-6b33-4798-804a-0e0ca6adca0d": {
       "Name": "Banded",
-      "Description": "Attached identification band to patient.",
-      "IsHidden": "false"
+      "Description": "Attached identification band to patient."
     },
     "5195279b-b057-4d17-aace-82e371d9eb44": {
       "Name": "Force Fed",
@@ -44,13 +43,15 @@
     },
     "25a40f6a-fa23-4331-9fd8-ed8d0bfbb780": {
       "Name": "Oral Medication",
-      "Description": "Gave medication to patient through mouth.",
-      "IsHidden": "false"
+      "Description": "Gave medication to patient through mouth."
     },
     "98bf72f8-f388-4a6a-962e-b3f4cc94f174": {
       "Name": "Subcutaneous",
-      "Description": "Gave fluids or medication to patient underneath the skin.",
-      "IsHidden": "false"
+      "Description": "Gave fluids or medication to patient underneath the skin."
+    },
+    "88c20461-e306-447c-92bd-196bfbfa9458": {
+      "Name": "Syringe Fed",
+      "Description": "Administer formula via syringe to provide nourishment."
     }
   },
   "Wildlife": {

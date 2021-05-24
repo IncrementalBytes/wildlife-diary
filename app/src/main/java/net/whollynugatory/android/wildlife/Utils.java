@@ -45,7 +45,7 @@ public class Utils {
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String DATA_STAMPS_ROOT = "DataStamps";
-  public static final String DEFAULT_FOLLOWING_USER_ID = "leqPZhhUQ1dMcwiGLxpr1fOv9d63";
+  public static final String DEFAULT_FOLLOWING_USER_ID = "pHuFQzKKwJhI0KNTc6UoCvtMXEI2";
   public static final String ENCOUNTER_ROOT = "Encounters";
   public static final String ARG_SUMMARY_ID = "summary_id";
   public static final String TASK_ROOT = "Tasks";
@@ -57,6 +57,7 @@ public class Utils {
 
   public enum ListTypes {
 
+    Banded,
     MostEncountered,
     TotalEncounters,
     UniqueEncountered,

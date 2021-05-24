@@ -57,38 +57,4 @@
 
   </androidx.cardview.widget.CardView>
 
-<!--  <TextView-->
-<!--    android:id="@+id/task_list_item_text_name"-->
-<!--    android:layout_width="wrap_content"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:layout_margin="@dimen/default_view_margin"-->
-<!--    android:text="@string/placeholder"-->
-<!--    android:textColor="@color/white"-->
-<!--    android:textSize="18sp"-->
-<!--    android:textStyle="bold"-->
-<!--    app:layout_constraintStart_toStartOf="parent"-->
-<!--    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--  <androidx.appcompat.widget.AppCompatImageView-->
-<!--    android:id="@+id/task_list_item_image"-->
-<!--    android:layout_width="wrap_content"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:layout_margin="@dimen/default_view_margin"-->
-<!--    android:contentDescription="@string/desc_task_completed"-->
-<!--    android:src="@drawable/ic_completed_dark"-->
-<!--    app:layout_constraintBottom_toBottomOf="@id/task_list_item_text_name"-->
-<!--    app:layout_constraintEnd_toEndOf="parent"-->
-<!--    app:layout_constraintTop_toTopOf="@id/task_list_item_text_name" />-->
-
-<!--  <TextView-->
-<!--    android:id="@+id/task_list_item_text_desc"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_margin="@dimen/default_view_margin"-->
-<!--    android:text="@string/placeholder"-->
-<!--    android:textColor="@color/white"-->
-<!--    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--    app:layout_constraintStart_toStartOf="parent"-->
-<!--    app:layout_constraintTop_toBottomOf="@id/task_list_item_text_name" />-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>

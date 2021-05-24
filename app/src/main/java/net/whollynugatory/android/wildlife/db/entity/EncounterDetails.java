@@ -28,7 +28,11 @@ public class EncounterDetails implements Serializable {
 
   public String EncounterId;
 
-  public String TaskIds;
+  public String TaskDescription;
+
+  public boolean TaskIsSensitive;
+
+  public String TaskName;
 
   public String WildlifeAbbreviation;
 
@@ -39,7 +43,9 @@ public class EncounterDetails implements Serializable {
 
     Date = 0;
     EncounterId = Utils.UNKNOWN_ID;
-    TaskIds = Utils.UNKNOWN_ID;
+    TaskDescription = Utils.UNKNOWN_STRING;
+    TaskIsSensitive = false;
+    TaskName = Utils.UNKNOWN_STRING;
     WildlifeAbbreviation = Utils.UNKNOWN_STRING;
     WildlifeSpecies = Utils.UNKNOWN_STRING;
   }

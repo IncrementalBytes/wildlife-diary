@@ -44,7 +44,6 @@ import net.whollynugatory.android.wildlife.InsertEncountersAsync;
 import net.whollynugatory.android.wildlife.InsertTasksAsync;
 import net.whollynugatory.android.wildlife.InsertWildlifeAsync;
 import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
-import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.UserEntity;
@@ -99,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements
       if (fragment != null) {
         String fragmentClassName = fragment.getClass().getName();
         if (fragmentClassName.equals(SummaryFragment.class.getName())) {
+          setTitle(getString(R.string.app_name));
           mAddEncounterButton.setVisibility(View.VISIBLE);
         } else if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
           setTitle(getString(R.string.title_settings));
@@ -169,13 +169,6 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  protected void onDestroy() {
-    super.onDestroy();
-
-    Log.d(TAG, "++onDestroy()");
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
     Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
@@ -210,20 +203,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-
-    Log.d(TAG, "++onPause()");
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-
-    Log.d(TAG, "++onResume()");
   }
 
   /*
@@ -268,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements
         Locale.US,
         "No encounters found. %s",
         mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
+    replaceFragment(SummaryFragment.newInstance());
   }
 
   @Override
@@ -288,10 +268,10 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterDetailsClicked(EncounterDetails encounterDetails) {
+  public void onEncounterDetailsClicked(String encounterId) {
 
-    Log.d(TAG, "++onEncounterDetailsClicked(EncounterDetails)");
-    replaceFragment(EncounterDetailFragment.newInstance(encounterDetails));
+    Log.d(TAG, "++onEncounterDetailsClicked(String)");
+    replaceFragment(EncounterDetailFragment.newInstance(encounterId));
   }
 
   @Override
@@ -308,24 +288,18 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onSummaryMostEncountered() {
+  public void onSummaryClicked(int summaryId) {
 
-    Log.d(TAG, "onSummaryMostEncountered()");
-    replaceFragment(ListFragment.newInstance(Utils.ListTypes.MostEncountered));
+    Log.d(TAG, "++onSummaryClicked(int)");
+    replaceFragment(ListFragment.newInstance(summaryId));
   }
 
   @Override
   public void onSummaryTotalEncounters() {
 
     Log.d(TAG, "++onSummaryTotalEncounters()");
+    // TODO: replace with call/adjustment to ListFragment
     replaceFragment(EncounterListFragment.newInstance());
-  }
-
-  @Override
-  public void onSummaryUniqueEncounters() {
-
-    Log.d(TAG, "++onSummaryUniqueEncounters()");
-    replaceFragment(ListFragment.newInstance(Utils.ListTypes.UniqueEncountered));
   }
 
   @Override
@@ -366,6 +340,12 @@ public class MainActivity extends AppCompatActivity implements
   public void onTaskItemSelected(String taskId) {
 
     Log.d(TAG, "++onTaskItemSelected(String)");
+  }
+
+  @Override
+  public void onTaskListSet(String titleUpdate) {
+
+    setTitle(titleUpdate);
   }
 
   @Override

@@ -26,6 +26,8 @@ public class SummaryDetails {
 
   public int TotalBanded;
 
+  public int TotalEncounters;
+
   public int TotalForceFed;
 
   public int TotalGavage;
@@ -50,12 +52,13 @@ public class SummaryDetails {
 
   public int TotalSubcutaneous;
 
-  public int TotalEncounters;
+  public int TotalSyringeFed;
 
   public SummaryDetails() {
 
     MostEncountered = Utils.UNKNOWN_ID;
     TotalBanded = 0;
+    TotalEncounters = 0;
     TotalForceFed = 0;
     TotalGavage = 0;
     TotalHandledEuthanasia = 0;
@@ -68,6 +71,6 @@ public class SummaryDetails {
     TotalOralMedicated = 0;
     TotalSpeciesEncountered = 0;
     TotalSubcutaneous = 0;
-    TotalEncounters = 0;
+    TotalSyringeFed = 0;
   }
 }

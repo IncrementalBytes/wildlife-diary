@@ -2,8 +2,10 @@
 <resources>
   <style name="SummaryCard" parent="CardView">
     <item name="cardCornerRadius">@dimen/default_card_corner</item>
-    <item name="android:layout_margin">@dimen/default_card_margin</item>
-    <item name="cardBackgroundColor">@color/dark_green</item>
+    <item name="android:layout_marginTop">2dp</item>
+    <item name="android:layout_marginBottom">2dp</item>
+    <item name="android:layout_marginStart">@dimen/default_card_margin</item>
+    <item name="android:layout_marginEnd">@dimen/default_card_margin</item>
   </style>
   <style name="SummaryHeader" parent="Widget.AppCompat.TextView">
     <item name="android:textSize">18sp</item>

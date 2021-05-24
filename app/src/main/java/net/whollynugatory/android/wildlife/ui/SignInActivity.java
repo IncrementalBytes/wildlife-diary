@@ -15,12 +15,15 @@
  */
 package net.whollynugatory.android.wildlife.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -42,11 +45,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
   private static final String TAG = Utils.BASE_TAG + SignInActivity.class.getSimpleName();
 
-  private static final int RC_SIGN_IN = 4701;
-
   private ProgressBar mProgressBar;
   private Snackbar mSnackbar;
 
+  private ActivityResultLauncher<Intent> mActivityResultLauncher;
   private FirebaseAuth mAuth;
   private GoogleSignInClient mGoogleSignInClient;
 
@@ -75,6 +77,27 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
       .build();
 
     mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+    mActivityResultLauncher = registerForActivityResult(
+      new ActivityResultContracts.StartActivityForResult(),
+      result -> {
+
+        if (result.getResultCode() == Activity.RESULT_OK) {
+          Intent data = result.getData();
+          Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+          try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            if (account != null) {
+              Log.d(TAG, "FirebaseAuthWithGoogle:" + account.getId());
+              firebaseAuthenticateWithGoogle(account.getIdToken());
+            } else {
+              showErrorInSnackBar("Account returned is invalid.");
+            }
+          } catch (ApiException e) {
+            showErrorInSnackBar("Google sign in failed", e);
+          }
+        }
+      });
   }
 
   @Override
@@ -95,26 +118,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     Log.d(TAG, "++onClick()");
     if (view.getId() == R.id.sign_in_button_google) {
-      signInWithGoogle();
-    }
-  }
-
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-    Log.d(TAG, "++onActivityResult(int, int, Intent)");
-    if (requestCode == RC_SIGN_IN) {
-      Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-      try {
-        GoogleSignInAccount account = task.getResult(ApiException.class);
-        Log.d(TAG, "FirebaseAuthWithGoogle:" + account.getId());
-        firebaseAuthenticateWithGoogle(account.getIdToken());
-      } catch (ApiException e) {
-        String message = "Google sign in failed";
-        Log.w(TAG, message, e);
-        showErrorInSnackBar(message);
-      }
+      Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+      mActivityResultLauncher.launch(signInIntent);
     }
   }
 
@@ -156,20 +161,22 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void showErrorInSnackBar(String message) {
+    showErrorInSnackBar(message, null);
+  }
 
-    Log.e(TAG, message);
+  private void showErrorInSnackBar(String message, Exception ex) {
+
+    if (ex == null) {
+      Log.e(TAG, message);
+    } else {
+      Log.e(TAG, message, ex);
+    }
+
     mSnackbar = Snackbar.make(
       findViewById(R.id.activity_sign_in),
       message,
       Snackbar.LENGTH_INDEFINITE);
     mSnackbar.setAction(R.string.dismiss, v -> mSnackbar.dismiss());
     mSnackbar.show();
-  }
-
-  private void signInWithGoogle() {
-
-    Log.d(TAG, "++signInWithGoogle()");
-    Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-    startActivityForResult(signInIntent, RC_SIGN_IN);
   }
 }

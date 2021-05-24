@@ -39,6 +39,16 @@ public class WildlifeViewModel extends AndroidViewModel {
     mWildlifeRepository = new WildlifeRepository(application);
   }
 
+  public LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId) {
+
+    return mWildlifeRepository.getEncounterDetails(userId, encounterId);
+  }
+
+  public LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName) {
+
+    return mWildlifeRepository.getEncountersByTaskName(userId, taskName);
+  }
+
   public LiveData<List<EncounterDetails>> getTotalEncounters(String userId) {
 
     return mWildlifeRepository.getTotalEncounters(userId);

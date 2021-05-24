@@ -54,20 +54,20 @@ public class SimpleListItemAdapter extends ArrayAdapter<WildlifeSummary> {
       convertView = layoutInflater.inflate(R.layout.simple_list_item, null);
       holder = new SimpleListItemAdapter.ViewHolder();
       holder.NameText = convertView.findViewById(R.id.simple_list_item_text_name);
-      holder.CountText = convertView.findViewById(R.id.simple_list_item_text_desc);
+      holder.DetailsText = convertView.findViewById(R.id.simple_list_item_text_desc);
       convertView.setTag(holder);
     } else {
       holder = (SimpleListItemAdapter.ViewHolder) convertView.getTag();
     }
 
-    holder.NameText.setText(mList.get(position).FriendlyName);
-    holder.CountText.setText(String.valueOf(mList.get(position).EncounterCount));
+    holder.NameText.setText(mList.get(position).WildlifeSpecies);
+    holder.DetailsText.setText(mList.get(position).SummaryDetails);
     return convertView;
   }
 
   private static class ViewHolder {
 
     private TextView NameText;
-    private TextView CountText;
+    private TextView DetailsText;
   }
 }

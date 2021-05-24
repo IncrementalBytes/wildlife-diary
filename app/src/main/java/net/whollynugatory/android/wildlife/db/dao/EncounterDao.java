@@ -31,30 +31,60 @@ import java.util.List;
 @Dao
 public interface EncounterDao {
 
-  @Query("SELECT Wildlife.friendly_name AS FriendlyName, " +
+  @Query("SELECT Encounter.date AS Date, " +
+    "Encounter.encounter_id AS EncounterId, " +
+    "Wildlife.friendly_name AS WildlifeSpecies, " +
+    "Wildlife.abbreviation AS WildlifeAbbreviation, " +
+    "Tasks.name AS TaskName, " +
+    "Tasks.is_sensitive AS TaskIsSensitive, " +
+    "Tasks.description AS TaskDescription " +
+    "FROM encounter_table AS Encounter " +
+    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
+    "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
+    "WHERE user_id == :userId AND Tasks.name = :taskName " +
+    "ORDER BY Date DESC")
+  LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName);
+
+  @Query("SELECT Encounter.date AS Date, " +
+    "Encounter.encounter_id AS EncounterId, " +
+    "Wildlife.friendly_name AS WildlifeSpecies, " +
+    "Wildlife.abbreviation AS WildlifeAbbreviation, " +
+    "Tasks.name AS TaskName, " +
+    "Tasks.is_sensitive AS TaskIsSensitive, " +
+    "Tasks.description AS TaskDescription " +
+    "FROM encounter_table AS Encounter " +
+    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
+    "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
+    "WHERE user_id == :userId AND encounter_id = :encounterId " +
+    "ORDER BY Date DESC, EncounterId")
+  LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId);
+
+  @Query("SELECT Wildlife.friendly_name AS WildlifeSpecies, " +
     "  Wildlife.id AS WildlifeId, " +
-    "  COUNT(Wildlife.abbreviation) AS EncounterCount " +
+    "  COUNT(DISTINCT(Wildlife.abbreviation)) AS SummaryDetails " +
     "FROM encounter_table " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "WHERE user_id == :userId " +
     "GROUP BY Wildlife.abbreviation " +
-    "ORDER BY EncounterCount DESC")
+    "ORDER BY SummaryDetails DESC " +
+    "LIMIT 10")
   LiveData<List<WildlifeSummary>> getMostEncountered(String userId);
 
   @Query("SELECT COUNT(DISTINCT encounter_id) AS TotalEncounters, " +
     "    COUNT(DISTINCT wildlife_id) AS TotalSpeciesEncountered, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%d91114ce-6b33-4798-804a-0e0ca6adca0d%')) AS TotalBanded, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%5195279b-b057-4d17-aace-82e371d9eb44%')) AS TotalForceFed, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%695ec329-b99e-444f-a582-c43a3a35d10c%')) AS TotalGavage, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%25f14681-7b98-4a35-8759-ba668c353eb1%')) AS TotalHandledEuthanasia, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%1219a543-cafd-4513-8e1e-e41c3be64862%')) AS TotalHandledExam, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%d27b32b3-8403-4552-8d2b-7723d6777fac%')) AS TotalHandledForceFed, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%c1ebbb56-4c65-42fb-beb8-c628393ffc3a%')) AS TotalHandledGavage, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%175720d7-79d3-4c7c-be33-2dd33db277fb%')) AS TotalHandledMedication, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%0525c4b8-37e4-4b95-bdc6-d1df62f7d670%')) AS TotalHandledSubcutaneous, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%fc0e2bdf-00c0-4da4-855b-857c233effa6%')) AS TotalOcularMedicated, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%25a40f6a-fa23-4331-9fd8-ed8d0bfbb780%')) AS TotalOralMedicated, " +
-    "    (SELECT COUNT(*) FROM encounter_table WHERE task_ids LIKE ('%98bf72f8-f388-4a6a-962e-b3f4cc94f174%')) AS TotalSubcutaneous, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = 'd91114ce-6b33-4798-804a-0e0ca6adca0d') AS TotalBanded, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '5195279b-b057-4d17-aace-82e371d9eb44') AS TotalForceFed, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '695ec329-b99e-444f-a582-c43a3a35d10c') AS TotalGavage, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '25f14681-7b98-4a35-8759-ba668c353eb1') AS TotalHandledEuthanasia, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '1219a543-cafd-4513-8e1e-e41c3be64862') AS TotalHandledExam, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = 'd27b32b3-8403-4552-8d2b-7723d6777fac') AS TotalHandledForceFed, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = 'c1ebbb56-4c65-42fb-beb8-c628393ffc3a') AS TotalHandledGavage, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '175720d7-79d3-4c7c-be33-2dd33db277fb') AS TotalHandledMedication, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '0525c4b8-37e4-4b95-bdc6-d1df62f7d670') AS TotalHandledSubcutaneous, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = 'fc0e2bdf-00c0-4da4-855b-857c233effa6') AS TotalOcularMedicated, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '25a40f6a-fa23-4331-9fd8-ed8d0bfbb780') AS TotalOralMedicated, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '98bf72f8-f388-4a6a-962e-b3f4cc94f174') AS TotalSubcutaneous, " +
+    "    (SELECT COUNT(*) FROM encounter_table WHERE task_id = '88c20461-e306-447c-92bd-196bfbfa9458') AS TotalSyringeFed, " +
     "    (SELECT FriendlyName FROM " +
     "        (SELECT wt.friendly_name AS FriendlyName, wildlife_id, COUNT(*) AS Count " +
     "            FROM encounter_table " +
@@ -72,22 +102,25 @@ public interface EncounterDao {
     "Encounter.encounter_id AS EncounterId, " +
     "Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.abbreviation AS WildlifeAbbreviation, " +
-    "Encounter.task_ids AS TaskIds " +
+    "Tasks.name AS TaskName, " +
+    "Tasks.is_sensitive AS TaskIsSensitive, " +
+    "Tasks.description AS TaskDescription " +
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
+    "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
     "WHERE user_id == :userId " +
-    "GROUP BY Encounter.encounter_id " +
     "ORDER BY Date DESC, EncounterId")
   LiveData<List<EncounterDetails>> getTotalEncounters(String userId);
 
-  @Query("SELECT Wildlife.friendly_name AS FriendlyName, " +
-    "  Wildlife.id AS WildlifeId, " +
-    "  COUNT(Wildlife.abbreviation) AS EncounterCount " +
+  @Query("SELECT Wildlife.friendly_name AS WildlifeSpecies, " +
+    "Wildlife.id AS WildlifeId, " +
+    "COUNT(DISTINCT (Wildlife.abbreviation)) AS SummaryDetails " +
     "FROM encounter_table " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "WHERE user_id == :userId " +
     "GROUP BY Wildlife.abbreviation " +
-    "ORDER BY EncounterCount ASC")
+    "ORDER BY SummaryDetails ASC " +
+    "LIMIT 10")
   LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)

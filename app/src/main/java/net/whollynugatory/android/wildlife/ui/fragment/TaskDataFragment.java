@@ -63,10 +63,22 @@ public class TaskDataFragment extends Fragment {
   }
 
   @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
 
-    Log.d(TAG, "++onActivityCreated(Bundle)");
+    Log.d(TAG, "++onAttach(Context)");
+    try {
+      mCallback = (OnTaskDataListener) context;
+    } catch (ClassCastException e) {
+      throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
+    }
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    Log.d(TAG, "++onCreate(Bundle)");
     FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).get().addOnCompleteListener(
       task -> {
 
@@ -101,18 +113,6 @@ public class TaskDataFragment extends Fragment {
           }
         }
       });
-  }
-
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    try {
-      mCallback = (OnTaskDataListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
   }
 
   @Override

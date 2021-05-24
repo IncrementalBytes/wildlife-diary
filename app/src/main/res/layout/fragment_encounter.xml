@@ -11,7 +11,7 @@
     android:src="@drawable/ic_close_dark"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    android:contentDescription="@string/close_encounters" />
+    android:contentDescription="@string/close_encounter" />
 
   <TextView
     android:id="@+id/encounter_text_date"
@@ -83,22 +83,44 @@
     app:layout_constraintStart_toEndOf="@id/encounter_text_task"
     app:layout_constraintTop_toBottomOf="@id/encounter_auto_wildlife" />
 
+  <TextView
+    android:id="@+id/encounter_text_number_in_group"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    android:text="@string/number_in_group"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintStart_toEndOf="@id/encounter_picker_number_in_group"
+    app:layout_constraintTop_toTopOf="@id/encounter_picker_number_in_group"
+    app:layout_constraintBottom_toBottomOf="@id/encounter_picker_number_in_group"/>
+
+  <NumberPicker
+    android:id="@+id/encounter_picker_number_in_group"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/encounter_text_number_in_group"
+    app:layout_constraintTop_toBottomOf="@id/encounter_spinner_task"/>
+
   <Button
     android:id="@+id/encounter_button_add"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/default_view_margin"
     android:text="@string/label_add"
-    app:layout_constraintTop_toBottomOf="@id/encounter_spinner_task"
+    app:layout_constraintTop_toBottomOf="@id/encounter_picker_number_in_group"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"/>
 
-  <ListView
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/encounter_button_add"
-    app:layout_constraintBottom_toBottomOf="parent"/>
+<!--  <ListView-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="0dp"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    app:layout_constraintTop_toBottomOf="@id/encounter_button_add"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

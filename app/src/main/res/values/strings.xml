@@ -31,7 +31,7 @@
   <string name="perf_key_following_user_id">following_user_id</string>
   <string name="perf_key_stamp_encounters">stamp_encounters</string>
   <string name="perf_key_stamp_wildlife">stamp_wildlife</string>
-  <string name="close_encounters">Close Encounters</string>
+  <string name="close_encounter">Close Insert Encounter</string>
   <string name="header_total_encounters">Total Encounters</string>
   <string name="header_unique_encounters">Unique Encounters</string>
   <string name="header_handled_exam">Handled (Exam)</string>
@@ -51,4 +51,6 @@
   <string name="menu_home">Home</string>
   <string name="pref_key_task_list">task_list</string>
   <string name="tap_for_details">Tap for details</string>
+  <string name="header_syringe_fed">Syringe Fed</string>
+  <string name="number_in_group">Number in group:</string>
 </resources>
