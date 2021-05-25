@@ -317,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements
   public void onTaskDataPopulate(List<TaskEntity> taskEntityList) {
 
     Log.d(TAG, "++onTaskDataPopulate(List<TaskEntity>)");
-    Utils.setTaskList(this, taskEntityList);
     new InsertTasksAsync(
       MainActivity.this,
       WildlifeDatabase.getInstance(this).taskDao(),

@@ -21,8 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,8 +32,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
+import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.SimpleListItemAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -107,10 +105,10 @@ public class ListFragment extends Fragment {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_simple_list, container, false);
-    ListView listView = view.findViewById(R.id.simple_list_view);
     RecyclerView recyclerView = view.findViewById(R.id.simple_list_recycler_view);
-    listView.setVisibility(View.VISIBLE);
-    recyclerView.setVisibility(View.GONE);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    mEncounterAdapter = new EncounterAdapter(getContext());
+    recyclerView.setAdapter(mEncounterAdapter);
 
     String followingUserId = Utils.getFollowingUserId(getContext());
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
@@ -119,22 +117,15 @@ public class ListFragment extends Fragment {
       wildlifeViewModel.getUniqueEncountered(followingUserId).observe(getViewLifecycleOwner(), uniqueEncounteredList -> {
 
         Log.d(TAG, "Unique Encounter list is " + uniqueEncounteredList.size());
-        ListAdapter customAdapter = new SimpleListItemAdapter(getActivity(), 0, uniqueEncounteredList);
-        listView.setAdapter(customAdapter);
+        mEncounterAdapter.setWildlifeSummaryList(uniqueEncounteredList);
       });
     } else if (mSummaryId == R.id.summary_card_most_encountered) {
       wildlifeViewModel.getMostEncountered(followingUserId).observe(getViewLifecycleOwner(), mostEncounteredList -> {
 
         Log.d(TAG, "Most Encounter list is " + mostEncounteredList.size());
-        ListAdapter customAdapter = new SimpleListItemAdapter(getActivity(), 0, mostEncounteredList);
-        listView.setAdapter(customAdapter);
+        mEncounterAdapter.setWildlifeSummaryList(mostEncounteredList);
       });
     } else {
-      listView.setVisibility(View.GONE);
-      recyclerView.setVisibility(View.VISIBLE);
-      recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-      mEncounterAdapter = new EncounterAdapter(getContext());
-      recyclerView.setAdapter(mEncounterAdapter);
       String taskName = "";
       if (mSummaryId == R.id.summary_card_banded) {
         taskName = "Banded";
@@ -186,6 +177,7 @@ public class ListFragment extends Fragment {
 
     private final LayoutInflater mInflater;
     private List<EncounterDetails> mEncounterDetails;
+    private List<WildlifeSummary> mWildlifeSummaries;
 
     public EncounterAdapter(Context context) {
 
@@ -206,6 +198,9 @@ public class ListFragment extends Fragment {
       if (mEncounterDetails != null) {
         EncounterDetails encounterDetails = mEncounterDetails.get(position);
         holder.bind(encounterDetails);
+      } else if (mWildlifeSummaries != null) {
+        WildlifeSummary wildlifeSummary = mWildlifeSummaries.get(position);
+        holder.bind(wildlifeSummary);
       } else {
         Log.w(TAG, "EncounterDetails is empty at this time.");
       }
@@ -214,7 +209,7 @@ public class ListFragment extends Fragment {
     @Override
     public int getItemCount() {
 
-      return mEncounterDetails != null ? mEncounterDetails.size() : 0;
+      return mEncounterDetails != null ? mEncounterDetails.size() : mWildlifeSummaries != null ? mWildlifeSummaries.size() : 0;
     }
 
     public void setEncounterDetailsList(Collection<EncounterDetails> encounterDetailsCollection) {
@@ -222,6 +217,13 @@ public class ListFragment extends Fragment {
       Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterDetails>)");
       mEncounterDetails = new ArrayList<>(encounterDetailsCollection);
       mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
+      notifyDataSetChanged();
+    }
+
+    public void setWildlifeSummaryList(Collection<WildlifeSummary> wildlifeSummaryCollection) {
+
+      Log.d(TAG, "++setWildlifeSummaryList(Collection<WildlifeSummary>)");
+      mWildlifeSummaries = new ArrayList<>(wildlifeSummaryCollection);
       notifyDataSetChanged();
     }
 
@@ -242,6 +244,12 @@ public class ListFragment extends Fragment {
 
         mTitleTextView.setText(encounterDetails.WildlifeSpecies);
         mDetailsTextView.setText(Utils.fromTimestamp(encounterDetails.Date));
+      }
+
+      void bind(WildlifeSummary wildlifeSummary) {
+
+        mTitleTextView.setText(wildlifeSummary.WildlifeSpecies);
+        mDetailsTextView.setText(wildlifeSummary.SummaryDetails);
       }
     }
   }

@@ -21,22 +21,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.TaskListItemAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class EncounterDetailFragment extends Fragment {
@@ -44,6 +44,7 @@ public class EncounterDetailFragment extends Fragment {
   private static final String TAG = Utils.BASE_TAG + EncounterDetailFragment.class.getSimpleName();
 
   private String mEncounterId;
+  private TaskAdapter mTaskAdapter;
 
   public static EncounterDetailFragment newInstance(String encounterId) {
 
@@ -87,7 +88,11 @@ public class EncounterDetailFragment extends Fragment {
     TextView wildlifeTextView = view.findViewById(R.id.encounter_details_wildlife);
     TextView abbreviationTextView = view.findViewById(R.id.encounter_details_abbreviation);
     TextView dateTextView = view.findViewById(R.id.encounter_details_date);
-    ListView taskListView = view.findViewById(R.id.encounter_details_list_tasks);
+    RecyclerView recyclerView = view.findViewById(R.id.encounter_details_recycler_view);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    mTaskAdapter = new TaskAdapter(getContext());
+    recyclerView.setAdapter(mTaskAdapter);
+
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     String followingUserId = Utils.getFollowingUserId(getContext());
     wildlifeViewModel.getEncounterDetails(followingUserId, mEncounterId).observe(getViewLifecycleOwner(), encounters -> {
@@ -108,8 +113,71 @@ public class EncounterDetailFragment extends Fragment {
       abbreviationTextView.setText(encounters.get(0).WildlifeAbbreviation);
       dateTextView.setText(Utils.fromTimestamp(encounters.get(0).Date));
       Log.d(TAG, "Task list is " + completedTaskList.size());
-      ListAdapter customAdapter = new TaskListItemAdapter(getActivity(), 0, completedTaskList);
-      taskListView.setAdapter(customAdapter);
+      mTaskAdapter.setTaskEntityList(completedTaskList);
     });
+  }
+
+  private static class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
+
+    private final String TAG = Utils.BASE_TAG + TaskAdapter.class.getSimpleName();
+
+    private final LayoutInflater mInflater;
+    private List<TaskEntity> mTaskEntityList;
+
+    public TaskAdapter(Context context) {
+
+      mInflater = LayoutInflater.from(context);
+    }
+
+    @NonNull
+    @Override
+    public TaskAdapter.TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+      View itemView = mInflater.inflate(R.layout.task_list_item, parent, false);
+      return new TaskAdapter.TaskHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TaskAdapter.TaskHolder holder, int position) {
+
+      if (mTaskEntityList != null) {
+        TaskEntity taskEntity = mTaskEntityList.get(position);
+        holder.bind(taskEntity);
+      } else {
+        Log.w(TAG, "TaskEntityList is empty at this time.");
+      }
+    }
+
+    @Override
+    public int getItemCount() {
+
+      return mTaskEntityList != null ? mTaskEntityList.size() : 0;
+    }
+
+    public void setTaskEntityList(Collection<TaskEntity> taskEntityCollection) {
+
+      Log.d(TAG, "++setTaskEntityList(Collection<TaskEntity>)");
+      mTaskEntityList = new ArrayList<>(taskEntityCollection);
+      notifyDataSetChanged();
+    }
+
+    static class TaskHolder extends RecyclerView.ViewHolder {
+
+      private final TextView mTitleTextView;
+      private final TextView mDescriptionTextView;
+
+      TaskHolder(View itemView) {
+        super(itemView);
+
+        mTitleTextView = itemView.findViewById(R.id.task_item_text_name);
+        mDescriptionTextView = itemView.findViewById(R.id.task_item_text_desc);
+      }
+
+      void bind(TaskEntity taskEntity) {
+
+        mTitleTextView.setText(taskEntity.Name);
+        mDescriptionTextView.setText(taskEntity.Description);
+      }
+    }
   }
 }

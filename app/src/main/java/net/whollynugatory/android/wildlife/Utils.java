@@ -22,26 +22,15 @@ import androidx.preference.PreferenceManager;
 import androidx.annotation.StringRes;
 import androidx.room.TypeConverter;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
-
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 
 public class Utils {
 
-  public static final String ARG_ENCOUNTER_DETAILS = "encounter_details";
   public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
-  public static final String ARG_FOLLOWING_USER_ID = "following_id";
-  public static final String ARG_LIST_TYPE = "list_type";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String DATA_STAMPS_ROOT = "DataStamps";
@@ -54,15 +43,6 @@ public class Utils {
   public static final String UNKNOWN_USER_ID = "0000000000000000000000000000";
   public static final String USERS_ROOT = "Users";
   public static final String WILDLIFE_ROOT = "Wildlife";
-
-  public enum ListTypes {
-
-    Banded,
-    MostEncountered,
-    TotalEncounters,
-    UniqueEncountered,
-    Unknown
-  }
 
   public static String combine(Object... paths) {
 
@@ -87,25 +67,19 @@ public class Utils {
     return new SimpleDateFormat( "MM/dd/yyyy", Locale.US).format(calendar.getTime());
   }
 
-  @TypeConverter
-  public static String fromTaskList(List<String> taskList) {
-
-    return new Gson().toJson(taskList);
-  }
-
   public static String getEncountersStamp(Context context) {
 
-    return getStringPref(context, R.string.perf_key_stamp_encounters, Utils.UNKNOWN_ID);
+    return getStringPref(context, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
   }
 
   public static String getTasksStamp(Context context) {
 
-    return getStringPref(context, R.string.perf_key_stamp_tasks, Utils.UNKNOWN_ID);
+    return getStringPref(context, R.string.pref_key_stamp_tasks, Utils.UNKNOWN_ID);
   }
 
   public static String getFollowingUserId(Context context) {
 
-    return getStringPref(context, R.string.perf_key_following_user_id, Utils.UNKNOWN_USER_ID);
+    return getStringPref(context, R.string.pref_key_following_user_id, Utils.UNKNOWN_USER_ID);
   }
 
   public static boolean getShowSensitive(Context context) {
@@ -113,32 +87,24 @@ public class Utils {
     return getBooleanPref(context, R.string.pref_key_enable_sensitive, false);
   }
 
-  public static ArrayList<TaskEntity> getTaskList(Context context) {
-
-    Gson gson = new Gson();
-    String json = getStringPref(context, R.string.pref_key_task_list);
-    Type type = new TypeToken<ArrayList<TaskEntity>>() { }.getType();
-    return gson.fromJson(json, type);
-  }
-
   public static String getUserId(Context context) {
 
-    return getStringPref(context, R.string.perf_key_user_id, Utils.UNKNOWN_USER_ID);
+    return getStringPref(context, R.string.pref_key_user_id, Utils.UNKNOWN_USER_ID);
   }
 
   public static String getWildlifeStamp(Context context) {
 
-    return getStringPref(context, R.string.perf_key_stamp_wildlife, Utils.UNKNOWN_ID);
+    return getStringPref(context, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
   }
 
   public static void setEncountersStamp(Context context, String newEncountersStamp) {
 
-    setStringPref(context, R.string.perf_key_stamp_encounters, newEncountersStamp);
+    setStringPref(context, R.string.pref_key_stamp_encounters, newEncountersStamp);
   }
 
   public static void setFollowingUserId(Context context, String newFollowingUserId) {
 
-    setStringPref(context, R.string.perf_key_following_user_id, newFollowingUserId);
+    setStringPref(context, R.string.pref_key_following_user_id, newFollowingUserId);
   }
 
   public static void setShowSensitive(Context context, boolean showSensitive) {
@@ -146,29 +112,19 @@ public class Utils {
     setBooleanPref(context, R.string.pref_key_enable_sensitive, showSensitive);
   }
 
-  public static void setTaskList(Context context, List<TaskEntity> taskEntities) {
-
-    Gson gson = new Gson();
-    String json = gson.toJson(taskEntities);
-    PreferenceManager.getDefaultSharedPreferences(context)
-      .edit()
-      .putString(context.getString(R.string.pref_key_task_list), json)
-      .apply();
-  }
-
   public static void setTasksStamp(Context context, String newTasksStamp) {
 
-    setStringPref(context, R.string.perf_key_stamp_tasks, newTasksStamp);
+    setStringPref(context, R.string.pref_key_stamp_tasks, newTasksStamp);
   }
 
   public static void setUserId(Context context, String userId) {
 
-    setStringPref(context, R.string.perf_key_user_id, userId);
+    setStringPref(context, R.string.pref_key_user_id, userId);
   }
 
   public static void setWildlifeStamp(Context context, String newWildlifeStamp) {
 
-    setStringPref(context, R.string.perf_key_stamp_wildlife, newWildlifeStamp);
+    setStringPref(context, R.string.pref_key_stamp_wildlife, newWildlifeStamp);
   }
 
   @TypeConverter
@@ -192,12 +148,6 @@ public class Utils {
     return calendar.getTimeInMillis();
   }
 
-  @TypeConverter
-  public static List<String> toTaskList(String value) {
-
-    return new Gson().fromJson(value, new TypeToken<List<String>>() {}.getType());
-  }
-
   /*
     Private Method(s)
    */
@@ -207,11 +157,6 @@ public class Utils {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String prefKey = context.getString(prefKeyId);
     return sharedPreferences.getBoolean(prefKey, defaultValue);
-  }
-
-  private static String getStringPref(Context context, @StringRes int preferenceKeyId) {
-
-    return getStringPref(context, preferenceKeyId, "");
   }
 
   public static String getStringPref(Context context, @StringRes int preferenceKeyId, String defaultValue) {

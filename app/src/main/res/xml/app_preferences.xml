@@ -12,6 +12,9 @@
 
   </androidx.preference.PreferenceCategory>
 
+  <androidx.preference.PreferenceCategory>
+  </androidx.preference.PreferenceCategory>
+
   <androidx.preference.PreferenceCategory android:title="@string/pref_category_about">
     <androidx.preference.EditTextPreference
       android:key="@string/pref_key_app_version"

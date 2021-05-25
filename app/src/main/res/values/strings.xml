@@ -26,11 +26,11 @@
   <string name="channel_name">New Encounter Added</string>
   <string name="channel_description">Get notified when a new encounter is added.</string>
   <string name="default_notification_channel_id">wildlife-notification-id</string>
-  <string name="perf_key_user_id">user_id</string>
-  <string name="perf_key_stamp_tasks">stamp_tasks</string>
-  <string name="perf_key_following_user_id">following_user_id</string>
-  <string name="perf_key_stamp_encounters">stamp_encounters</string>
-  <string name="perf_key_stamp_wildlife">stamp_wildlife</string>
+  <string name="pref_key_user_id">user_id</string>
+  <string name="pref_key_stamp_tasks">stamp_tasks</string>
+  <string name="pref_key_following_user_id">following_user_id</string>
+  <string name="pref_key_stamp_encounters">stamp_encounters</string>
+  <string name="pref_key_stamp_wildlife">stamp_wildlife</string>
   <string name="close_encounter">Close Insert Encounter</string>
   <string name="header_total_encounters">Total Encounters</string>
   <string name="header_unique_encounters">Unique Encounters</string>
@@ -53,4 +53,5 @@
   <string name="tap_for_details">Tap for details</string>
   <string name="header_syringe_fed">Syringe Fed</string>
   <string name="number_in_group">Number in group:</string>
+  <string name="pref_key_dark_mode">dark_mode</string>
 </resources>

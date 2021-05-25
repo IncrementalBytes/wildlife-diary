@@ -20,7 +20,6 @@
       android:layout_margin="@dimen/default_view_margin"
       android:singleLine="true"
       android:text="@string/placeholder"
-      android:textColor="@color/white"
       android:textSize="24sp"
       android:textStyle="bold"
       app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +35,6 @@
       android:layout_marginBottom="@dimen/default_view_margin"
       android:singleLine="true"
       android:text="@string/placeholder"
-      android:textColor="@color/blue"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/encounter_details_wildlife"/>
 
@@ -48,15 +46,16 @@
       android:layout_marginEnd="@dimen/default_view_margin"
       android:layout_marginBottom="@dimen/default_view_margin"
       android:text="@string/placeholder"
-      android:textColor="@color/lite_blue"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="@id/encounter_details_abbreviation"
       app:layout_constraintBottom_toBottomOf="@id/encounter_details_abbreviation"/>
 
-    <ListView
-      android:id="@+id/encounter_details_list_tasks"
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/encounter_details_recycler_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:isScrollContainer="true"
+      android:scrollbars="vertical"
       android:layout_marginTop="@dimen/default_view_margin"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/encounter_details_abbreviation"

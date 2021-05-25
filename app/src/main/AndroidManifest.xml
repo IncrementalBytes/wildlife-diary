@@ -13,9 +13,6 @@
       android:name="com.google.firebase.messaging.default_notification_icon"
       android:resource="@drawable/ic_stat_ic_notification" />
     <meta-data
-      android:name="com.google.firebase.messaging.default_notification_color"
-      android:resource="@color/green" />
-    <meta-data
       android:name="com.google.firebase.messaging.default_notification_channel_id"
       android:value="@string/default_notification_channel_id" />
     <activity android:name=".ui.SignInActivity">
@@ -24,7 +21,7 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <activity android:name=".ui.MainActivity"/>
+    <activity android:name=".ui.MainActivity" android:configChanges="uiMode" />
     <service
       android:name=".WildlifeMessagingService"
       android:exported="false">

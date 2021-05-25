@@ -8,7 +8,7 @@
     android:id="@+id/encounter_button_close"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:src="@drawable/ic_close_dark"
+    android:src="@drawable/ic_close_light"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     android:contentDescription="@string/close_encounter" />
@@ -114,13 +114,5 @@
     app:layout_constraintTop_toBottomOf="@id/encounter_picker_number_in_group"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"/>
-
-<!--  <ListView-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="0dp"-->
-<!--    app:layout_constraintStart_toStartOf="parent"-->
-<!--    app:layout_constraintEnd_toEndOf="parent"-->
-<!--    app:layout_constraintTop_toBottomOf="@id/encounter_button_add"-->
-<!--    app:layout_constraintBottom_toBottomOf="parent"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
