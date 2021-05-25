@@ -38,15 +38,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import net.whollynugatory.android.wildlife.InsertEncountersAsync;
-import net.whollynugatory.android.wildlife.InsertTasksAsync;
-import net.whollynugatory.android.wildlife.InsertWildlifeAsync;
-import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
-import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
-import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.UserEntity;
 import net.whollynugatory.android.wildlife.R;
-import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment;
@@ -59,7 +52,6 @@ import net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.WildlifeDataFragment;
 
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
@@ -227,14 +219,10 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterDataPopulate(List<EncounterEntity> encounterEntityList) {
+  public void onEncounterDataPopulated() {
 
-    Log.d(TAG, "++onEncounterDataPopulate(List<EncounterEntity>)");
-
-    new InsertEncountersAsync(
-      MainActivity.this,
-      WildlifeDatabase.getInstance(this).encounterDao(),
-      encounterEntityList).execute();
+    Log.d(TAG, "++onEncounterDataPopulated()");
+    replaceFragment(SummaryFragment.newInstance());
   }
 
   @Override
@@ -295,13 +283,10 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onTaskDataPopulate(List<TaskEntity> taskEntityList) {
+  public void onTaskDataPopulated() {
 
-    Log.d(TAG, "++onTaskDataPopulate(List<TaskEntity>)");
-    new InsertTasksAsync(
-      MainActivity.this,
-      WildlifeDatabase.getInstance(this).taskDao(),
-      taskEntityList).execute();
+    Log.d(TAG, "++onTaskDataPopulate()");
+    replaceFragment(WildlifeDataFragment.newInstance());
   }
 
   @Override
@@ -361,13 +346,10 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onWildlifeDataPopulate(List<WildlifeEntity> wildlifeEntityList) {
+  public void onWildlifeDataPopulated() {
 
-    Log.d(TAG, "++onWildlifeDataPopulate(List<WildlifeEntity>)");
-    new InsertWildlifeAsync(
-      MainActivity.this,
-      WildlifeDatabase.getInstance(this).wildlifeDao(),
-      wildlifeEntityList).execute();
+    Log.d(TAG, "++onWildlifeDataPopulated()");
+    replaceFragment(EncounterDataFragment.newInstance());
   }
 
   @Override
@@ -381,27 +363,6 @@ public class MainActivity extends AppCompatActivity implements
   public void onWildlifeItemSelected(String wildlifeId) {
 
     Log.d(TAG, "++onWildlifeItemSelected(String)");
-  }
-
-  /*
-    Public Method(s)
-   */
-  public void encounterInsertionComplete() {
-
-    Log.d(TAG, "++encounterInsertionComplete()");
-    replaceFragment(SummaryFragment.newInstance());
-  }
-
-  public void taskInsertionComplete() {
-
-    Log.d(TAG, "++taskInsertionComplete()");
-    replaceFragment(WildlifeDataFragment.newInstance());
-  }
-
-  public void wildlifeInsertionComplete() {
-
-    Log.d(TAG, "++wildlifeInsertionComplete()");
-    replaceFragment(EncounterDataFragment.newInstance());
   }
 
   /*

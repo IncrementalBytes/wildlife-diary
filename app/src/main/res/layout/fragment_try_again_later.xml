@@ -20,7 +20,7 @@
     android:id="@+id/try_again_button_try_again"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="@string/message_try_again"
+    android:text="@string/label_try_again"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +30,7 @@
     android:id="@+id/try_again_button_sign_out"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="@string/message_sign_out"
+    android:text="@string/label_sign_out"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/try_again_button_try_again"/>

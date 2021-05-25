@@ -124,5 +124,5 @@ public interface EncounterDao {
   LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertAll(List<EncounterEntity> encounterEntityList);
+  void insert(EncounterEntity encounterEntity);
 }

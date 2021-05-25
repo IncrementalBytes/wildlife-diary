@@ -30,10 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class EncounterDataFragment  extends Fragment {
@@ -46,10 +45,7 @@ public class EncounterDataFragment  extends Fragment {
 
     void onEncounterDataMissing();
 
-    /*
-      Instructs caller to update local db with passed data.
-     */
-    void onEncounterDataPopulate(List<EncounterEntity> encounterEntityList);
+    void onEncounterDataPopulated();
 
     void onEncounterDataSynced();
   }
@@ -84,7 +80,7 @@ public class EncounterDataFragment  extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Checking data stamp for Encounters was unsuccessful.", task.getException());
-          mCallback.onEncounterDataFailure("Unable to retrieve Wildlife data stamp.");
+          mCallback.onEncounterDataFailure("Unable to retrieve Encounters data stamp.");
         } else {
           String remoteStamp = Utils.UNKNOWN_ID;
           DataSnapshot resultSnapshot = task.getResult();
@@ -137,21 +133,21 @@ public class EncounterDataFragment  extends Fragment {
             if (resultSnapshot.getChildrenCount() > 0) {
               Log.d(TAG, "Attempting Encounter inserts: " + resultSnapshot.getChildrenCount());
               if (getActivity() != null) {
-                List<EncounterEntity> encounterEntityList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
                   EncounterEntity encounterEntity = dataSnapshot.getValue(EncounterEntity.class);
                   String id = dataSnapshot.getKey();
                   if (encounterEntity != null && id != null) {
                     encounterEntity.Id = id;
                     if (encounterEntity.isValid()) {
-                      encounterEntityList.add(encounterEntity);
+                      WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                        WildlifeDatabase.getInstance(getContext()).encounterDao().insert(encounterEntity));
                     } else {
-                      Log.w(TAG, "Encounter entity was invalid, not adding: " + encounterEntity.Id);
+                      Log.w(TAG, "Encounter entity was invalid, not adding: " + encounterEntity.toString());
                     }
                   }
                 }
 
-                mCallback.onEncounterDataPopulate(encounterEntityList);
+                mCallback.onEncounterDataPopulated();
               } else {
                 mCallback.onEncounterDataFailure("App was not ready for operation at this time.");
               }

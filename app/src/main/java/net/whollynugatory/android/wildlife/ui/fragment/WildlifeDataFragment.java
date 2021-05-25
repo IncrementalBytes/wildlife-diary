@@ -30,10 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class WildlifeDataFragment  extends Fragment {
@@ -46,10 +45,7 @@ public class WildlifeDataFragment  extends Fragment {
 
     void onWildlifeDataMissing();
 
-    /*
-      Instructs caller to update local db with passed data.
-     */
-    void onWildlifeDataPopulate(List<WildlifeEntity> wildlifeEntityList);
+    void onWildlifeDataPopulated();
 
     void onWildlifeDataSynced();
   }
@@ -137,21 +133,21 @@ public class WildlifeDataFragment  extends Fragment {
             if (resultSnapshot.getChildrenCount() > 0) {
               Log.d(TAG, "Attempting Wildlife inserts: " + resultSnapshot.getChildrenCount());
               if (getActivity() != null) {
-                List<WildlifeEntity> wildlifeEntityList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
                   WildlifeEntity wildlifeEntity = dataSnapshot.getValue(WildlifeEntity.class);
                   String id = dataSnapshot.getKey();
                   if (wildlifeEntity != null && id != null) {
                     wildlifeEntity.Id = id;
                     if (wildlifeEntity.isValid()) {
-                      wildlifeEntityList.add(wildlifeEntity);
+                      WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                        WildlifeDatabase.getInstance(getContext()).wildlifeDao().insert(wildlifeEntity));
                     } else {
-                      Log.w(TAG, "Wildlife entity was invalid, not adding: " + wildlifeEntity.Id);
+                      Log.w(TAG, "Wildlife entity was invalid, not adding: " + wildlifeEntity.toString());
                     }
                   }
                 }
 
-                mCallback.onWildlifeDataPopulate(wildlifeEntityList);
+                mCallback.onWildlifeDataPopulated();
               } else {
                 mCallback.onWildlifeDataFailure("App was not ready for operation at this time.");
               }

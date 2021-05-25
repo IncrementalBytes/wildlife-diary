@@ -30,10 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class TaskDataFragment extends Fragment {
@@ -46,10 +45,7 @@ public class TaskDataFragment extends Fragment {
 
     void onTaskDataMissing();
 
-    /*
-      Instructs caller to update local db with passed data.
-     */
-    void onTaskDataPopulate(List<TaskEntity> taskEntityList);
+    void onTaskDataPopulated();
 
     void onTaskDataSynced();
   }
@@ -137,21 +133,21 @@ public class TaskDataFragment extends Fragment {
             if (resultSnapshot.getChildrenCount() > 0) {
               Log.d(TAG, "Attempting Task inserts: " + resultSnapshot.getChildrenCount());
               if (getActivity() != null) {
-                List<TaskEntity> taskEntityList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
                   TaskEntity taskEntity = dataSnapshot.getValue(TaskEntity.class);
                   String id = dataSnapshot.getKey();
                   if (taskEntity != null && id != null) {
                     taskEntity.Id = id;
                     if (taskEntity.isValid()) {
-                      taskEntityList.add(taskEntity);
+                      WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                        WildlifeDatabase.getInstance(getContext()).taskDao().insert(taskEntity));
                     } else {
-                      Log.w(TAG, "Task entity was invalid, not adding: " + taskEntity.Id);
+                      Log.w(TAG, "Task entity was invalid, not adding: " + taskEntity.toString());
                     }
                   }
                 }
 
-                mCallback.onTaskDataPopulate(taskEntityList);
+                mCallback.onTaskDataPopulated();
               } else {
                 mCallback.onTaskDataFailure("App was not ready for operation at this time.");
               }

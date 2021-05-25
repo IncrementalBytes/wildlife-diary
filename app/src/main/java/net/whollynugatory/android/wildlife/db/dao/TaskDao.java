@@ -32,5 +32,5 @@ public interface TaskDao {
   LiveData<List<TaskEntity>> getAll();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertAll(List<TaskEntity> taskEntityList);
+  void insert(TaskEntity taskEntity);
 }
