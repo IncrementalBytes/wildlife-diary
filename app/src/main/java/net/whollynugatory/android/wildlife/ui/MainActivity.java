@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +32,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -57,6 +55,7 @@ import net.whollynugatory.android.wildlife.ui.fragment.ListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.SummaryFragment;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.ui.fragment.TaskDataFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.WildlifeDataFragment;
 
@@ -70,11 +69,11 @@ public class MainActivity extends AppCompatActivity implements
   ListFragment.OnSimpleListListener,
   SummaryFragment.OnSummaryListListener,
   TaskDataFragment.OnTaskDataListener,
+  TryAgainLaterFragment.OnTryAgainLaterListener,
   WildlifeDataFragment.OnWildlifeDataListener {
 
   private static final String TAG = Utils.BASE_TAG + MainActivity.class.getSimpleName();
 
-  private FloatingActionButton mAddEncounterButton;
   private Snackbar mSnackbar;
 
   private UserEntity mUserEntity;
@@ -88,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements
 
     manageNotificationChannel();
 
-    mAddEncounterButton = findViewById(R.id.main_fab_add);
-    mAddEncounterButton.setOnClickListener(v -> replaceFragment(EncounterFragment.newInstance()));
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
     setSupportActionBar(mainToolbar);
 
@@ -101,10 +98,8 @@ public class MainActivity extends AppCompatActivity implements
           setTitle(getString(R.string.app_name));
         } else if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
           setTitle(getString(R.string.title_settings));
-          mAddEncounterButton.setVisibility(View.GONE);
         } else {
           setTitle(getString(R.string.app_name));
-          mAddEncounterButton.setVisibility(View.GONE);
         }
       }
     });
@@ -117,7 +112,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     if (userId.isEmpty() || userId.equals(Utils.UNKNOWN_USER_ID)) {
-      showMessageInSnackBar("Unable to determine user data. Please sign out of app and try again.");
+      replaceFragment(
+        TryAgainLaterFragment.newInstance(
+          "Unable to determine user data. Please sign out of app and try again."));
     } else {
       String finalUserId = userId;
       FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
@@ -125,14 +122,15 @@ public class MainActivity extends AppCompatActivity implements
 
           if (!task.isSuccessful()) {
             Log.e(TAG, "Error getting data", task.getException());
-            showMessageInSnackBar("There was a problem accessing data. Try again later.");
+            replaceFragment(
+              TryAgainLaterFragment.newInstance(
+                "There was a problem accessing data. Try again later."));
           } else {
             DataSnapshot result = task.getResult();
             if (result != null) {
               mUserEntity = result.getValue(UserEntity.class);
               Utils.setUserId(this, finalUserId);
               if (mUserEntity == null) {
-                // TODO: default following user to ???
                 mUserEntity = new UserEntity();
                 mUserEntity.Id = finalUserId;
                 String path = Utils.combine(Utils.USERS_ROOT, finalUserId);
@@ -143,10 +141,12 @@ public class MainActivity extends AppCompatActivity implements
                 Utils.setFollowingUserId(this, mUserEntity.FollowingId);
               }
 
-              // TODO: add animation/notification that work is happening
+              Utils.setCanAdd(this, mUserEntity.CanAdd);
               replaceFragment(TaskDataFragment.newInstance());
             } else {
-              showMessageInSnackBar("Data returned from cloud was unexpected. Try again later.");
+              replaceFragment(
+                TryAgainLaterFragment.newInstance(
+                  "UserData returned from server was unexpected. Try again later."));
             }
           }
         });
@@ -170,29 +170,12 @@ public class MainActivity extends AppCompatActivity implements
     } else if (item.getItemId() == R.id.menu_settings) {
       replaceFragment(UserSettingsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_logout) {
-      AlertDialog dialog = new AlertDialog.Builder(this)
+      AlertDialog alertDialog = new AlertDialog.Builder(this)
         .setMessage(R.string.logout_message)
-        .setPositiveButton(android.R.string.yes, (dialog1, which) -> {
-
-          // sign out of firebase
-          FirebaseAuth.getInstance().signOut();
-
-          // sign out of google, if necessary
-          GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build();
-          GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, gso);
-          googleSignInClient.signOut().addOnCompleteListener(this, task -> {
-
-            // return to sign-in activity
-            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
-            finish();
-          });
-        })
+        .setPositiveButton(android.R.string.yes, (dialog, which) -> signOut())
         .setNegativeButton(android.R.string.no, null)
         .create();
-      dialog.show();
+      alertDialog.show();
     }
 
     return super.onOptionsItemSelected(item);
@@ -247,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterDataPopulate(List<EncounterEntity> encounterEntityList) {
 
     Log.d(TAG, "++onEncounterDataPopulate(List<EncounterEntity>)");
+
     new InsertEncountersAsync(
       MainActivity.this,
       WildlifeDatabase.getInstance(this).encounterDao(),
@@ -274,6 +258,13 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
+  public void onSummaryAddEncounter() {
+
+    Log.d(TAG, "++onSummaryAddEncounter()");
+    replaceFragment(EncounterFragment.newInstance());
+  }
+
+  @Override
   public void onSummaryClicked(int summaryId) {
 
     Log.d(TAG, "++onSummaryClicked(int)");
@@ -281,19 +272,9 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onSummarySet() {
-
-    Log.d(TAG, "++onSummarySet()");
-    if (mUserEntity.CanAdd) {
-      mAddEncounterButton.setVisibility(View.VISIBLE);
-    }
-  }
-
-  @Override
   public void onSummaryTotalEncounters() {
 
     Log.d(TAG, "++onSummaryTotalEncounters()");
-    // TODO: replace with call/adjustment to ListFragment
     replaceFragment(EncounterListFragment.newInstance());
   }
 
@@ -340,6 +321,21 @@ public class MainActivity extends AppCompatActivity implements
   public void onTaskListSet(String titleUpdate) {
 
     setTitle(titleUpdate);
+  }
+
+  @Override
+  public void onTryAgainLaterSignOut() {
+
+    Log.d(TAG, "++onTryAgainLaterSignOut()");
+    signOut();
+  }
+
+  @Override
+  public void onTryAgainLaterTryAgain() {
+
+    Log.d(TAG, "++onTryAgainLaterTryAgain()");
+    finish();
+    startActivity(getIntent());
   }
 
   @Override
@@ -448,5 +444,21 @@ public class MainActivity extends AppCompatActivity implements
       Snackbar.LENGTH_LONG);
     mSnackbar.setAction(R.string.dismiss, v -> mSnackbar.dismiss());
     mSnackbar.show();
+  }
+
+  private void signOut() {
+
+    Log.d(TAG, "++signOut()");
+    FirebaseAuth.getInstance().signOut();
+    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+      .requestIdToken(getString(R.string.default_web_client_id))
+      .requestEmail()
+      .build();
+    GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, gso);
+    googleSignInClient.signOut().addOnCompleteListener(this, task -> {
+
+      startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+      finish();
+    });
   }
 }

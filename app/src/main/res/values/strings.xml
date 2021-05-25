@@ -54,4 +54,7 @@
   <string name="header_syringe_fed">Syringe Fed</string>
   <string name="number_in_group">Number in group:</string>
   <string name="pref_key_dark_mode">dark_mode</string>
+  <string name="pref_key_can_add">can_add</string>
+  <string name="message_try_again">Try Again?</string>
+  <string name="message_sign_out">Sign Out</string>
 </resources>

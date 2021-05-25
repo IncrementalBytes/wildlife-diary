@@ -28,6 +28,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentSummaryBinding;
@@ -41,13 +43,14 @@ public class SummaryFragment extends Fragment {
 
   public interface OnSummaryListListener {
 
+    void onSummaryAddEncounter();
     void onSummaryClicked(int summaryId);
-    void onSummarySet();
     void onSummaryTotalEncounters();
   }
 
   private FragmentSummaryBinding mBinding;
 
+  private FloatingActionButton mAddEncounterButton;
   private CardView mEuthanasiaCard;
 
   private OnSummaryListListener mCallback;
@@ -83,13 +86,18 @@ public class SummaryFragment extends Fragment {
 
     View view = mBinding.getRoot();
     mEuthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
+    mAddEncounterButton = view.findViewById(R.id.summary_fab_add);
+    mAddEncounterButton.setOnClickListener(v -> mCallback.onSummaryAddEncounter());
+
+    if (Utils.getCanAdd(getContext())) {
+      mAddEncounterButton.setVisibility(View.VISIBLE);
+    }
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     String followingUserId = Utils.getFollowingUserId(getActivity());
-    wildlifeViewModel.getSummary(followingUserId).observe(getViewLifecycleOwner(), summaryDetails -> {
-      mBinding.setSummary(summaryDetails);
-      mCallback.onSummarySet();
-    });
+    wildlifeViewModel.getSummary(followingUserId).observe(
+      getViewLifecycleOwner(),
+      summaryDetails -> mBinding.setSummary(summaryDetails));
     return view;
   }
 

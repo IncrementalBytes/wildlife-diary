@@ -31,12 +31,13 @@ public class Utils {
 
   public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
+  public static final String ARG_MESSAGE = "message";
+  public static final String ARG_SUMMARY_ID = "summary_id";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String DATA_STAMPS_ROOT = "DataStamps";
   public static final String DEFAULT_FOLLOWING_USER_ID = "pHuFQzKKwJhI0KNTc6UoCvtMXEI2";
   public static final String ENCOUNTER_ROOT = "Encounters";
-  public static final String ARG_SUMMARY_ID = "summary_id";
   public static final String TASK_ROOT = "Tasks";
   public static final String UNKNOWN_ID = "000000000-0000-0000-0000-000000000000";
   public static final String UNKNOWN_STRING = "UNKNOWN";
@@ -67,6 +68,11 @@ public class Utils {
     return new SimpleDateFormat( "MM/dd/yyyy", Locale.US).format(calendar.getTime());
   }
 
+  public static boolean getCanAdd(Context context) {
+
+    return getBooleanPref(context, R.string.pref_key_can_add, false);
+  }
+
   public static String getEncountersStamp(Context context) {
 
     return getStringPref(context, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
@@ -95,6 +101,11 @@ public class Utils {
   public static String getWildlifeStamp(Context context) {
 
     return getStringPref(context, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
+  }
+
+  public static void setCanAdd(Context context, boolean canAdd) {
+
+    setBooleanPref(context, R.string.pref_key_can_add, canAdd);
   }
 
   public static void setEncountersStamp(Context context, String newEncountersStamp) {
