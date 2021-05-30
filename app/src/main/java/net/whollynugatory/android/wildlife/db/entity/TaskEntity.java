@@ -21,6 +21,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.database.Exclude;
+
 import net.whollynugatory.android.wildlife.Utils;
 
 import java.io.Serializable;
@@ -44,27 +46,31 @@ public class TaskEntity implements Serializable {
   @ColumnInfo(name = "is_sensitive")
   public boolean IsSensitive;
 
+  @Ignore
+  @Exclude
+  public boolean IsComplete;
+
   public TaskEntity() {
 
     Description = Utils.UNKNOWN_STRING;
     Id = Utils.UNKNOWN_ID;
+    IsComplete = false;
     IsSensitive = false;
     Name = Utils.UNKNOWN_STRING;
-  }
-
-  public TaskEntity(@NonNull String id, @NonNull String name, String description, boolean isSensitive) {
-
-    Description = description;
-    Id = id;
-    IsSensitive = isSensitive;
-    Name = name;
   }
 
   @NonNull
   @Override
   public String toString() {
 
-    return String.format(Locale.US, "{Id: %s, Name: %s, IsSensitive: %s}", Id, Name, IsSensitive);
+    return
+      String.format(
+        Locale.US,
+        "{Id: %s, Name: %s, IsSensitive: %s, IsComplete: %s}",
+        Id,
+        Name,
+        IsSensitive,
+        IsComplete);
   }
 
   @Ignore

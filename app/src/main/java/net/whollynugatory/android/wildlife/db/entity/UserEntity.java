@@ -26,14 +26,14 @@ public class UserEntity implements Serializable {
   @Exclude
   public String Id;
 
-  public boolean CanAdd;
-
   public String FollowingId;
+
+  public boolean IsContributor;
 
   public UserEntity() {
 
-    CanAdd = false;
     FollowingId = Utils.DEFAULT_FOLLOWING_USER_ID;
     Id = Utils.UNKNOWN_USER_ID;
+    IsContributor = false;
   }
 }

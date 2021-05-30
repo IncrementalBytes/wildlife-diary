@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements
                 Utils.setFollowingUserId(this, mUserEntity.FollowingId);
               }
 
-              Utils.setCanAdd(this, mUserEntity.CanAdd);
+              Utils.setIsContributor(this, mUserEntity.IsContributor);
               replaceFragment(TaskDataFragment.newInstance());
             } else {
               replaceFragment(
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements
       String.format(
         Locale.US,
         "No encounters found. %s",
-        mUserEntity.CanAdd ? "Try adding some!" : "Please try again later."));
+        mUserEntity.IsContributor ? "Try adding some!" : "Please try again later."));
     replaceFragment(SummaryFragment.newInstance());
   }
 

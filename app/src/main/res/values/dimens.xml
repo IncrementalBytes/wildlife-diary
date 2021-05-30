@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <dimen name="fab_margin">16dp</dimen>
-  <dimen name="default_view_margin">8dp</dimen>
+  <dimen name="default_view_margin">4dp</dimen>
   <dimen name="default_card_margin">4dp</dimen>
   <dimen name="default_card_corner">5dp</dimen>
 </resources>

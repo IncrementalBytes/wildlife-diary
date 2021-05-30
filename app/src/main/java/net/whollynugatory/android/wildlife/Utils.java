@@ -24,7 +24,6 @@ import androidx.room.TypeConverter;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Locale;
 
 public class Utils {
@@ -68,9 +67,9 @@ public class Utils {
     return new SimpleDateFormat( "MM/dd/yyyy", Locale.US).format(calendar.getTime());
   }
 
-  public static boolean getCanAdd(Context context) {
+  public static boolean getIsContributor(Context context) {
 
-    return getBooleanPref(context, R.string.pref_key_can_add, false);
+    return getBooleanPref(context, R.string.pref_key_is_contributor, false);
   }
 
   public static String getEncountersStamp(Context context) {
@@ -103,9 +102,9 @@ public class Utils {
     return getStringPref(context, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
   }
 
-  public static void setCanAdd(Context context, boolean canAdd) {
+  public static void setIsContributor(Context context, boolean canAdd) {
 
-    setBooleanPref(context, R.string.pref_key_can_add, canAdd);
+    setBooleanPref(context, R.string.pref_key_is_contributor, canAdd);
   }
 
   public static void setEncountersStamp(Context context, String newEncountersStamp) {
@@ -191,16 +190,5 @@ public class Utils {
       .edit()
       .putString(context.getString(preferenceKeyId), preferenceValue)
       .apply();
-  }
-
-  /*
-    Public Class(es)
-   */
-  public static class SortByName implements Comparator<SpinnerItemState> {
-
-    public int compare(SpinnerItemState a, SpinnerItemState b) {
-
-      return a.getTitle().compareTo(b.getTitle());
-    }
   }
 }

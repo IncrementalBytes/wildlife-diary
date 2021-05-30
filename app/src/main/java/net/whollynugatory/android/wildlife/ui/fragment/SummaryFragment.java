@@ -50,7 +50,6 @@ public class SummaryFragment extends Fragment {
 
   private FragmentSummaryBinding mBinding;
 
-  private FloatingActionButton mAddEncounterButton;
   private CardView mEuthanasiaCard;
 
   private OnSummaryListListener mCallback;
@@ -86,17 +85,18 @@ public class SummaryFragment extends Fragment {
 
     View view = mBinding.getRoot();
     mEuthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
-    mAddEncounterButton = view.findViewById(R.id.summary_fab_add);
-    mAddEncounterButton.setOnClickListener(v -> mCallback.onSummaryAddEncounter());
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.summary_fab_add);
+    addEncounterButton.setOnClickListener(v -> mCallback.onSummaryAddEncounter());
 
-    if (Utils.getCanAdd(getContext())) {
-      mAddEncounterButton.setVisibility(View.VISIBLE);
+    if (Utils.getIsContributor(getContext())) {
+      addEncounterButton.setVisibility(View.VISIBLE);
     }
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     String followingUserId = Utils.getFollowingUserId(getActivity());
     wildlifeViewModel.getSummary(followingUserId).observe(
       getViewLifecycleOwner(),
+      // TODO: add "new" to tasks with recent additions
       summaryDetails -> mBinding.setSummary(summaryDetails));
     return view;
   }

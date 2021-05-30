@@ -8,7 +8,7 @@
     android:id="@+id/task_item_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_card_margin"
+    android:layout_margin="2dp"
     app:cardCornerRadius="@dimen/default_card_corner"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
@@ -19,33 +19,37 @@
 
       <TextView
         android:id="@+id/task_item_text_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/default_view_margin"
+        android:layout_margin="2dp"
         android:text="@string/placeholder"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toStartOf="@id/task_item_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/task_item_text_desc"/>
 
       <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/task_item_image"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/default_view_margin"
+        android:layout_height="0dp"
+        android:layout_marginEnd="2dp"
         android:contentDescription="@string/desc_task_completed"
         android:src="@drawable/ic_completed_light"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/task_item_text_name"
-        app:layout_constraintBottom_toBottomOf="@id/task_item_text_name"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
       <TextView
         android:id="@+id/task_item_text_desc"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_view_margin"
+        android:layout_marginStart="@dimen/default_view_margin"
+        android:layout_marginEnd="@dimen/default_view_margin"
         android:text="@string/placeholder"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/task_item_image"
         app:layout_constraintTop_toBottomOf="@id/task_item_text_name"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

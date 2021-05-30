@@ -2,22 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
-
-  <ImageButton
-    android:id="@+id/encounter_button_close"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/ic_close_light"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:contentDescription="@string/close_encounter" />
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
 
   <TextView
     android:id="@+id/encounter_text_date"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
+    android:layout_marginStart="@dimen/default_view_margin"
     android:text="@string/label_date"
     android:textSize="18sp"
     android:textStyle="bold"
@@ -29,21 +21,20 @@
     android:id="@+id/encounter_edit_date"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
+    android:layout_marginTop="@dimen/default_view_margin"
+    android:layout_marginStart="@dimen/default_view_margin"
     android:ems="6"
     android:inputType="date"
-    android:labelFor="@id/encounter_text_date"
     android:hint="@string/hint_date"
     app:layout_constraintStart_toEndOf="@id/encounter_text_date"
-    app:layout_constraintTop_toBottomOf="@id/encounter_button_close"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:autofillHints="" />
+    app:layout_constraintTop_toTopOf="parent"
+    android:autofillHints="none" />
 
   <TextView
     android:id="@+id/encounter_text_wildlife"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
+    android:layout_marginStart="@dimen/default_view_margin"
     android:text="@string/label_species"
     android:textSize="18sp"
     android:textStyle="bold"
@@ -55,7 +46,8 @@
     android:id="@+id/encounter_auto_wildlife"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
+    android:layout_marginStart="@dimen/default_view_margin"
+    android:ems="6"
     android:labelFor="@id/encounter_text_wildlife"
     android:hint="@string/hint_abbreviation"
     app:layout_constraintStart_toEndOf="@id/encounter_text_wildlife"
@@ -63,56 +55,80 @@
     app:layout_constraintEnd_toEndOf="parent" />
 
   <TextView
-    android:id="@+id/encounter_text_task"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
-    android:text="@string/label_task"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@id/encounter_spinner_task"
-    app:layout_constraintBottom_toBottomOf="@id/encounter_spinner_task"/>
-
-  <Spinner
-    android:id="@+id/encounter_spinner_task"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toEndOf="@id/encounter_text_task"
-    app:layout_constraintTop_toBottomOf="@id/encounter_auto_wildlife" />
-
-  <TextView
     android:id="@+id/encounter_text_number_in_group"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
+    android:layout_marginStart="@dimen/default_view_margin"
     android:text="@string/number_in_group"
     android:textSize="18sp"
     android:textStyle="bold"
+    android:labelFor="@id/encounter_edit_number_in_group"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintStart_toEndOf="@id/encounter_picker_number_in_group"
-    app:layout_constraintTop_toTopOf="@id/encounter_picker_number_in_group"
-    app:layout_constraintBottom_toBottomOf="@id/encounter_picker_number_in_group"/>
+    app:layout_constraintStart_toEndOf="@id/encounter_button_minus"
+    app:layout_constraintTop_toTopOf="@id/encounter_button_minus"
+    app:layout_constraintBottom_toBottomOf="@id/encounter_button_minus"/>
 
-  <NumberPicker
-    android:id="@+id/encounter_picker_number_in_group"
+  <Button
+    android:id="@+id/encounter_button_minus"
+    android:layout_width="48dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/default_view_margin"
+    android:text="@string/minus_sign"
+    app:layout_constraintStart_toEndOf="@id/encounter_text_number_in_group"
+    app:layout_constraintTop_toBottomOf="@id/encounter_auto_wildlife"/>
+
+  <EditText
+    android:id="@+id/encounter_edit_number_in_group"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/default_view_margin"
+    android:ems="2"
+    android:inputType="number"
+    android:enabled="false"
+    android:gravity="center_horizontal"
+    app:layout_constraintStart_toEndOf="@id/encounter_button_minus"
+    app:layout_constraintTop_toTopOf="@id/encounter_button_minus"
+    app:layout_constraintBottom_toBottomOf="@id/encounter_button_minus"
+    android:autofillHints="none" />
+
+  <Button
+    android:id="@+id/encounter_button_addition"
+    android:layout_width="48dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/default_view_margin"
+    android:text="@string/plus_sign"
+    app:layout_constraintStart_toEndOf="@id/encounter_edit_number_in_group"
+    app:layout_constraintTop_toTopOf="@id/encounter_button_minus"
+    app:layout_constraintBottom_toBottomOf="@id/encounter_button_minus"/>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/encounter_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
     android:layout_margin="@dimen/default_view_margin"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toEndOf="@id/encounter_text_number_in_group"
-    app:layout_constraintTop_toBottomOf="@id/encounter_spinner_task"/>
+    android:isScrollContainer="true"
+    android:scrollbars="vertical"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/encounter_button_minus"
+    app:layout_constraintBottom_toTopOf="@id/encounter_button_add"
+    tools:listitem="@layout/task_list_item"/>
 
   <Button
     android:id="@+id/encounter_button_add"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
-    android:text="@string/label_add"
-    app:layout_constraintTop_toBottomOf="@id/encounter_picker_number_in_group"
-    app:layout_constraintStart_toStartOf="parent"
+    android:layout_marginStart="@dimen/default_view_margin"
+    android:text="@string/label_add_encounter"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"/>
+
+  <Button
+    android:id="@+id/encounter_button_record"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/default_view_margin"
+    android:text="@string/label_record_encounters"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

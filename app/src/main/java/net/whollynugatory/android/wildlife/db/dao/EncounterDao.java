@@ -17,9 +17,11 @@ package net.whollynugatory.android.wildlife.db.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
@@ -30,6 +32,9 @@ import java.util.List;
 
 @Dao
 public interface EncounterDao {
+
+  @Query("DELETE FROM encounter_table WHERE encounter_id = :encounterEntityId")
+  void deleteEncounterById(String encounterEntityId);
 
   @Query("SELECT Encounter.date AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +
@@ -125,4 +130,7 @@ public interface EncounterDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(EncounterEntity encounterEntity);
+
+  @Update
+  void update(EncounterEntity encounterEntity);
 }

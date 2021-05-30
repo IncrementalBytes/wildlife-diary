@@ -13,7 +13,7 @@
   <string name="label_task">Encounter Task:</string>
   <string name="hint_abbreviation">Abbreviation of species</string>
   <string name="hint_date">MM/DD/YYYY</string>
-  <string name="label_add">Add</string>
+  <string name="label_add_encounter">Add Encounter</string>
   <string name="encounter_data">Checking out Encounter data…</string>
   <string name="wildlife_data">Checking out Wildlife data…</string>
   <string name="task_data">Checking out Task data…</string>
@@ -31,7 +31,7 @@
   <string name="pref_key_following_user_id">following_user_id</string>
   <string name="pref_key_stamp_encounters">stamp_encounters</string>
   <string name="pref_key_stamp_wildlife">stamp_wildlife</string>
-  <string name="pref_key_can_add">can_add</string>
+  <string name="pref_key_is_contributor">is_contributor</string>
   <string name="close_encounter">Close Insert Encounter</string>
   <string name="header_total_encounters">Total Encounters</string>
   <string name="header_unique_encounters">Unique Encounters</string>
@@ -55,4 +55,9 @@
   <string name="number_in_group">Number in group:</string>
   <string name="label_try_again">Try Again?</string>
   <string name="label_sign_out">Sign Out</string>
+  <string name="desc_add_to_group">Add to group</string>
+  <string name="desc_subtract_from_group">Subtract from group</string>
+  <string name="plus_sign">+</string>
+  <string name="minus_sign">-</string>
+  <string name="label_record_encounters">Record Encounters</string>
 </resources>

@@ -98,6 +98,7 @@ public class EncounterDataFragment  extends Fragment {
 
             String encounterStamp = Utils.getEncountersStamp(getActivity());
             if (encounterStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !encounterStamp.equalsIgnoreCase(remoteStamp)) {
+              // TODO: clear encounter table
               Utils.setEncountersStamp(getActivity(), remoteStamp);
               populateEncounterTable();
             } else {

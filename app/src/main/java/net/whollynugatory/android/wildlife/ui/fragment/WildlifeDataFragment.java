@@ -98,6 +98,7 @@ public class WildlifeDataFragment  extends Fragment {
 
             String wildlifeStamp = Utils.getWildlifeStamp(getActivity());
             if (wildlifeStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !wildlifeStamp.equalsIgnoreCase(remoteStamp)) {
+              // TODO: clear wildlife table
               Utils.setWildlifeStamp(getActivity(), remoteStamp);
               populateWildlifeTable();
             } else {
