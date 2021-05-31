@@ -78,6 +78,7 @@ public class EncounterFragment extends Fragment {
 
   private int mEncountersAdded;
   private int mGroupCount = 1;
+  private List<TaskEntity> mTaskEntityList;
   private HashMap<String, String> mWildlifeMap;
   private WildlifeViewModel mWildlifeViewModel;
 
@@ -213,11 +214,17 @@ public class EncounterFragment extends Fragment {
     mRecordEncountersButton.setOnClickListener(v -> recordEncounters());
 
     Button addButton = view.findViewById(R.id.encounter_button_add);
-    addButton.setOnClickListener(v -> addEncounter());
+    addButton.setOnClickListener(v -> {
+
+      addEncounter();
+      mTaskAdapter.setTaskEntityList(mTaskEntityList);
+    });
 
     mWildlifeViewModel.getTasks().observe(getViewLifecycleOwner(), taskEntityList -> {
 
-      mTaskAdapter.setTaskEntityList(taskEntityList);
+      // TODO: order list by number of times task has been used
+      mTaskEntityList = new ArrayList<>(taskEntityList);
+      mTaskAdapter.setTaskEntityList(mTaskEntityList);
       prepareWildlifeList();
     });
 
@@ -262,13 +269,13 @@ public class EncounterFragment extends Fragment {
                 Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
                 mCallback.onEncounterFailure("Failed to added encounter.");
               } else {
-                mCallback.onEncounterAdded();
                 mWildlifeText.setText("");
                 mGroupCountEdit.setText(String.valueOf(1));
                 mMinusButton.setEnabled(false);
                 mAdditionButton.setEnabled(true);
                 mEncountersAdded++;
                 mRecordEncountersButton.setEnabled(mEncountersAdded > 0);
+                mCallback.onEncounterAdded();
               }
             });
         } else {
@@ -396,9 +403,9 @@ public class EncounterFragment extends Fragment {
         mDescriptionTextView.setText(mTaskEntity.Description);
         mTitleTextView.setText(mTaskEntity.Name);
         if (mTaskEntity.IsComplete) {
-          mCompleteImage.setImageResource(R.drawable.ic_complete_light);
+          mCompleteImage.setImageResource(R.drawable.ic_complete_dark);
         } else {
-          mCompleteImage.setImageResource(R.drawable.ic_incomplete_light);
+          mCompleteImage.setImageResource(R.drawable.ic_incomplete_dark);
         }
       }
 
@@ -407,11 +414,9 @@ public class EncounterFragment extends Fragment {
 
         mTaskEntity.IsComplete = !mTaskEntity.IsComplete;
         if (mTaskEntity.IsComplete) {
-          // TODO: view.setBackgroundColor();
-          mCompleteImage.setImageResource(R.drawable.ic_complete_light);
+          mCompleteImage.setImageResource(R.drawable.ic_complete_dark);
         } else {
-          // TODO: view.setBackgroundColor();
-          mCompleteImage.setImageResource(R.drawable.ic_incomplete_light);
+          mCompleteImage.setImageResource(R.drawable.ic_incomplete_dark);
         }
       }
     }

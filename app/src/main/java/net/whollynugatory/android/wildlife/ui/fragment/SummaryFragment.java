@@ -90,6 +90,8 @@ public class SummaryFragment extends Fragment {
 
     if (Utils.getIsContributor(getContext())) {
       addEncounterButton.setVisibility(View.VISIBLE);
+    } else {
+      addEncounterButton.setVisibility(View.GONE);
     }
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);

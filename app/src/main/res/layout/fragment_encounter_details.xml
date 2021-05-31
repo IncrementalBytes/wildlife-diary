@@ -22,6 +22,7 @@
       android:text="@string/placeholder"
       android:textSize="24sp"
       android:textStyle="bold"
+      android:textColor="@color/primaryTextColor"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintEnd_toEndOf="parent"/>
@@ -35,6 +36,7 @@
       android:layout_marginBottom="@dimen/default_view_margin"
       android:singleLine="true"
       android:text="@string/placeholder"
+      android:textColor="@color/primaryTextColor"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/encounter_details_wildlife"/>
 
@@ -46,6 +48,7 @@
       android:layout_marginEnd="@dimen/default_view_margin"
       android:layout_marginBottom="@dimen/default_view_margin"
       android:text="@string/placeholder"
+      android:textColor="@color/primaryTextColor"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="@id/encounter_details_abbreviation"
       app:layout_constraintBottom_toBottomOf="@id/encounter_details_abbreviation"/>

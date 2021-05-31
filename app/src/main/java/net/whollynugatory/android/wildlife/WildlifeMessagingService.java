@@ -68,7 +68,7 @@ public class WildlifeMessagingService extends FirebaseMessagingService {
     String notificationId = getString(R.string.default_notification_channel_id);
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, notificationId)
       .setAutoCancel(true)
-      .setSmallIcon(R.drawable.ic_stat_ic_notification)
+      .setSmallIcon(R.drawable.ic_notification_dark)
       .setContentIntent(pendingIntent)
       .setContentTitle(notificationTitle)
       .setContentText(notificationBody)

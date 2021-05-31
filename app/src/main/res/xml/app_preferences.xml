@@ -2,17 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
   <androidx.preference.PreferenceCategory>
-
     <androidx.preference.SwitchPreference
       android:defaultValue="false"
       android:key="@string/pref_key_enable_sensitive"
       android:persistent="true"
       android:summary="@string/pref_summary_enable_sensitive"
       android:title="@string/pref_title_enable_sensitive"/>
-
-  </androidx.preference.PreferenceCategory>
-
-  <androidx.preference.PreferenceCategory>
   </androidx.preference.PreferenceCategory>
 
   <androidx.preference.PreferenceCategory android:title="@string/pref_category_about">

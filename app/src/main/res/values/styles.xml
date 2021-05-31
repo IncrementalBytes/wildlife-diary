@@ -2,30 +2,20 @@
 <resources>
   <style name="SummaryCard" parent="CardView">
     <item name="cardCornerRadius">@dimen/default_card_corner</item>
-    <item name="android:layout_marginTop">2dp</item>
-    <item name="android:layout_marginBottom">2dp</item>
-  </style>
-  <style name="SummaryCardRight" parent="CardView">
-    <item name="cardCornerRadius">@dimen/default_card_corner</item>
-    <item name="android:layout_marginTop">2dp</item>
-    <item name="android:layout_marginBottom">2dp</item>
-    <item name="android:layout_marginStart">1dp</item>
-  </style>
-  <style name="SummaryCardLeft" parent="CardView">
-    <item name="cardCornerRadius">@dimen/default_card_corner</item>
-    <item name="android:layout_marginTop">2dp</item>
-    <item name="android:layout_marginBottom">2dp</item>
-    <item name="android:layout_marginEnd">1dp</item>
+    <item name="android:layout_margin">@dimen/default_card_margin</item>
+    <item name="cardBackgroundColor">@color/secondaryDarkColor</item>
   </style>
   <style name="SummaryHeader" parent="Widget.AppCompat.TextView">
     <item name="android:textSize">18sp</item>
     <item name="font">@font/basic</item>
+    <item name="android:textColor">@color/secondaryTextColor</item>
     <item name="android:gravity">center_horizontal</item>
     <item name="android:layout_margin">@dimen/default_view_margin</item>
   </style>
   <style name="SummaryValue" parent="Widget.AppCompat.TextView">
     <item name="android:textSize">24sp</item>
     <item name="font">@font/basic</item>
+    <item name="android:textColor">@color/primaryTextColor</item>
     <item name="android:textStyle">bold</item>
     <item name="android:gravity">center_horizontal</item>
     <item name="android:layout_margin">@dimen/default_view_margin</item>

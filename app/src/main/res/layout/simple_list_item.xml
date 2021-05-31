@@ -8,10 +8,7 @@
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/default_card_corner"
-    android:layout_marginBottom="2dp"
-    android:layout_marginStart="2dp"
-    android:layout_marginEnd="2dp"
+    style="@style/SummaryCard"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
@@ -37,6 +34,7 @@
         android:textAlignment="textStart"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/secondaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/simple_list_item_guideline"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,6 +50,7 @@
         android:text="@string/placeholder"
         android:textAlignment="textEnd"
         android:textSize="24sp"
+        android:textColor="@color/primaryTextColor"
         app:layout_constraintBottom_toBottomOf="@id/simple_list_item_text_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/simple_list_item_guideline"

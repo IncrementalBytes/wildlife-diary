@@ -12,6 +12,7 @@
     android:text="@string/placeholder"
     android:textAlignment="center"
     android:textSize="24sp"
+    android:textColor="@color/primaryTextColor"
     app:layout_constraintBottom_toTopOf="@id/try_again_button_try_again"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent" />

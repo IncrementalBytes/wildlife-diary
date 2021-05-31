@@ -50,7 +50,7 @@ public class WildlifeRepository {
     mWildlifeDao = db.wildlifeDao();
   }
 
-  public LiveData<List<TaskEntity>> getAllTasks() {
+  public LiveData<List<TaskEntity>> getTasks() {
 
     return mTaskDao.getAll();
   }

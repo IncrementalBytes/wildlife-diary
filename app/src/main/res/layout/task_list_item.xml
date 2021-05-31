@@ -8,8 +8,7 @@
     android:id="@+id/task_item_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
-    app:cardCornerRadius="@dimen/default_card_corner"
+    style="@style/SummaryCard"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
@@ -25,6 +24,7 @@
         android:text="@string/placeholder"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="@color/secondaryTextColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/task_item_image"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,7 +36,7 @@
         android:layout_height="0dp"
         android:layout_marginEnd="2dp"
         android:contentDescription="@string/desc_task_completed"
-        android:src="@drawable/ic_completed_light"
+        android:src="@drawable/ic_complete_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -48,6 +48,7 @@
         android:layout_marginStart="@dimen/default_view_margin"
         android:layout_marginEnd="@dimen/default_view_margin"
         android:text="@string/placeholder"
+        android:textColor="@color/primaryTextColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/task_item_image"
         app:layout_constraintTop_toBottomOf="@id/task_item_text_name"

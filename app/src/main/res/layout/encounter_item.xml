@@ -8,7 +8,7 @@
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/default_card_corner"
+    style="@style/SummaryCard"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
@@ -27,6 +27,7 @@
         android:textAlignment="textStart"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/secondaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,6 +40,7 @@
         android:layout_marginEnd="@dimen/default_view_margin"
         android:singleLine="true"
         android:text="@string/placeholder"
+        android:textColor="@color/primaryTextColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/encounter_item_wildlife"/>
 
@@ -49,6 +51,7 @@
         android:layout_marginStart="@dimen/default_view_margin"
         android:layout_marginEnd="@dimen/default_view_margin"
         android:text="@string/placeholder"
+        android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/encounter_item_abbreviation"
         app:layout_constraintBottom_toBottomOf="@id/encounter_item_abbreviation"/>
@@ -62,6 +65,7 @@
         android:padding="2dp"
         android:text="@string/tap_for_details"
         android:textStyle="bold"
+        android:textColor="@color/primaryDarkColor"
         android:gravity="end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

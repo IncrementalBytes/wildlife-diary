@@ -66,7 +66,7 @@ public class WildlifeViewModel extends AndroidViewModel {
 
   public LiveData<List<TaskEntity>> getTasks() {
 
-    return mWildlifeRepository.getAllTasks();
+    return mWildlifeRepository.getTasks();
   }
 
   public LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId) {

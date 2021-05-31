@@ -16,9 +16,7 @@
 
     <androidx.core.widget.NestedScrollView
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginEnd="2dp"
-      android:layout_marginStart="2dp">
+      android:layout_height="match_parent">
 
       <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -149,7 +147,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_banded"
-          style="@style/SummaryCardLeft"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toStartOf="@id/summary_guideline"
@@ -188,7 +186,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_force_fed"
-          style="@style/SummaryCardRight"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
@@ -227,7 +225,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_gavage"
-          style="@style/SummaryCardLeft"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toStartOf="@id/summary_guideline"
@@ -266,7 +264,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_medication_ocular"
-          style="@style/SummaryCardRight"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
@@ -305,7 +303,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_medication_oral"
-          style="@style/SummaryCardLeft"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toStartOf="@id/summary_guideline"
@@ -344,7 +342,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_subcutaneous"
-          style="@style/SummaryCardRight"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
@@ -383,7 +381,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_syringe_fed"
-          style="@style/SummaryCardLeft"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toStartOf="@id/summary_guideline"
@@ -422,7 +420,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_handled_exam"
-          style="@style/SummaryCardRight"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintStart_toEndOf="@id/summary_guideline"
@@ -461,7 +459,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_handled_force_fed"
-          style="@style/SummaryCardLeft"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toStartOf="@id/summary_guideline"
@@ -500,7 +498,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_handled_gavage"
-          style="@style/SummaryCardRight"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
@@ -539,7 +537,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_handled_medication"
-          style="@style/SummaryCardLeft"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toStartOf="@id/summary_guideline"
@@ -578,7 +576,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_handled_subcutaneous"
-          style="@style/SummaryCardRight"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
@@ -617,7 +615,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/summary_card_handled_euthanasia"
-          style="@style/SummaryCardLeft"
+          style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintStart_toStartOf="parent"
@@ -665,7 +663,7 @@
       android:layout_margin="@dimen/fab_margin"
       android:contentDescription="@string/desc_add_encounter"
       android:elevation="2dp"
-      android:src="@drawable/ic_add_light"
+      android:src="@drawable/ic_add_dark"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       tools:visibility="visible" />

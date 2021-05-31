@@ -57,6 +57,8 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
     EditTextPreference editTextPreference = findPreference(getString(R.string.pref_key_app_version));
     if (editTextPreference != null) {
       editTextPreference.setSummary(BuildConfig.VERSION_NAME);
+    } else {
+      Log.w(TAG, "AppVersion preference was not found.");
     }
   }
 
@@ -75,6 +77,8 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
             (boolean) newValue);
           return true;
         });
+    } else {
+      Log.w(TAG, "ShowSensitive preference was not found.");
     }
   }
 }
