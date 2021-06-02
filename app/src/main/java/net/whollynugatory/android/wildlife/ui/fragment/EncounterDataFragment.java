@@ -41,7 +41,7 @@ public class EncounterDataFragment  extends Fragment {
 
   public interface OnEncounterDataListener {
 
-    void onEncounterDataFailure(String message);
+    void onEncounterDataFailed(String message);
 
     void onEncounterDataMissing();
 
@@ -80,7 +80,7 @@ public class EncounterDataFragment  extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Checking data stamp for Encounters was unsuccessful.", task.getException());
-          mCallback.onEncounterDataFailure("Unable to retrieve Encounters data stamp.");
+          mCallback.onEncounterDataFailed("Unable to retrieve Encounters data stamp.");
         } else {
           String remoteStamp = Utils.UNKNOWN_ID;
           DataSnapshot resultSnapshot = task.getResult();
@@ -98,15 +98,16 @@ public class EncounterDataFragment  extends Fragment {
 
             String encounterStamp = Utils.getEncountersStamp(getActivity());
             if (encounterStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !encounterStamp.equalsIgnoreCase(remoteStamp)) {
-              // TODO: clear encounter table
-              Utils.setEncountersStamp(getActivity(), remoteStamp);
+              WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
               populateEncounterTable();
+              Utils.setEncountersStamp(getActivity(), remoteStamp);
             } else {
               Log.d(TAG, "Encounter data in-sync.");
               mCallback.onEncounterDataSynced();
             }
           } else {
-            mCallback.onEncounterDataFailure("Encounter data stamp not found.");
+            mCallback.onEncounterDataFailed("Encounter data stamp not found.");
           }
         }
       });
@@ -127,7 +128,7 @@ public class EncounterDataFragment  extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data", task.getException());
-          mCallback.onEncounterDataFailure("Could not retrieve Encounter data.");
+          mCallback.onEncounterDataFailed("Could not retrieve Encounter data.");
         } else {
           DataSnapshot resultSnapshot = task.getResult();
           if (resultSnapshot != null) {
@@ -150,13 +151,13 @@ public class EncounterDataFragment  extends Fragment {
 
                 mCallback.onEncounterDataPopulated();
               } else {
-                mCallback.onEncounterDataFailure("App was not ready for operation at this time.");
+                mCallback.onEncounterDataFailed("App was not ready for operation at this time.");
               }
             } else {
               mCallback.onEncounterDataMissing();
             }
           } else {
-            mCallback.onEncounterDataFailure("Encounter results not found.");
+            mCallback.onEncounterDataFailed("Encounter results not found.");
           }
         }
       });

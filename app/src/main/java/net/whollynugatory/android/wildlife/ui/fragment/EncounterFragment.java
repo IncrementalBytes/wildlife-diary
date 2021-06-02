@@ -30,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -61,8 +63,8 @@ public class EncounterFragment extends Fragment {
   public interface OnEncounterListener {
 
     void onEncounterAdded();
-    void onEncounterClosed();
-    void onEncounterFailure(String message);
+    void onEncounterFailed(String message);
+    void onEncounterRecorded();
   }
 
   private OnEncounterListener mCallback;
@@ -196,14 +198,14 @@ public class EncounterFragment extends Fragment {
     mDateEdit.addTextChangedListener(mTextWatcher);
     mGroupCountEdit.setText(String.valueOf(mGroupCount));
 
-    mAdditionButton.setOnClickListener(view12 -> {
+    mAdditionButton.setOnClickListener(additionButtonView -> {
 
       mGroupCountEdit.setText(String.valueOf(++mGroupCount));
       updateUI();
     });
 
     mMinusButton.setEnabled(false);
-    mMinusButton.setOnClickListener(view1 -> {
+    mMinusButton.setOnClickListener(minusButtonView -> {
 
       mGroupCountEdit.setText(String.valueOf(--mGroupCount));
       updateUI();
@@ -262,12 +264,13 @@ public class EncounterFragment extends Fragment {
         encounterEntity.Id = UUID.randomUUID().toString(); // unique entry per task
         encounterEntity.TaskId = taskEntity.Id;
         if (encounterEntity.isValid()) {
-          FirebaseDatabase.getInstance().getReference().child(Utils.ENCOUNTER_ROOT).child(encounterEntity.Id).setValue(encounterEntity)
+          String path = Utils.combine(Utils.ENCOUNTER_ROOT, encounterEntity.Id);
+          FirebaseDatabase.getInstance().getReference().child(path).setValue(encounterEntity)
             .addOnCompleteListener(task -> {
 
               if (!task.isSuccessful()) {
                 Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
-                mCallback.onEncounterFailure("Failed to added encounter.");
+                mCallback.onEncounterFailed("Failed to added encounter.");
               } else {
                 mWildlifeText.setText("");
                 mGroupCountEdit.setText(String.valueOf(1));
@@ -279,7 +282,7 @@ public class EncounterFragment extends Fragment {
               }
             });
         } else {
-          mCallback.onEncounterFailure("Encounter data was unknown: " + encounterEntity.toString());
+          mCallback.onEncounterFailed("Encounter data was unknown: " + encounterEntity.toString());
         }
 
         taskEntity.IsComplete = false;
@@ -321,7 +324,7 @@ public class EncounterFragment extends Fragment {
       Log.w(TAG, "No encounters were recorded.");
     }
 
-    mCallback.onEncounterClosed();
+    mCallback.onEncounterRecorded();
   }
 
   private void updateUI() {
@@ -330,9 +333,9 @@ public class EncounterFragment extends Fragment {
     mMinusButton.setEnabled(mGroupCount > 1);
   }
 
-  private static class TaskAdapter extends RecyclerView.Adapter<EncounterFragment.TaskAdapter.TaskHolder> {
+  private static class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
-    private final String TAG = Utils.BASE_TAG + EncounterFragment.TaskAdapter.class.getSimpleName();
+    private final String TAG = Utils.BASE_TAG + TaskAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
     private List<TaskEntity> mTaskEntityList;
@@ -344,14 +347,14 @@ public class EncounterFragment extends Fragment {
 
     @NonNull
     @Override
-    public EncounterFragment.TaskAdapter.TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TaskAdapter.TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
       View itemView = mInflater.inflate(R.layout.task_list_item, parent, false);
-      return new EncounterFragment.TaskAdapter.TaskHolder(itemView);
+      return new TaskAdapter.TaskHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EncounterFragment.TaskAdapter.TaskHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TaskAdapter.TaskHolder holder, int position) {
 
       if (mTaskEntityList != null) {
         TaskEntity taskEntity = mTaskEntityList.get(position);
@@ -382,15 +385,17 @@ public class EncounterFragment extends Fragment {
     static class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
       private final TextView mDescriptionTextView;
+      private final ImageView mIsCompleteImage;
+      private final CardView mSummaryCardView;
       private final TextView mTitleTextView;
-      private final ImageView mCompleteImage;
 
       private TaskEntity mTaskEntity;
 
       TaskHolder(View itemView) {
         super(itemView);
 
-        mCompleteImage = itemView.findViewById(R.id.task_item_image);
+        mIsCompleteImage = itemView.findViewById(R.id.task_item_image);
+        mSummaryCardView = itemView.findViewById(R.id.task_item_card);
         mTitleTextView = itemView.findViewById(R.id.task_item_text_name);
         mDescriptionTextView = itemView.findViewById(R.id.task_item_text_desc);
 
@@ -403,9 +408,9 @@ public class EncounterFragment extends Fragment {
         mDescriptionTextView.setText(mTaskEntity.Description);
         mTitleTextView.setText(mTaskEntity.Name);
         if (mTaskEntity.IsComplete) {
-          mCompleteImage.setImageResource(R.drawable.ic_complete_dark);
+          mIsCompleteImage.setImageResource(R.drawable.ic_complete_dark);
         } else {
-          mCompleteImage.setImageResource(R.drawable.ic_incomplete_dark);
+          mIsCompleteImage.setImageResource(R.drawable.ic_incomplete_dark);
         }
       }
 
@@ -414,9 +419,19 @@ public class EncounterFragment extends Fragment {
 
         mTaskEntity.IsComplete = !mTaskEntity.IsComplete;
         if (mTaskEntity.IsComplete) {
-          mCompleteImage.setImageResource(R.drawable.ic_complete_dark);
+          mIsCompleteImage.setImageResource(R.drawable.ic_complete_dark);
+          mSummaryCardView.setCardBackgroundColor(
+            ResourcesCompat.getColor(
+              view.getResources(),
+              R.color.primaryDarkColor,
+              view.getContext().getTheme()));
         } else {
-          mCompleteImage.setImageResource(R.drawable.ic_incomplete_dark);
+          mIsCompleteImage.setImageResource(R.drawable.ic_incomplete_dark);
+          mSummaryCardView.setCardBackgroundColor(
+            ResourcesCompat.getColor(
+              view.getResources(),
+              R.color.secondaryDarkColor,
+              view.getContext().getTheme()));
         }
       }
     }

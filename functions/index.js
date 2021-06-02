@@ -10,7 +10,7 @@ exports.pushNotification = functions.database.ref("/DataStamps/Encounters")
       const payload = {
         notification: {
           title: "Wildlife Diary",
-          body: "New Encounter Added!",
+          body: "New Encounter Added!", // TODO: handle Added, Updated, & Deleted - ??? or just make a generic message
           sound: "default",
         },
       };

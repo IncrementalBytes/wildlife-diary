@@ -22,8 +22,11 @@ import androidx.preference.PreferenceManager;
 import androidx.annotation.StringRes;
 import androidx.room.TypeConverter;
 
+import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class Utils {
@@ -64,7 +67,7 @@ public class Utils {
 
     Calendar calendar = Calendar.getInstance();
     calendar.setTimeInMillis(dateInMilliseconds);
-    return new SimpleDateFormat( "MM/dd/yyyy", Locale.US).format(calendar.getTime());
+    return new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(calendar.getTime());
   }
 
   public static boolean getIsContributor(Context context) {
@@ -190,5 +193,16 @@ public class Utils {
       .edit()
       .putString(context.getString(preferenceKeyId), preferenceValue)
       .apply();
+  }
+
+  /*
+    Public Class(es)
+   */
+  public static class SortByName implements Comparator<TaskEntity> {
+
+    public int compare(TaskEntity a, TaskEntity b) {
+
+      return a.Name.compareTo(b.Name);
+    }
   }
 }

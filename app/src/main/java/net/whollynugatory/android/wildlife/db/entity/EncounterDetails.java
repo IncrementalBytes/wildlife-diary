@@ -15,9 +15,12 @@
  */
 package net.whollynugatory.android.wildlife.db.entity;
 
+import androidx.annotation.NonNull;
+
 import net.whollynugatory.android.wildlife.Utils;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Class defining what tasks were performed during an encounter.
@@ -28,13 +31,23 @@ public class EncounterDetails implements Serializable {
 
   public String EncounterId;
 
+  public String Id;
+
+  public int NumberInGroup;
+
   public String TaskDescription;
+
+  public String TaskId;
 
   public boolean TaskIsSensitive;
 
   public String TaskName;
 
+  public String UserId;
+
   public String WildlifeAbbreviation;
+
+  public String WildlifeId;
 
   public String WildlifeSpecies;
 
@@ -43,10 +56,29 @@ public class EncounterDetails implements Serializable {
 
     Date = 0;
     EncounterId = Utils.UNKNOWN_ID;
+    Id = Utils.UNKNOWN_ID;
+    NumberInGroup = 0;
     TaskDescription = Utils.UNKNOWN_STRING;
+    TaskId = Utils.UNKNOWN_ID;
     TaskIsSensitive = false;
     TaskName = Utils.UNKNOWN_STRING;
+    UserId = Utils.UNKNOWN_USER_ID;
     WildlifeAbbreviation = Utils.UNKNOWN_STRING;
+    WildlifeId = Utils.UNKNOWN_ID;
     WildlifeSpecies = Utils.UNKNOWN_STRING;
+  }
+
+  @NonNull
+  @Override
+  public String toString() {
+
+    return String.format(
+      Locale.US,
+      "{Date: %s, Id: %s, EncounterId: %s, TaskId: %s, WildlifeId: %s}",
+      Date,
+      Id,
+      EncounterId,
+      TaskId,
+      WildlifeId);
   }
 }

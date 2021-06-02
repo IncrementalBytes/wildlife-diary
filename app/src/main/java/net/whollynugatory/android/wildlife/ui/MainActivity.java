@@ -56,6 +56,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
   EncounterDataFragment.OnEncounterDataListener,
+  EncounterDetailFragment.OnEncounterDetailsListener,
   EncounterFragment.OnEncounterListener,
   EncounterListFragment.OnEncounterListListener,
   ListFragment.OnSimpleListListener,
@@ -121,18 +122,18 @@ public class MainActivity extends AppCompatActivity implements
             DataSnapshot result = task.getResult();
             if (result != null) {
               mUserEntity = result.getValue(UserEntity.class);
-              Utils.setUserId(this, finalUserId);
               if (mUserEntity == null) {
-                mUserEntity = new UserEntity();
-                mUserEntity.Id = finalUserId;
+                mUserEntity = new UserEntity(); // sets following user id
+                mUserEntity.Id = finalUserId; // assign firebase user id
                 String path = Utils.combine(Utils.USERS_ROOT, finalUserId);
                 FirebaseDatabase.getInstance().getReference().child(path).setValue(mUserEntity)
                   .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
               } else {
                 mUserEntity.Id = finalUserId;
-                Utils.setFollowingUserId(this, mUserEntity.FollowingId);
               }
 
+              Utils.setFollowingUserId(this, mUserEntity.FollowingId);
+              Utils.setUserId(this, finalUserId);
               Utils.setIsContributor(this, mUserEntity.IsContributor);
               replaceFragment(TaskDataFragment.newInstance());
             } else {
@@ -184,23 +185,23 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterClosed() {
+  public void onEncounterRecorded() {
 
-    Log.d(TAG, "++onEncounterClosed()");
+    Log.d(TAG, "++onEncounterRecorded()");
     replaceFragment(EncounterDataFragment.newInstance());
   }
 
   @Override
-  public void onEncounterFailure(String message) {
+  public void onEncounterFailed(String message) {
 
-    Log.d(TAG, "++onEncounterFailure(String)");
+    Log.d(TAG, "++onEncounterFailed(String)");
     showMessageInSnackBar(message);
   }
 
   @Override
-  public void onEncounterDataFailure(String message) {
+  public void onEncounterDataFailed(String message) {
 
-    Log.d(TAG, "++onEncounterDataFailure(String)");
+    Log.d(TAG, "++onEncounterDataFailed(String)");
     Utils.setEncountersStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }
@@ -240,6 +241,26 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
+  public void onEncounterDeleted() {
+
+    Log.d(TAG, "++onEncounterDeleted()");
+    replaceFragment(EncounterDataFragment.newInstance());
+  }
+
+  @Override
+  public void onEncounterUpdated() {
+
+    Log.d(TAG, "++onEncounterUpdated()");
+    replaceFragment(EncounterDataFragment.newInstance());
+  }
+
+  @Override
+  public void onEncounterUpdateFailed() {
+
+    Log.d(TAG, "++onEncounterUpdateFailed()");
+  }
+
+  @Override
   public void onEncounterItemSelected(String encounterId) {
 
     Log.d(TAG, "++onEncounterItemSelected(String)");
@@ -267,9 +288,9 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onTaskDataFailure(String message) {
+  public void onTaskDataFailed(String message) {
 
-    Log.d(TAG, "++onTaskDataFailure(String)");
+    Log.d(TAG, "++onTaskDataFailed(String)");
     Utils.setTasksStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }
@@ -330,9 +351,9 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onWildlifeDataFailure(String message) {
+  public void onWildlifeDataFailed(String message) {
 
-    Log.d(TAG, "++onWildlifeDataFailure(String)");
+    Log.d(TAG, "++onWildlifeDataFailed(String)");
     Utils.setWildlifeStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }

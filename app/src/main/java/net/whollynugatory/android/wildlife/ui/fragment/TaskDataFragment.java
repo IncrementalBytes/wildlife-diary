@@ -41,7 +41,7 @@ public class TaskDataFragment extends Fragment {
 
   public interface OnTaskDataListener {
 
-    void onTaskDataFailure(String message);
+    void onTaskDataFailed(String message);
 
     void onTaskDataMissing();
 
@@ -80,7 +80,7 @@ public class TaskDataFragment extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Checking data stamp for Tasks was unsuccessful.", task.getException());
-          mCallback.onTaskDataFailure("Unable to retrieve Task data stamp.");
+          mCallback.onTaskDataFailed("Unable to retrieve Task data stamp.");
         } else {
           String remoteStamp = Utils.UNKNOWN_ID;
           DataSnapshot resultSnapshot = task.getResult();
@@ -98,7 +98,8 @@ public class TaskDataFragment extends Fragment {
 
             String taskStamp = Utils.getTasksStamp(getActivity());
             if (taskStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !taskStamp.equalsIgnoreCase(remoteStamp)) {
-              // TODO: clear task table
+              WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                WildlifeDatabase.getInstance(getContext()).taskDao().deleteAll());
               Utils.setTasksStamp(getActivity(), remoteStamp);
               populateTaskTable();
             } else {
@@ -106,7 +107,7 @@ public class TaskDataFragment extends Fragment {
               mCallback.onTaskDataSynced();
             }
           } else {
-            mCallback.onTaskDataFailure("Task data stamp not found.");
+            mCallback.onTaskDataFailed("Task data stamp not found.");
           }
         }
       });
@@ -127,7 +128,7 @@ public class TaskDataFragment extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data.", task.getException());
-          mCallback.onTaskDataFailure("Could not retrieve Task data.");
+          mCallback.onTaskDataFailed("Could not retrieve Task data.");
         } else {
           DataSnapshot resultSnapshot = task.getResult();
           if (resultSnapshot != null) {
@@ -150,13 +151,13 @@ public class TaskDataFragment extends Fragment {
 
                 mCallback.onTaskDataPopulated();
               } else {
-                mCallback.onTaskDataFailure("App was not ready for operation at this time.");
+                mCallback.onTaskDataFailed("App was not ready for operation at this time.");
               }
             } else {
               mCallback.onTaskDataMissing();
             }
           } else {
-            mCallback.onTaskDataFailure("Task results not found.");
+            mCallback.onTaskDataFailed("Task results not found.");
           }
         }
       });

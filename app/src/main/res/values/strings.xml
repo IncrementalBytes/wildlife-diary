@@ -56,4 +56,7 @@
   <string name="plus_sign">+</string>
   <string name="minus_sign">-</string>
   <string name="label_record_encounters">Record Encounters</string>
+  <string name="label_update_encounter">Update Encounter</string>
+  <string name="label_delete">Delete</string>
+  <string name="format_number_in_group">Number of %s in encounter: %d</string>
 </resources>

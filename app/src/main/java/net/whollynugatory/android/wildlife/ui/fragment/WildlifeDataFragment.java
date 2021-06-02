@@ -41,7 +41,7 @@ public class WildlifeDataFragment  extends Fragment {
 
   public interface OnWildlifeDataListener {
 
-    void onWildlifeDataFailure(String message);
+    void onWildlifeDataFailed(String message);
 
     void onWildlifeDataMissing();
 
@@ -80,7 +80,7 @@ public class WildlifeDataFragment  extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Checking data stamp for Wildlife was unsuccessful.", task.getException());
-          mCallback.onWildlifeDataFailure("Unable to retrieve Wildlife data stamp.");
+          mCallback.onWildlifeDataFailed("Unable to retrieve Wildlife data stamp.");
         } else {
           String remoteStamp = Utils.UNKNOWN_ID;
           DataSnapshot resultSnapshot = task.getResult();
@@ -98,7 +98,8 @@ public class WildlifeDataFragment  extends Fragment {
 
             String wildlifeStamp = Utils.getWildlifeStamp(getActivity());
             if (wildlifeStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !wildlifeStamp.equalsIgnoreCase(remoteStamp)) {
-              // TODO: clear wildlife table
+              WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                WildlifeDatabase.getInstance(getContext()).wildlifeDao().deleteAll());
               Utils.setWildlifeStamp(getActivity(), remoteStamp);
               populateWildlifeTable();
             } else {
@@ -106,7 +107,7 @@ public class WildlifeDataFragment  extends Fragment {
               mCallback.onWildlifeDataSynced();
             }
           } else {
-            mCallback.onWildlifeDataFailure("Wildlife data stamp not found.");
+            mCallback.onWildlifeDataFailed("Wildlife data stamp not found.");
           }
         }
       });
@@ -127,7 +128,7 @@ public class WildlifeDataFragment  extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data", task.getException());
-          mCallback.onWildlifeDataFailure("Could not retrieve Wildlife data.");
+          mCallback.onWildlifeDataFailed("Could not retrieve Wildlife data.");
         } else {
           DataSnapshot resultSnapshot = task.getResult();
           if (resultSnapshot != null) {
@@ -150,13 +151,13 @@ public class WildlifeDataFragment  extends Fragment {
 
                 mCallback.onWildlifeDataPopulated();
               } else {
-                mCallback.onWildlifeDataFailure("App was not ready for operation at this time.");
+                mCallback.onWildlifeDataFailed("App was not ready for operation at this time.");
               }
             } else {
               mCallback.onWildlifeDataMissing();
             }
           } else {
-            mCallback.onWildlifeDataFailure("Wildlife results not found.");
+            mCallback.onWildlifeDataFailed("Wildlife results not found.");
           }
         }
       });

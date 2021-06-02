@@ -94,9 +94,9 @@ public class TryAgainLaterFragment extends Fragment {
     TextView message = view.findViewById(R.id.try_again_text_message);
     message.setText(mMessage);
     Button tryAgainButton = view.findViewById(R.id.try_again_button_try_again);
-    tryAgainButton.setOnClickListener(view1 -> mCallback.onTryAgainLaterTryAgain());
+    tryAgainButton.setOnClickListener(tryAgainButtonView -> mCallback.onTryAgainLaterTryAgain());
     Button signOutButton = view.findViewById(R.id.try_again_button_sign_out);
-    signOutButton.setOnClickListener(view12 -> mCallback.onTryAgainLaterSignOut());
+    signOutButton.setOnClickListener(signOutButtonView -> mCallback.onTryAgainLaterSignOut());
     return view;
   }
 }
