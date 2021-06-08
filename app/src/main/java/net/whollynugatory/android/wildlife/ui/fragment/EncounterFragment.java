@@ -248,16 +248,21 @@ public class EncounterFragment extends Fragment {
     if (mEncounterId.isEmpty()) {
       deleteImage.setVisibility(View.GONE);
       updateEncounterButton.setVisibility(View.GONE);
-      addEncounterButton.setOnClickListener(v -> addUpdateEncounter());
+      addEncounterButton.setOnClickListener(v -> addEncounter());
     } else {
       addEncounterButton.setVisibility(View.INVISIBLE);
       mRecordEncountersButton.setVisibility(View.GONE);
       deleteImage.setOnClickListener(v -> {
+
         deleteEncounter();
         updateDataStamp();
         mCallback.onEncounterDeleted();
       });
-      updateEncounterButton.setOnClickListener(v -> addUpdateEncounter());
+      updateEncounterButton.setOnClickListener(v -> {
+
+        deleteEncounter();
+        addEncounter();
+      });
     }
 
     mWildlifeViewModel.getTasks().observe(getViewLifecycleOwner(), taskEntityList -> {
@@ -281,9 +286,9 @@ public class EncounterFragment extends Fragment {
   /*
     Private Method(s)
    */
-  private void addUpdateEncounter() {
+  private void addEncounter() {
 
-    Log.d(TAG, "++addUpdateEncounter()");
+    Log.d(TAG, "++addEncounter()");
     EncounterEntity encounterEntity = new EncounterEntity();
     encounterEntity.Date = Utils.toTimestamp(mDateEdit.getText().toString());
     encounterEntity.EncounterId = UUID.randomUUID().toString();
@@ -312,6 +317,7 @@ public class EncounterFragment extends Fragment {
           newEntity.Id = UUID.randomUUID().toString(); // unique entry per task
           newEntity.TaskId = taskEntity.Id;
           if (newEntity.isValid()) {
+            Log.d(TAG, "Adding " + newEntity.toString());
             encounterEntities.put(newEntity.Id, newEntity);
           } else {
             mCallback.onEncounterFailed("Encounter data was unknown: " + encounterEntity.toString());
@@ -323,8 +329,7 @@ public class EncounterFragment extends Fragment {
     }
 
     if (encounterEntities.size() > 0) {
-      DatabaseReference encounterRef = FirebaseDatabase.getInstance().getReference(Utils.ENCOUNTER_ROOT);
-      encounterRef.updateChildren(encounterEntities)
+      FirebaseDatabase.getInstance().getReference(Utils.ENCOUNTER_ROOT).updateChildren(encounterEntities)
         .addOnCompleteListener(task -> {
 
           if (!task.isSuccessful()) {
@@ -339,7 +344,6 @@ public class EncounterFragment extends Fragment {
             mCallback.onEncounterAdded();
             mRecordEncountersButton.setEnabled(true);
           } else {
-            deleteEncounter();
             updateDataStamp();
             mCallback.onEncounterRecorded();
           }
@@ -356,17 +360,22 @@ public class EncounterFragment extends Fragment {
     Log.d(TAG, "++deleteEncounter()");
     if (!mEncounterId.isEmpty()) {
       mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
+
+        HashMap<String, Object> encounterEntities = new HashMap<>();
         for(EncounterDetails encounterDetails : encounterDetailsList) {
-
-          String path = Utils.combine(Utils.ENCOUNTER_ROOT, encounterDetails.Id);
-          FirebaseDatabase.getInstance().getReference(path).removeValue().addOnCompleteListener(task -> {
-
-            if (!task.isSuccessful()) {
-              Log.e(TAG, "Unable to remove encounter: " + encounterDetails.EncounterId, task.getException());
-            }
-          });
+          Log.d(TAG, "Deleting " + encounterDetails.toString());
+          encounterEntities.put(encounterDetails.Id, null);
         }
+
+        FirebaseDatabase.getInstance().getReference(Utils.ENCOUNTER_ROOT).updateChildren(encounterEntities).addOnCompleteListener(task -> {
+
+          if (!task.isSuccessful()) {
+            Log.e(TAG, "Unable to delete encounter(s).", task.getException());
+          }
+        });
       });
+    } else {
+      Log.w(TAG, "EncounterId was empty.");
     }
   }
 
