@@ -35,9 +35,6 @@ public interface EncounterDao {
   @Query("DELETE FROM encounter_table")
   void deleteAll();
 
-  @Query("DELETE FROM encounter_table WHERE encounter_id = :encounterEntityId")
-  void deleteEncounterById(String encounterEntityId);
-
   @Query("SELECT Encounter.date AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +
     "Encounter.wildlife_id AS WildlifeId, " +
@@ -48,8 +45,7 @@ public interface EncounterDao {
     "Tasks.name AS TaskName, " +
     "Tasks.id AS TaskId, " +
     "Tasks.is_sensitive AS TaskIsSensitive, " +
-    "Tasks.description AS TaskDescription, " +
-    "Encounter.number_in_group AS NumberInGroup " +
+    "Tasks.description AS TaskDescription " +
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
@@ -67,8 +63,7 @@ public interface EncounterDao {
     "Tasks.name AS TaskName, " +
     "Tasks.id AS TaskId, " +
     "Tasks.is_sensitive AS TaskIsSensitive, " +
-    "Tasks.description AS TaskDescription, " +
-    "Encounter.number_in_group AS NumberInGroup " +
+    "Tasks.description AS TaskDescription " +
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
@@ -78,12 +73,12 @@ public interface EncounterDao {
 
   @Query("SELECT Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.id AS WildlifeId, " +
-    "COUNT(Wildlife.abbreviation) AS SummaryDetails " +
+    "COUNT(DISTINCT(encounter_id)) AS EncounterCount " +
     "FROM encounter_table " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "WHERE user_id == :userId " +
     "GROUP BY Wildlife.abbreviation " +
-    "ORDER BY SummaryDetails DESC")
+    "ORDER BY EncounterCount DESC, WildlifeSpecies ASC")
   LiveData<List<WildlifeSummary>> getMostEncountered(String userId);
 
   @Query("SELECT COUNT(DISTINCT encounter_id) AS TotalEncounters, " +
@@ -102,7 +97,7 @@ public interface EncounterDao {
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '98bf72f8-f388-4a6a-962e-b3f4cc94f174') AS TotalSubcutaneous, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '88c20461-e306-447c-92bd-196bfbfa9458') AS TotalSyringeFed, " +
     "(SELECT FriendlyName FROM " +
-    "    (SELECT wt.friendly_name AS FriendlyName, wildlife_id, COUNT(*) AS Count " +
+    "    (SELECT wt.friendly_name AS FriendlyName, wildlife_id, COUNT(DISTINCT encounter_id) AS Count " +
     "        FROM encounter_table " +
     "        INNER JOIN wildlife_table AS wt ON wt.id == encounter_table.wildlife_id " +
     "        WHERE user_id == :userId " +
@@ -124,8 +119,7 @@ public interface EncounterDao {
     "Tasks.name AS TaskName, " +
     "Tasks.id AS TaskId, " +
     "Tasks.is_sensitive AS TaskIsSensitive, " +
-    "Tasks.description AS TaskDescription, " +
-    "Encounter.number_in_group AS NumberInGroup " +
+    "Tasks.description AS TaskDescription " +
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
@@ -135,12 +129,12 @@ public interface EncounterDao {
 
   @Query("SELECT Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.id AS WildlifeId, " +
-    "COUNT(Wildlife.abbreviation) AS SummaryDetails " +
+    "COUNT(DISTINCT(encounter_id)) AS EncounterCount  " +
     "FROM encounter_table " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "WHERE user_id == :userId " +
     "GROUP BY Wildlife.abbreviation " +
-    "ORDER BY SummaryDetails ASC")
+    "ORDER BY EncounterCount ASC, WildlifeSpecies ASC")
   LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)

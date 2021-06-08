@@ -63,9 +63,6 @@ public class EncounterEntity implements Serializable {
   @ColumnInfo(name = "date")
   public long Date;
 
-  @ColumnInfo(name = "number_in_group")
-  public int NumberInGroup;
-
   @NonNull
   @ColumnInfo(name = "task_id")
   public String TaskId;
@@ -83,10 +80,19 @@ public class EncounterEntity implements Serializable {
     Id = Utils.UNKNOWN_ID;
     EncounterId = Utils.UNKNOWN_ID;
     Date = 0;
-    NumberInGroup = 0;
     TaskId = Utils.UNKNOWN_ID;
     WildlifeId = Utils.UNKNOWN_ID;
     UserId = Utils.UNKNOWN_USER_ID;
+  }
+
+  public EncounterEntity(EncounterEntity encounterEntity) {
+
+    Id = encounterEntity.Id;
+    EncounterId = encounterEntity.EncounterId;
+    Date = encounterEntity.Date;
+    TaskId = encounterEntity.TaskId;
+    WildlifeId = encounterEntity.WildlifeId;
+    UserId = encounterEntity.UserId;
   }
 
   @NonNull
@@ -119,11 +125,6 @@ public class EncounterEntity implements Serializable {
 
     if (EncounterId.isEmpty() || EncounterId.contains(Utils.UNKNOWN_ID)) {
       Log.e(TAG, "Encounter identification missing.");
-      return false;
-    }
-
-    if (NumberInGroup < 1) {
-      Log.e(TAG, "Number in group is not set.");
       return false;
     }
 

@@ -19,13 +19,13 @@ import net.whollynugatory.android.wildlife.Utils;
 
 public class WildlifeSummary {
 
-  public String SummaryDetails;
+  public int EncounterCount;
   public String WildlifeId;
   public String WildlifeSpecies;
 
   public WildlifeSummary() {
 
-    SummaryDetails = Utils.UNKNOWN_STRING;
+    EncounterCount = 0;
     WildlifeId = Utils.UNKNOWN_ID;
     WildlifeSpecies = Utils.UNKNOWN_STRING;
   }

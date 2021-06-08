@@ -16,6 +16,7 @@
 package net.whollynugatory.android.wildlife.ui.fragment;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,10 +38,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
@@ -63,7 +66,11 @@ public class EncounterFragment extends Fragment {
   public interface OnEncounterListener {
 
     void onEncounterAdded();
+
+    void onEncounterDeleted();
+
     void onEncounterFailed(String message);
+
     void onEncounterRecorded();
   }
 
@@ -78,9 +85,10 @@ public class EncounterFragment extends Fragment {
 
   private TaskAdapter mTaskAdapter;
 
-  private int mEncountersAdded;
+  private String mEncounterId;
+  private String mFollowingUserId;
   private int mGroupCount = 1;
-  private List<TaskEntity> mTaskEntityList;
+  private HashMap<String, TaskEntity> mTaskEntityMap;
   private HashMap<String, String> mWildlifeMap;
   private WildlifeViewModel mWildlifeViewModel;
 
@@ -146,8 +154,15 @@ public class EncounterFragment extends Fragment {
   public static EncounterFragment newInstance() {
 
     Log.d(TAG, "++newInstance()");
+    return new EncounterFragment();
+  }
+
+  public static EncounterFragment newInstance(String encounterId) {
+
+    Log.d(TAG, "++newInstance(String)");
     EncounterFragment fragment = new EncounterFragment();
     Bundle arguments = new Bundle();
+    arguments.putString(Utils.ARG_ENCOUNTER_ID, encounterId);
     fragment.setArguments(arguments);
     return fragment;
   }
@@ -165,6 +180,17 @@ public class EncounterFragment extends Fragment {
     } catch (ClassCastException e) {
       throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
     }
+
+    Bundle arguments = getArguments();
+    if (arguments != null) {
+      if (arguments.containsKey(Utils.ARG_ENCOUNTER_ID)) {
+        mEncounterId = arguments.getString(Utils.ARG_ENCOUNTER_ID);
+      } else {
+        mEncounterId = "";
+      }
+    } else {
+      mEncounterId = "";
+    }
   }
 
   @Override
@@ -172,6 +198,7 @@ public class EncounterFragment extends Fragment {
     super.onCreate(savedInstanceState);
 
     Log.d(TAG, "++onCreate(Bundle)");
+    mFollowingUserId = Utils.getFollowingUserId(getContext());
     mWildlifeMap = new HashMap<>();
     mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
   }
@@ -182,14 +209,16 @@ public class EncounterFragment extends Fragment {
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_encounter, container, false);
 
-    mEncountersAdded = 0;
-
     mAdditionButton = view.findViewById(R.id.encounter_button_addition);
     mDateEdit = view.findViewById(R.id.encounter_edit_date);
     mGroupCountEdit = view.findViewById(R.id.encounter_edit_number_in_group);
     mMinusButton = view.findViewById(R.id.encounter_button_minus);
+    mRecordEncountersButton = view.findViewById(R.id.encounter_button_record);
     mWildlifeText = view.findViewById(R.id.encounter_auto_wildlife);
 
+    Button addEncounterButton = view.findViewById(R.id.encounter_button_add);
+    Button updateEncounterButton = view.findViewById(R.id.encounter_button_update);
+    ImageView deleteImage = view.findViewById(R.id.encounter_button_delete);
     RecyclerView recyclerView = view.findViewById(R.id.encounter_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mTaskAdapter = new EncounterFragment.TaskAdapter(getContext());
@@ -197,7 +226,6 @@ public class EncounterFragment extends Fragment {
 
     mDateEdit.addTextChangedListener(mTextWatcher);
     mGroupCountEdit.setText(String.valueOf(mGroupCount));
-
     mAdditionButton.setOnClickListener(additionButtonView -> {
 
       mGroupCountEdit.setText(String.valueOf(++mGroupCount));
@@ -211,23 +239,40 @@ public class EncounterFragment extends Fragment {
       updateUI();
     });
 
-    mRecordEncountersButton = view.findViewById(R.id.encounter_button_record);
     mRecordEncountersButton.setEnabled(false);
-    mRecordEncountersButton.setOnClickListener(v -> recordEncounters());
-
-    Button addButton = view.findViewById(R.id.encounter_button_add);
-    addButton.setOnClickListener(v -> {
-
-      addEncounter();
-      mTaskAdapter.setTaskEntityList(mTaskEntityList);
+    mRecordEncountersButton.setOnClickListener(v -> {
+      updateDataStamp();
+      mCallback.onEncounterRecorded();
     });
+
+    if (mEncounterId.isEmpty()) {
+      deleteImage.setVisibility(View.GONE);
+      updateEncounterButton.setVisibility(View.GONE);
+      addEncounterButton.setOnClickListener(v -> addUpdateEncounter());
+    } else {
+      addEncounterButton.setVisibility(View.INVISIBLE);
+      mRecordEncountersButton.setVisibility(View.GONE);
+      deleteImage.setOnClickListener(v -> {
+        deleteEncounter();
+        updateDataStamp();
+        mCallback.onEncounterDeleted();
+      });
+      updateEncounterButton.setOnClickListener(v -> addUpdateEncounter());
+    }
 
     mWildlifeViewModel.getTasks().observe(getViewLifecycleOwner(), taskEntityList -> {
 
       // TODO: order list by number of times task has been used
-      mTaskEntityList = new ArrayList<>(taskEntityList);
-      mTaskAdapter.setTaskEntityList(mTaskEntityList);
+      mTaskEntityMap = new HashMap<>();
+      for (TaskEntity taskEntity : taskEntityList) {
+        mTaskEntityMap.put(taskEntity.Id, taskEntity);
+      }
+
+      mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
       prepareWildlifeList();
+      if (!mEncounterId.isEmpty()) {
+        setupForEditing();
+      }
     });
 
     return view;
@@ -236,13 +281,12 @@ public class EncounterFragment extends Fragment {
   /*
     Private Method(s)
    */
-  private void addEncounter() {
+  private void addUpdateEncounter() {
 
-    Log.d(TAG, "++addEncounter()");
+    Log.d(TAG, "++addUpdateEncounter()");
     EncounterEntity encounterEntity = new EncounterEntity();
     encounterEntity.Date = Utils.toTimestamp(mDateEdit.getText().toString());
     encounterEntity.EncounterId = UUID.randomUUID().toString();
-    encounterEntity.NumberInGroup = Integer.parseInt(mGroupCountEdit.getText().toString());
     encounterEntity.UserId = Utils.DEFAULT_FOLLOWING_USER_ID;
 
     String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
@@ -258,35 +302,71 @@ public class EncounterFragment extends Fragment {
     }
 
     int totalItems = mTaskAdapter.getItemCount();
+    int groupTotal = Integer.parseInt(mGroupCountEdit.getText().toString());
+    HashMap<String, Object> encounterEntities = new HashMap<>();
     for (int taskCount = 0; taskCount < totalItems; taskCount++) {
       TaskEntity taskEntity = mTaskAdapter.getItem(taskCount);
       if (taskEntity.IsComplete) {
-        encounterEntity.Id = UUID.randomUUID().toString(); // unique entry per task
-        encounterEntity.TaskId = taskEntity.Id;
-        if (encounterEntity.isValid()) {
-          String path = Utils.combine(Utils.ENCOUNTER_ROOT, encounterEntity.Id);
-          FirebaseDatabase.getInstance().getReference().child(path).setValue(encounterEntity)
-            .addOnCompleteListener(task -> {
-
-              if (!task.isSuccessful()) {
-                Log.e(TAG, "Error setting data: " + encounterEntity.toString(), task.getException());
-                mCallback.onEncounterFailed("Failed to added encounter.");
-              } else {
-                mWildlifeText.setText("");
-                mGroupCountEdit.setText(String.valueOf(1));
-                mMinusButton.setEnabled(false);
-                mAdditionButton.setEnabled(true);
-                mEncountersAdded++;
-                mRecordEncountersButton.setEnabled(mEncountersAdded > 0);
-                mCallback.onEncounterAdded();
-              }
-            });
-        } else {
-          mCallback.onEncounterFailed("Encounter data was unknown: " + encounterEntity.toString());
+        for (int groupCount = 0; groupCount < groupTotal; groupCount++) {
+          EncounterEntity newEntity = new EncounterEntity(encounterEntity);
+          newEntity.Id = UUID.randomUUID().toString(); // unique entry per task
+          newEntity.TaskId = taskEntity.Id;
+          if (newEntity.isValid()) {
+            encounterEntities.put(newEntity.Id, newEntity);
+          } else {
+            mCallback.onEncounterFailed("Encounter data was unknown: " + encounterEntity.toString());
+          }
         }
 
         taskEntity.IsComplete = false;
       }
+    }
+
+    if (encounterEntities.size() > 0) {
+      DatabaseReference encounterRef = FirebaseDatabase.getInstance().getReference(Utils.ENCOUNTER_ROOT);
+      encounterRef.updateChildren(encounterEntities)
+        .addOnCompleteListener(task -> {
+
+          if (!task.isSuccessful()) {
+            Log.e(TAG, "Error setting data Encounter data.", task.getException());
+            mCallback.onEncounterFailed("Failed to add encounter(s).");
+          } else if (mEncounterId.isEmpty()) {
+            mWildlifeText.setText("");
+            mGroupCount = 1;
+            mGroupCountEdit.setText(String.valueOf(mGroupCount));
+            mMinusButton.setEnabled(false);
+            mAdditionButton.setEnabled(true);
+            mCallback.onEncounterAdded();
+            mRecordEncountersButton.setEnabled(true);
+          } else {
+            deleteEncounter();
+            updateDataStamp();
+            mCallback.onEncounterRecorded();
+          }
+
+          mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
+        });
+    } else {
+      Log.w(TAG, "No encounters were collected; look for earlier messages.");
+    }
+  }
+
+  private void deleteEncounter() {
+
+    Log.d(TAG, "++deleteEncounter()");
+    if (!mEncounterId.isEmpty()) {
+      mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
+        for(EncounterDetails encounterDetails : encounterDetailsList) {
+
+          String path = Utils.combine(Utils.ENCOUNTER_ROOT, encounterDetails.Id);
+          FirebaseDatabase.getInstance().getReference(path).removeValue().addOnCompleteListener(task -> {
+
+            if (!task.isSuccessful()) {
+              Log.e(TAG, "Unable to remove encounter: " + encounterDetails.EncounterId, task.getException());
+            }
+          });
+        }
+      });
     }
   }
 
@@ -307,27 +387,47 @@ public class EncounterFragment extends Fragment {
     });
   }
 
-  private void recordEncounters() {
+  private void updateDataStamp() {
 
-    Log.d(TAG, "++recordEncounters()");
-    if (mEncountersAdded > 0) {
-      Map<String, Object> childUpdates = new HashMap<>();
-      childUpdates.put(Utils.ENCOUNTER_ROOT, UUID.randomUUID().toString());
-      FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).updateChildren(childUpdates)
-        .addOnCompleteListener(task -> {
+    Log.d(TAG, "++updateDataStamp()");
+    Map<String, Object> childUpdates = new HashMap<>();
+    childUpdates.put(Utils.ENCOUNTER_ROOT, UUID.randomUUID().toString());
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).updateChildren(childUpdates)
+      .addOnCompleteListener(task -> {
 
-          if (!task.isSuccessful()) {
-            Log.w(TAG, "Unable to update remote data stamp for changes.", task.getException());
-          }
-        });
-    } else {
-      Log.w(TAG, "No encounters were recorded.");
-    }
-
-    mCallback.onEncounterRecorded();
+        if (!task.isSuccessful()) {
+          Log.w(TAG, "Unable to update remote data stamp for changes.", task.getException());
+        }
+      });
   }
 
-  private void updateUI() {
+  private void setupForEditing() {
+
+    Log.d(TAG, "++setupForEditing()");
+    mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
+
+      List<String> taskIds = new ArrayList<>();
+      for (EncounterDetails encounterDetails : encounterDetailsList) {
+        if (!taskIds.contains(encounterDetails.TaskId) && mTaskEntityMap.containsKey(encounterDetails.TaskId)) {
+          TaskEntity taskEntity = mTaskEntityMap.get(encounterDetails.TaskId);
+          if (taskEntity != null) {
+            taskIds.add(encounterDetails.TaskId);
+            taskEntity.IsComplete = true;
+          }
+        }
+      }
+
+      mGroupCount = encounterDetailsList.size() / taskIds.size();
+      mDateEdit.setText(Utils.fromTimestamp(encounterDetailsList.get(0).Date));
+      mGroupCountEdit.setText(String.valueOf(mGroupCount));
+      mWildlifeText.setText(encounterDetailsList.get(0).WildlifeAbbreviation);
+      mWildlifeText.setEnabled(false);
+      mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
+      updateUI();
+    });
+  }
+
+   private void updateUI() {
 
     mAdditionButton.setEnabled(mGroupCount < 12);
     mMinusButton.setEnabled(mGroupCount > 1);
@@ -379,11 +479,14 @@ public class EncounterFragment extends Fragment {
 
       Log.d(TAG, "++setTaskEntityList(Collection<TaskEntity>)");
       mTaskEntityList = new ArrayList<>(taskEntityCollection);
+      mTaskEntityList.sort(new Utils.SortByName());
       notifyDataSetChanged();
     }
 
     static class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+      private final Resources mResources;
+      private final Resources.Theme mTheme;
       private final TextView mDescriptionTextView;
       private final ImageView mIsCompleteImage;
       private final CardView mSummaryCardView;
@@ -399,6 +502,8 @@ public class EncounterFragment extends Fragment {
         mTitleTextView = itemView.findViewById(R.id.task_item_text_name);
         mDescriptionTextView = itemView.findViewById(R.id.task_item_text_desc);
 
+        mResources = itemView.getResources();
+        mTheme = itemView.getContext().getTheme();
         itemView.setOnClickListener(this);
       }
 
@@ -409,8 +514,18 @@ public class EncounterFragment extends Fragment {
         mTitleTextView.setText(mTaskEntity.Name);
         if (mTaskEntity.IsComplete) {
           mIsCompleteImage.setImageResource(R.drawable.ic_complete_dark);
+          mSummaryCardView.setCardBackgroundColor(
+            ResourcesCompat.getColor(
+              mResources,
+              R.color.primaryDarkColor,
+              mTheme));
         } else {
           mIsCompleteImage.setImageResource(R.drawable.ic_incomplete_dark);
+          mSummaryCardView.setCardBackgroundColor(
+            ResourcesCompat.getColor(
+              mResources,
+              R.color.secondaryDarkColor,
+              mTheme));
         }
       }
 

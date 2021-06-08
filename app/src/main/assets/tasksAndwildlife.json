@@ -13,7 +13,7 @@
       "Description": "Provide nourishment via a feeding tube directly into stomach."
     },
     "25f14681-7b98-4a35-8759-ba668c353eb1": {
-      "Name": "Handled - Euthanasia",
+      "Name": "Handled - Euthanize",
       "Description": "Safely and securely held patient for euthanasia.",
       "IsSensitive": "true"
     },
@@ -30,7 +30,7 @@
       "Description": "Safely and securely held patient for gavage."
     },
     "175720d7-79d3-4c7c-be33-2dd33db277fb": {
-      "Name": "Handled - Medication",
+      "Name": "Handled - Medicate",
       "Description": "Safely and securely held patient for medication."
     },
     "0525c4b8-37e4-4b95-bdc6-d1df62f7d670": {
@@ -38,11 +38,11 @@
       "Description": "Safely and securely held patient for subcutaneous fluids."
     },
     "fc0e2bdf-00c0-4da4-855b-857c233effa6": {
-      "Name": "Ocular Medication",
+      "Name": "Medicate - Ocular",
       "Description": "Applied medication to patients eye(s)."
     },
     "25a40f6a-fa23-4331-9fd8-ed8d0bfbb780": {
-      "Name": "Oral Medication",
+      "Name": "Medicate - Oral",
       "Description": "Gave medication to patient through mouth."
     },
     "98bf72f8-f388-4a6a-962e-b3f4cc94f174": {

@@ -46,12 +46,6 @@ public class ListFragment extends Fragment {
 
   public interface OnSimpleListListener {
 
-    void onWildlifeItemSelected(String wildlifeId);
-
-    void onEncounterItemSelected(String encounterId);
-
-    void onTaskItemSelected(String taskId);
-
     void onTaskListSet(String titleUpdate);
 
     void onUnknownList();
@@ -134,7 +128,7 @@ public class ListFragment extends Fragment {
       } else if (mSummaryId == R.id.summary_card_gavage) {
         taskName = "Gavage";
       } else if (mSummaryId == R.id.summary_card_handled_euthanasia) {
-        taskName = "Handled - Euthanasia";
+        taskName = "Handled - Euthanize";
       } else if (mSummaryId == R.id.summary_card_handled_exam) {
         taskName = "Handled - Exam";
       } else if (mSummaryId == R.id.summary_card_handled_force_fed) {
@@ -142,13 +136,13 @@ public class ListFragment extends Fragment {
       } else if (mSummaryId == R.id.summary_card_handled_gavage) {
         taskName = "Handled - Gavage";
       } else if (mSummaryId == R.id.summary_card_handled_medication) {
-        taskName = "Handled - Medication";
+        taskName = "Handled - Medicate";
       } else if (mSummaryId == R.id.summary_card_handled_subcutaneous) {
         taskName = "Handled - Subcutaneous";
       } else if (mSummaryId == R.id.summary_card_medication_ocular) {
-        taskName = "Ocular Medication";
+        taskName = "Medicate - Ocular";
       } else if (mSummaryId == R.id.summary_card_medication_oral) {
-        taskName = "Oral Medication";
+        taskName = "Medicate - Oral";
       } else if (mSummaryId == R.id.summary_card_subcutaneous) {
         taskName = "Subcutaneous";
       } else if (mSummaryId == R.id.summary_card_syringe_fed) {
@@ -249,7 +243,7 @@ public class ListFragment extends Fragment {
       void bind(WildlifeSummary wildlifeSummary) {
 
         mTitleTextView.setText(wildlifeSummary.WildlifeSpecies);
-        mDetailsTextView.setText(wildlifeSummary.SummaryDetails);
+        mDetailsTextView.setText(String.valueOf(wildlifeSummary.EncounterCount));
       }
     }
   }

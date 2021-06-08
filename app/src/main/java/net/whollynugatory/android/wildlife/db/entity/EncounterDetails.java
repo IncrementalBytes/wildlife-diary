@@ -33,8 +33,6 @@ public class EncounterDetails implements Serializable {
 
   public String Id;
 
-  public int NumberInGroup;
-
   public String TaskDescription;
 
   public String TaskId;
@@ -57,7 +55,6 @@ public class EncounterDetails implements Serializable {
     Date = 0;
     EncounterId = Utils.UNKNOWN_ID;
     Id = Utils.UNKNOWN_ID;
-    NumberInGroup = 0;
     TaskDescription = Utils.UNKNOWN_STRING;
     TaskId = Utils.UNKNOWN_ID;
     TaskIsSensitive = false;

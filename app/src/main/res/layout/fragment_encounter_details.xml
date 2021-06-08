@@ -54,18 +54,6 @@
       app:layout_constraintBottom_toBottomOf="@id/encounter_details_text_abbreviation"/>
 
     <TextView
-      android:id="@+id/encounter_details_text_dbg_id"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/default_view_margin"
-      android:layout_marginEnd="@dimen/default_view_margin"
-      android:layout_marginBottom="@dimen/default_view_margin"
-      android:text="@string/placeholder"
-      app:layout_constraintTop_toBottomOf="@id/encounter_details_text_abbreviation"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"/>
-
-    <TextView
       android:id="@+id/encounter_details_text_number_in_group"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -73,7 +61,7 @@
       android:layout_marginEnd="@dimen/default_view_margin"
       android:layout_marginBottom="@dimen/default_view_margin"
       android:text="@string/placeholder"
-      app:layout_constraintTop_toBottomOf="@id/encounter_details_text_dbg_id"
+      app:layout_constraintTop_toBottomOf="@id/encounter_details_text_date"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -86,26 +74,7 @@
       android:layout_marginTop="@dimen/default_view_margin"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/encounter_details_text_number_in_group"
-      app:layout_constraintBottom_toTopOf="@id/encounter_details_button_update"
       tools:listitem="@layout/task_list_item"/>
-
-    <Button
-      android:id="@+id/encounter_details_button_update"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/default_view_margin"
-      android:text="@string/label_update_encounter"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <Button
-      android:id="@+id/encounter_details_button_delete"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/default_view_margin"
-      android:text="@string/label_delete"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent"/>
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 

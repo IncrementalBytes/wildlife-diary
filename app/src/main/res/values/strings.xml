@@ -12,7 +12,8 @@
   <string name="label_date">Date:</string>
   <string name="hint_abbreviation">Abbreviation of species</string>
   <string name="hint_date">MM/DD/YYYY</string>
-  <string name="label_add_encounter">Add Encounter</string>
+  <string name="label_add_encounter">Add</string>
+  <string name="label_update_encounter">Update</string>
   <string name="encounter_data">Checking out Encounter data…</string>
   <string name="wildlife_data">Checking out Wildlife data…</string>
   <string name="task_data">Checking out Task data…</string>
@@ -55,8 +56,7 @@
   <string name="label_sign_out">Sign Out</string>
   <string name="plus_sign">+</string>
   <string name="minus_sign">-</string>
-  <string name="label_record_encounters">Record Encounters</string>
-  <string name="label_update_encounter">Update Encounter</string>
+  <string name="label_record_encounters">Record</string>
   <string name="label_delete">Delete</string>
-  <string name="format_number_in_group">Number of %s in encounter: %d</string>
+  <string name="format_number_in_group">Number of %s in this encounter: %d</string>
 </resources>

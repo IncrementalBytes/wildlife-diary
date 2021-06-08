@@ -56,7 +56,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
   EncounterDataFragment.OnEncounterDataListener,
-  EncounterDetailFragment.OnEncounterDetailsListener,
   EncounterFragment.OnEncounterListener,
   EncounterListFragment.OnEncounterListListener,
   ListFragment.OnSimpleListListener,
@@ -185,6 +184,13 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
+  public void onEncounterDeleted() {
+
+    Log.d(TAG, "++onEncounterDeleted()");
+    replaceFragment(EncounterDataFragment.newInstance());
+  }
+
+  @Override
   public void onEncounterRecorded() {
 
     Log.d(TAG, "++onEncounterRecorded()");
@@ -237,33 +243,11 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterDetailsClicked(String encounterId) {
 
     Log.d(TAG, "++onEncounterDetailsClicked(String)");
-    replaceFragment(EncounterDetailFragment.newInstance(encounterId));
-  }
-
-  @Override
-  public void onEncounterDeleted() {
-
-    Log.d(TAG, "++onEncounterDeleted()");
-    replaceFragment(EncounterDataFragment.newInstance());
-  }
-
-  @Override
-  public void onEncounterUpdated() {
-
-    Log.d(TAG, "++onEncounterUpdated()");
-    replaceFragment(EncounterDataFragment.newInstance());
-  }
-
-  @Override
-  public void onEncounterUpdateFailed() {
-
-    Log.d(TAG, "++onEncounterUpdateFailed()");
-  }
-
-  @Override
-  public void onEncounterItemSelected(String encounterId) {
-
-    Log.d(TAG, "++onEncounterItemSelected(String)");
+    if (mUserEntity.IsContributor) {
+      replaceFragment(EncounterFragment.newInstance(encounterId));
+    } else {
+      replaceFragment(EncounterDetailFragment.newInstance(encounterId));
+    }
   }
 
   @Override
@@ -315,12 +299,6 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onTaskDataSynced()");
     replaceFragment(WildlifeDataFragment.newInstance());
-  }
-
-  @Override
-  public void onTaskItemSelected(String taskId) {
-
-    Log.d(TAG, "++onTaskItemSelected(String)");
   }
 
   @Override
@@ -378,12 +356,6 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onWildlifeDataSynced()");
     replaceFragment(EncounterDataFragment.newInstance());
-  }
-
-  @Override
-  public void onWildlifeItemSelected(String wildlifeId) {
-
-    Log.d(TAG, "++onWildlifeItemSelected(String)");
   }
 
   /*

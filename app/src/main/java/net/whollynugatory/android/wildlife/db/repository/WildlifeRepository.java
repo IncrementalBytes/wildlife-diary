@@ -50,11 +50,6 @@ public class WildlifeRepository {
     mWildlifeDao = db.wildlifeDao();
   }
 
-  public void deleteByEncounterId(String encounterId) {
-
-    mEncounterDao.deleteEncounterById(encounterId);
-  }
-
   public LiveData<List<TaskEntity>> getTasks() {
 
     return mTaskDao.getAll();
