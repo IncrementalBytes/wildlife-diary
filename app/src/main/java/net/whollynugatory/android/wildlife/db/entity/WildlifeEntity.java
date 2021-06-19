@@ -21,6 +21,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.android.gms.common.SignInButton;
+
 import net.whollynugatory.android.wildlife.Utils;
 
 import java.io.Serializable;
@@ -42,13 +44,19 @@ public class WildlifeEntity implements Serializable {
   @ColumnInfo(name = "friendly_name")
   public String FriendlyName;
 
-  // TODO: have path to image of wildlife
+  @ColumnInfo(name = "image_attribution")
+  public String ImageAttribution;
+
+  @ColumnInfo(name = "image_src")
+  public String ImageSrc;
 
   public WildlifeEntity() {
 
     Id = Utils.UNKNOWN_ID;
     Abbreviation = Utils.UNKNOWN_STRING;
     FriendlyName = Utils.UNKNOWN_STRING;
+    ImageAttribution = Utils.UNKNOWN_ATTRIBUTION;
+    ImageSrc = Utils.UNKNOWN_STRING;
   }
 
   @NonNull

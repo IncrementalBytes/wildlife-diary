@@ -16,6 +16,9 @@
 package net.whollynugatory.android.wildlife.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +40,9 @@ import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,10 +53,12 @@ public class EncounterDetailFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + EncounterDetailFragment.class.getSimpleName();
 
-  private TextView mAbbreviationTextView;
-  private TextView mDateTextView;
-  private TextView mNumberInGroupTextView;
-  private TextView mWildlifeTextView;
+  private TextView mAbbreviationText;
+  private TextView mDateText;
+  private TextView mLicenseText;
+  private TextView mNumberInGroupText;
+  private ImageView mWildlifeImage;
+  private TextView mWildlifeText;
 
   private List<EncounterDetails> mEncounterDetailsList;
   private EncounterEntity mEncounterEntity;
@@ -96,10 +104,12 @@ public class EncounterDetailFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
 
     Log.d(TAG, "onViewCreated()");
-    mAbbreviationTextView = view.findViewById(R.id.encounter_details_text_abbreviation);
-    mDateTextView = view.findViewById(R.id.encounter_details_text_date);
-    mNumberInGroupTextView = view.findViewById(R.id.encounter_details_text_number_in_group);
-    mWildlifeTextView = view.findViewById(R.id.encounter_details_text_wildlife);
+    mAbbreviationText = view.findViewById(R.id.encounter_details_text_abbreviation);
+    mDateText = view.findViewById(R.id.encounter_details_text_date);
+    mLicenseText = view.findViewById(R.id.encounter_details_text_license);
+    mNumberInGroupText = view.findViewById(R.id.encounter_details_text_number_in_group);
+    mWildlifeImage = view.findViewById(R.id.encounter_details_image_wildlife);
+    mWildlifeText = view.findViewById(R.id.encounter_details_text_wildlife);
 
     RecyclerView recyclerView = view.findViewById(R.id.encounter_details_recycler_tasks);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -143,10 +153,23 @@ public class EncounterDetailFragment extends Fragment {
       mEncounterEntity.Date = mEncounterDetailsList.get(0).Date;
       mEncounterEntity.UserId = mEncounterDetailsList.get(0).UserId;
 
-      mWildlifeTextView.setText(mEncounterDetailsList.get(0).WildlifeSpecies);
-      mAbbreviationTextView.setText(mEncounterDetailsList.get(0).WildlifeAbbreviation);
-      mDateTextView.setText(Utils.fromTimestamp(mEncounterDetailsList.get(0).Date));
-      mNumberInGroupTextView.setText(
+      // TODO: check local for image, if not found try to download
+//      Bitmap mImageBitmap = null;
+//      File f = new File(getString(R.string.debug_path), data.getStringExtra(BaseActivity.ARG_DEBUG_FILE_NAME));
+//      Log.d(TAG, "Using " + f.getAbsolutePath());
+//      try {
+//        mImageBitmap = BitmapFactory.decodeStream(new FileInputStream(f));
+//      } catch (FileNotFoundException e) {
+//        Log.e(TAG, "Failed to get wildlife image.", e);
+//      }
+//
+//      BitmapDrawable wildlifeDrawable = new BitmapDrawable(getResources(), mImageBitmap);
+//      mWildlifeImage.setImageDrawable(wildlifeDrawable);
+
+      mWildlifeText.setText(mEncounterDetailsList.get(0).WildlifeSpecies);
+      mAbbreviationText.setText(mEncounterDetailsList.get(0).WildlifeAbbreviation);
+      mDateText.setText(Utils.fromTimestamp(mEncounterDetailsList.get(0).Date));
+      mNumberInGroupText.setText(
         String.format(
           Locale.US,
           getString(R.string.format_number_in_group),

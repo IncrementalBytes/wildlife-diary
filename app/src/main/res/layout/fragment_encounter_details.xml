@@ -76,6 +76,27 @@
       app:layout_constraintTop_toBottomOf="@id/encounter_details_text_number_in_group"
       tools:listitem="@layout/task_list_item"/>
 
+    <ImageView
+      android:id="@+id/encounter_details_image_wildlife"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/default_card_margin"
+      android:contentDescription="@string/desc_sample_image_of_wildlife"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toTopOf="@id/encounter_details_text_license"
+      app:layout_constraintTop_toBottomOf="@id/encounter_details_recycler_tasks"/>
+
+    <TextView
+      android:id="@+id/encounter_details_text_license"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/default_view_margin"
+      android:text="@string/placeholder"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/encounter_details_image_wildlife"/>
+
   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

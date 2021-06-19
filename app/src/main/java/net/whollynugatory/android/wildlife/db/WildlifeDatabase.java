@@ -23,6 +23,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import net.whollynugatory.android.wildlife.Utils;
@@ -38,8 +39,7 @@ import java.util.concurrent.Executors;
 
 @Database(
   entities = {EncounterEntity.class, TaskEntity.class, WildlifeEntity.class},
-  version = 1,
-  exportSchema = false)
+  version = 2)
 @TypeConverters({Utils.class})
 public abstract class WildlifeDatabase extends RoomDatabase {
 
@@ -62,6 +62,7 @@ public abstract class WildlifeDatabase extends RoomDatabase {
         if (sInstance == null) {
           sInstance = Room.databaseBuilder(context.getApplicationContext(), WildlifeDatabase.class, Utils.DATABASE_NAME)
             .addCallback(sRoomDatabaseCallback)
+            .addMigrations(MIGRATION_1_2)
             .build();
         }
       }
@@ -85,6 +86,16 @@ public abstract class WildlifeDatabase extends RoomDatabase {
 
       Log.d(TAG, "++onOpen(SupportSQLiteDatabase)");
 
+    }
+  };
+
+  static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+
+    @Override
+    public void migrate(SupportSQLiteDatabase database) {
+
+      database.execSQL("ALTER TABLE wildlife_table ADD COLUMN image_attribution TEXT");
+      database.execSQL("ALTER TABLE wildlife_table ADD COLUMN image_src TEXT");
     }
   };
 }
