@@ -63,6 +63,7 @@ public abstract class WildlifeDatabase extends RoomDatabase {
           sInstance = Room.databaseBuilder(context.getApplicationContext(), WildlifeDatabase.class, Utils.DATABASE_NAME)
             .addCallback(sRoomDatabaseCallback)
             .addMigrations(MIGRATION_1_2)
+            .fallbackToDestructiveMigrationOnDowngrade()
             .build();
         }
       }
@@ -94,8 +95,17 @@ public abstract class WildlifeDatabase extends RoomDatabase {
     @Override
     public void migrate(SupportSQLiteDatabase database) {
 
-      database.execSQL("ALTER TABLE wildlife_table ADD COLUMN image_attribution TEXT");
-      database.execSQL("ALTER TABLE wildlife_table ADD COLUMN image_src TEXT");
+      Log.d(TAG, "++migrate(MIGRATION_1_2)");
+      Log.d(TAG, "Adding new columns to wildlife_table");
+      database.execSQL("CREATE TABLE wildlife_table_temp (" +
+        "id TEXT PRIMARY KEY NOT NULL, " +
+        "abbreviation TEXT NOT NULL, " +
+        "friendly_name TEXT NOT NULL, " +
+        "image_src TEXT DEFAULT '', " +
+        "image_attribution TEXT DEFAULT '')");
+      database.execSQL("INSERT INTO wildlife_table_temp SELECT id, abbreviation, friendly_name, '', '' FROM wildlife_table");
+      database.execSQL("DROP TABLE wildlife_table");
+      database.execSQL("ALTER TABLE wildlife_table_temp RENAME TO wildlife_table");
     }
   };
 }

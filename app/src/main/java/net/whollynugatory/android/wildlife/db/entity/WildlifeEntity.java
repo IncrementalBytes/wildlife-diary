@@ -44,10 +44,10 @@ public class WildlifeEntity implements Serializable {
   @ColumnInfo(name = "friendly_name")
   public String FriendlyName;
 
-  @ColumnInfo(name = "image_attribution")
+  @ColumnInfo(name = "image_attribution", defaultValue = "")
   public String ImageAttribution;
 
-  @ColumnInfo(name = "image_src")
+  @ColumnInfo(name = "image_src", defaultValue = "")
   public String ImageSrc;
 
   public WildlifeEntity() {
