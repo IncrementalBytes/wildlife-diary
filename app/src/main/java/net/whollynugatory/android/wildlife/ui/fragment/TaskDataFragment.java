@@ -98,8 +98,6 @@ public class TaskDataFragment extends Fragment {
 
             String taskStamp = Utils.getTasksStamp(getActivity());
             if (taskStamp.equals(Utils.UNKNOWN_ID) || remoteStamp.equals(Utils.UNKNOWN_ID) || !taskStamp.equalsIgnoreCase(remoteStamp)) {
-              WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                WildlifeDatabase.getInstance(getContext()).taskDao().deleteAll());
               Utils.setTasksStamp(getActivity(), remoteStamp);
               populateTaskTable();
             } else {
