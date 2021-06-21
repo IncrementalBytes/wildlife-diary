@@ -59,6 +59,6 @@
   <string name="label_record_encounters">Record</string>
   <string name="label_delete">Delete</string>
   <string name="format_number_in_group">Number of %s in this encounter: %d</string>
-  <string name="header_encounters_by_date">Encounters by Date</string>
   <string name="desc_sample_image_of_wildlife">Sample image of wildlife.</string>
+  <string name="header_encounters_by_date">Encounters by Date</string>
 </resources>

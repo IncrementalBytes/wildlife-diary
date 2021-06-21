@@ -37,6 +37,7 @@ import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -118,6 +119,32 @@ public class ListFragment extends Fragment {
 
         Log.d(TAG, "Most Encounter list is " + mostEncounteredList.size());
         mEncounterAdapter.setWildlifeSummaryList(mostEncounteredList);
+      });
+    } else if (mSummaryId == R.id.summary_card_encounters_by_date) {
+      wildlifeViewModel.getTotalEncounters(followingUserId).observe(getViewLifecycleOwner(), totalEncounterList -> {
+
+        HashMap<String, WildlifeSummary> wildlifeSummaryMap = new HashMap<>();
+        for(EncounterDetails encounterDetails : totalEncounterList) {
+          String dateString = Utils.fromTimestamp(encounterDetails.Date);
+          if (wildlifeSummaryMap.containsKey(dateString)) {
+            WildlifeSummary dateInstance = wildlifeSummaryMap.get(dateString);
+            if (dateInstance != null) {
+              dateInstance.EncounterCount++;
+            } else {
+              Log.w(TAG, "Could not get date instance from map: " + dateString);
+            }
+          } else {
+            WildlifeSummary wildlifeSummary = new WildlifeSummary();
+            wildlifeSummary.WildlifeSpecies = dateString;
+            wildlifeSummary.EncounterCount = 1;
+            wildlifeSummary.WildlifeId = String.valueOf(encounterDetails.Date);
+            wildlifeSummaryMap.put(dateString, wildlifeSummary);
+          }
+        }
+
+        List<WildlifeSummary> sortedSummaryCollection = new ArrayList<>(wildlifeSummaryMap.values());
+        sortedSummaryCollection.sort((s1, s2) -> s2.WildlifeId.compareTo(s1.WildlifeId));
+        mEncounterAdapter.setWildlifeSummaryList(sortedSummaryCollection);
       });
     } else {
       String taskName = "";

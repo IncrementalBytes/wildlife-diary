@@ -28,9 +28,6 @@ import java.util.List;
 @Dao
 public interface TaskDao {
 
-  @Query("DELETE FROM task_table")
-  void deleteAll();
-
   @Query("SELECT * FROM task_table ORDER BY name ASC")
   LiveData<List<TaskEntity>> getAll();
 

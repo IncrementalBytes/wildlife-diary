@@ -28,9 +28,6 @@ import java.util.List;
 @Dao
 public interface WildlifeDao {
 
-  @Query("DELETE FROM wildlife_table")
-  void deleteAll();
-
   @Query("SELECT * FROM wildlife_table")
   LiveData<List<WildlifeEntity>> getAll();
 

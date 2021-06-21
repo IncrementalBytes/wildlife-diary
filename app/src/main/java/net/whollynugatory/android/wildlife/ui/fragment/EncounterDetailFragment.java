@@ -16,9 +16,6 @@
 package net.whollynugatory.android.wildlife.ui.fragment;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +30,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
@@ -40,9 +39,6 @@ import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,7 +51,7 @@ public class EncounterDetailFragment extends Fragment {
 
   private TextView mAbbreviationText;
   private TextView mDateText;
-  private TextView mLicenseText;
+  private TextView mImageAttributionText;
   private TextView mNumberInGroupText;
   private ImageView mWildlifeImage;
   private TextView mWildlifeText;
@@ -106,7 +102,7 @@ public class EncounterDetailFragment extends Fragment {
     Log.d(TAG, "onViewCreated()");
     mAbbreviationText = view.findViewById(R.id.encounter_details_text_abbreviation);
     mDateText = view.findViewById(R.id.encounter_details_text_date);
-    mLicenseText = view.findViewById(R.id.encounter_details_text_license);
+    mImageAttributionText = view.findViewById(R.id.encounter_details_text_attribution);
     mNumberInGroupText = view.findViewById(R.id.encounter_details_text_number_in_group);
     mWildlifeImage = view.findViewById(R.id.encounter_details_image_wildlife);
     mWildlifeText = view.findViewById(R.id.encounter_details_text_wildlife);
@@ -147,33 +143,34 @@ public class EncounterDetailFragment extends Fragment {
         mTaskAdapter.setTaskEntityList(taskMap.values());
       }
 
+      EncounterDetails encounterDetails = mEncounterDetailsList.get(0);
       int numberInGroup = mEncounterDetailsList.size() / taskMap.size();
       mEncounterEntity = new EncounterEntity();
-      mEncounterEntity.WildlifeId = mEncounterDetailsList.get(0).WildlifeId;
-      mEncounterEntity.Date = mEncounterDetailsList.get(0).Date;
-      mEncounterEntity.UserId = mEncounterDetailsList.get(0).UserId;
+      mEncounterEntity.WildlifeId = encounterDetails.WildlifeId;
+      mEncounterEntity.Date = encounterDetails.Date;
+      mEncounterEntity.UserId = encounterDetails.UserId;
 
-      // TODO: check local for image, if not found try to download
-//      Bitmap mImageBitmap = null;
-//      File f = new File(getString(R.string.debug_path), data.getStringExtra(BaseActivity.ARG_DEBUG_FILE_NAME));
-//      Log.d(TAG, "Using " + f.getAbsolutePath());
-//      try {
-//        mImageBitmap = BitmapFactory.decodeStream(new FileInputStream(f));
-//      } catch (FileNotFoundException e) {
-//        Log.e(TAG, "Failed to get wildlife image.", e);
-//      }
-//
-//      BitmapDrawable wildlifeDrawable = new BitmapDrawable(getResources(), mImageBitmap);
-//      mWildlifeImage.setImageDrawable(wildlifeDrawable);
+      // update UI components
+      if (!encounterDetails.ImageUrl.equals(Utils.UNKNOWN_STRING)) {
+        Glide.with(this)
+          .load(encounterDetails.ImageUrl)
+          .placeholder(R.drawable.ic_placeholder_dark)
+          .error(R.drawable.ic_error_dark)
+          .into(mWildlifeImage);
+        mImageAttributionText.setText(encounterDetails.ImageAttribution);
+      } else {
+        mWildlifeImage.setVisibility(View.GONE);
+        mImageAttributionText.setVisibility(View.GONE);
+      }
 
-      mWildlifeText.setText(mEncounterDetailsList.get(0).WildlifeSpecies);
-      mAbbreviationText.setText(mEncounterDetailsList.get(0).WildlifeAbbreviation);
-      mDateText.setText(Utils.fromTimestamp(mEncounterDetailsList.get(0).Date));
+      mWildlifeText.setText(encounterDetails.WildlifeSpecies);
+      mAbbreviationText.setText(encounterDetails.WildlifeAbbreviation);
+      mDateText.setText(Utils.fromTimestamp(encounterDetails.Date));
       mNumberInGroupText.setText(
         String.format(
           Locale.US,
           getString(R.string.format_number_in_group),
-          mEncounterDetailsList.get(0).WildlifeAbbreviation,
+          encounterDetails.WildlifeAbbreviation,
           numberInGroup));
     });
   }

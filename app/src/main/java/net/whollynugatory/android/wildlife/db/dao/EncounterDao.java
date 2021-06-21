@@ -20,7 +20,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
@@ -32,9 +31,6 @@ import java.util.List;
 @Dao
 public interface EncounterDao {
 
-  @Query("DELETE FROM encounter_table")
-  void deleteAll();
-
   @Query("SELECT Encounter.date AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +
     "Encounter.wildlife_id AS WildlifeId, " +
@@ -42,6 +38,8 @@ public interface EncounterDao {
     "Encounter.id AS Id, " +
     "Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.abbreviation AS WildlifeAbbreviation, " +
+    "Wildlife.image_attribution AS ImageAttribution, " +
+    "Wildlife.image_src AS ImageUrl, " +
     "Tasks.name AS TaskName, " +
     "Tasks.id AS TaskId, " +
     "Tasks.is_sensitive AS TaskIsSensitive, " +
@@ -60,6 +58,8 @@ public interface EncounterDao {
     "Encounter.id AS Id, " +
     "Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.abbreviation AS WildlifeAbbreviation, " +
+    "Wildlife.image_attribution AS ImageAttribution, " +
+    "Wildlife.image_src AS ImageUrl, " +
     "Tasks.name AS TaskName, " +
     "Tasks.id AS TaskId, " +
     "Tasks.is_sensitive AS TaskIsSensitive, " +
@@ -116,6 +116,8 @@ public interface EncounterDao {
     "Encounter.id AS Id, " +
     "Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.abbreviation AS WildlifeAbbreviation, " +
+    "Wildlife.image_attribution AS ImageAttribution, " +
+    "Wildlife.image_src AS ImageUrl, " +
     "Tasks.name AS TaskName, " +
     "Tasks.id AS TaskId, " +
     "Tasks.is_sensitive AS TaskIsSensitive, " +
@@ -139,7 +141,4 @@ public interface EncounterDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(EncounterEntity encounterEntity);
-
-  @Update
-  void update(EncounterEntity encounterEntity);
 }

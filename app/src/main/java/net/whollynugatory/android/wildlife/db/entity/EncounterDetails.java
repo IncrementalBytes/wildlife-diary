@@ -33,6 +33,10 @@ public class EncounterDetails implements Serializable {
 
   public String Id;
 
+  public String ImageAttribution;
+
+  public String ImageUrl;
+
   public String TaskDescription;
 
   public String TaskId;
@@ -54,6 +58,8 @@ public class EncounterDetails implements Serializable {
 
     Date = 0;
     EncounterId = Utils.UNKNOWN_ID;
+    ImageAttribution = Utils.DEFAULT_ATTRIBUTION;
+    ImageUrl = Utils.UNKNOWN_STRING;
     Id = Utils.UNKNOWN_ID;
     TaskDescription = Utils.UNKNOWN_STRING;
     TaskId = Utils.UNKNOWN_ID;
