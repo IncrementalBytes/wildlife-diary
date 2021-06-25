@@ -70,7 +70,7 @@ public class EncounterFragment extends Fragment {
 
     void onEncounterFailed(String message);
 
-    void onEncounterRecorded();
+    void onEncountersRecorded();
   }
 
   private OnEncounterListener mCallback;
@@ -240,16 +240,17 @@ public class EncounterFragment extends Fragment {
 
     mRecordEncountersButton.setEnabled(false);
     mRecordEncountersButton.setOnClickListener(v -> {
+
       updateDataStamp();
-      mCallback.onEncounterRecorded();
+      mCallback.onEncountersRecorded();
     });
 
-    if (mEncounterId.isEmpty()) {
+    if (mEncounterId.isEmpty()) { // set for adding
       deleteImage.setVisibility(View.GONE);
       updateEncounterButton.setVisibility(View.GONE);
       addEncounterButton.setOnClickListener(v -> addEncounter());
-    } else {
-      addEncounterButton.setVisibility(View.INVISIBLE);
+    } else { // set for updating
+      addEncounterButton.setVisibility(View.GONE);
       mRecordEncountersButton.setVisibility(View.GONE);
       deleteImage.setOnClickListener(v -> {
 
@@ -257,6 +258,7 @@ public class EncounterFragment extends Fragment {
         updateDataStamp();
         mCallback.onEncounterDeleted();
       });
+
       updateEncounterButton.setOnClickListener(v -> {
 
         deleteEncounter();
@@ -264,9 +266,9 @@ public class EncounterFragment extends Fragment {
       });
     }
 
+    // populate the task list
     mWildlifeViewModel.getTasks().observe(getViewLifecycleOwner(), taskEntityList -> {
 
-      // TODO: order list by number of times task has been used
       mTaskEntityMap = new HashMap<>();
       for (TaskEntity taskEntity : taskEntityList) {
         mTaskEntityMap.put(taskEntity.Id, taskEntity);
@@ -334,7 +336,7 @@ public class EncounterFragment extends Fragment {
           if (!task.isSuccessful()) {
             Log.e(TAG, "Error setting data Encounter data.", task.getException());
             mCallback.onEncounterFailed("Failed to add encounter(s).");
-          } else if (mEncounterId.isEmpty()) {
+          } else if (mEncounterId.isEmpty()) { // reset view for additional encounters
             mWildlifeText.setText("");
             mGroupCount = 1;
             mGroupCountEdit.setText(String.valueOf(mGroupCount));
@@ -342,9 +344,9 @@ public class EncounterFragment extends Fragment {
             mAdditionButton.setEnabled(true);
             mCallback.onEncounterAdded();
             mRecordEncountersButton.setEnabled(true);
-          } else {
+          } else { // encounter updated
             updateDataStamp();
-            mCallback.onEncounterRecorded();
+            mCallback.onEncountersRecorded();
           }
 
           mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
@@ -358,21 +360,24 @@ public class EncounterFragment extends Fragment {
 
     Log.d(TAG, "++deleteEncounter()");
     if (!mEncounterId.isEmpty()) {
-      mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
+      mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(
+        getViewLifecycleOwner(),
+        encounterDetailsList -> {
 
-        HashMap<String, Object> encounterEntities = new HashMap<>();
-        for(EncounterDetails encounterDetails : encounterDetailsList) {
-          Log.d(TAG, "Deleting " + encounterDetails.toString());
-          encounterEntities.put(encounterDetails.Id, null);
-        }
-
-        FirebaseDatabase.getInstance().getReference(Utils.ENCOUNTER_ROOT).updateChildren(encounterEntities).addOnCompleteListener(task -> {
-
-          if (!task.isSuccessful()) {
-            Log.e(TAG, "Unable to delete encounter(s).", task.getException());
+          HashMap<String, Object> encounterEntities = new HashMap<>();
+          for (EncounterDetails encounterDetails : encounterDetailsList) {
+            Log.d(TAG, "Deleting " + encounterDetails.toString());
+            encounterEntities.put(encounterDetails.Id, null);
           }
+
+          FirebaseDatabase.getInstance().getReference(Utils.ENCOUNTER_ROOT).updateChildren(encounterEntities)
+            .addOnCompleteListener(task -> {
+
+              if (!task.isSuccessful()) {
+                Log.e(TAG, "Unable to delete encounter(s).", task.getException());
+              }
+            });
         });
-      });
     } else {
       Log.w(TAG, "EncounterId was empty.");
     }

@@ -16,8 +16,6 @@
 package net.whollynugatory.android.wildlife.ui;
 
 import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,33 +34,28 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import net.whollynugatory.android.wildlife.db.entity.UserEntity;
 import net.whollynugatory.android.wildlife.R;
-import net.whollynugatory.android.wildlife.ui.fragment.EncounterDataFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.DataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.ListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.SummaryFragment;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.ui.fragment.TaskDataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.WildlifeDataFragment;
 
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
-  EncounterDataFragment.OnEncounterDataListener,
+  DataFragment.OnDataListener,
   EncounterFragment.OnEncounterListener,
   EncounterListFragment.OnEncounterListListener,
   ListFragment.OnSimpleListListener,
   SummaryFragment.OnSummaryListListener,
-  TaskDataFragment.OnTaskDataListener,
-  TryAgainLaterFragment.OnTryAgainLaterListener,
-  WildlifeDataFragment.OnWildlifeDataListener {
+  TryAgainLaterFragment.OnTryAgainLaterListener {
 
   private static final String TAG = Utils.BASE_TAG + MainActivity.class.getSimpleName();
 
@@ -76,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onCreate(Bundle)");
     setContentView(R.layout.activity_main);
-
-    manageNotificationChannel();
 
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
     setSupportActionBar(mainToolbar);
@@ -95,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements
         }
       }
     });
-
-    FirebaseMessaging.getInstance().subscribeToTopic("wildlifeNotification");
 
     String userId = getIntent().getStringExtra(Utils.ARG_FIREBASE_USER_ID);
     if (userId == null || userId.equals(Utils.UNKNOWN_USER_ID)) {
@@ -134,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
               Utils.setFollowingUserId(this, mUserEntity.FollowingId);
               Utils.setUserId(this, finalUserId);
               Utils.setIsContributor(this, mUserEntity.IsContributor);
-              replaceFragment(TaskDataFragment.newInstance());
+              replaceFragment(DataFragment.newInstance(Utils.TASK_ROOT));
             } else {
               replaceFragment(
                 TryAgainLaterFragment.newInstance(
@@ -177,45 +166,24 @@ public class MainActivity extends AppCompatActivity implements
     Fragment Override(s)
    */
   @Override
-  public void onEncounterAdded() {
+  public void onDataEncountersPopulated() {
 
-    Log.d(TAG, "++onEncounterAdded()");
-    showMessageInSnackBar("Encounter Added!");
+    Log.d(TAG, "++onDataEncountersPopulated(String)");
+    replaceFragment(SummaryFragment.newInstance());
   }
 
   @Override
-  public void onEncounterDeleted() {
+  public void onDataFailed(String message) {
 
-    Log.d(TAG, "++onEncounterDeleted()");
-    replaceFragment(EncounterDataFragment.newInstance());
-  }
-
-  @Override
-  public void onEncounterRecorded() {
-
-    Log.d(TAG, "++onEncounterRecorded()");
-    replaceFragment(EncounterDataFragment.newInstance());
-  }
-
-  @Override
-  public void onEncounterFailed(String message) {
-
-    Log.d(TAG, "++onEncounterFailed(String)");
-    showMessageInSnackBar(message);
-  }
-
-  @Override
-  public void onEncounterDataFailed(String message) {
-
-    Log.d(TAG, "++onEncounterDataFailed(String)");
+    Log.d(TAG, "++onDataFailed(String)");
     Utils.setEncountersStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }
 
   @Override
-  public void onEncounterDataMissing() {
+  public void onDataMissing() {
 
-    Log.d(TAG, "++onEncounterDataMissing()");
+    Log.d(TAG, "++onDataMissing()");
     Utils.setEncountersStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(
       String.format(
@@ -226,17 +194,45 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onEncounterDataPopulated() {
+  public void onDataTasksPopulated() {
 
-    Log.d(TAG, "++onEncounterDataPopulated()");
-    replaceFragment(SummaryFragment.newInstance());
+    Log.d(TAG, "++onDataTasksPopulated(String)");
+    replaceFragment(DataFragment.newInstance(Utils.WILDLIFE_ROOT));
   }
 
   @Override
-  public void onEncounterDataSynced() {
+  public void onDataWildlifePopulated() {
 
-    Log.d(TAG, "++onEncounterDataSynced()");
-    replaceFragment(SummaryFragment.newInstance());
+    Log.d(TAG, "++onDataWildlifePopulated(String)");
+    replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
+  }
+
+  @Override
+  public void onEncounterAdded() {
+
+    Log.d(TAG, "++onEncounterAdded()");
+    showMessageInSnackBar("Encounter Added!");
+  }
+
+  @Override
+  public void onEncounterDeleted() {
+
+    Log.d(TAG, "++onEncounterDeleted()");
+    replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
+  }
+
+  @Override
+  public void onEncountersRecorded() {
+
+    Log.d(TAG, "++onEncountersRecorded()");
+    replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
+  }
+
+  @Override
+  public void onEncounterFailed(String message) {
+
+    Log.d(TAG, "++onEncounterFailed(String)");
+    showMessageInSnackBar(message);
   }
 
   @Override
@@ -272,36 +268,6 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onTaskDataFailed(String message) {
-
-    Log.d(TAG, "++onTaskDataFailed(String)");
-    Utils.setTasksStamp(this, Utils.UNKNOWN_ID);
-    showMessageInSnackBar(message);
-  }
-
-  @Override
-  public void onTaskDataMissing() {
-
-    Log.d(TAG, "++onTaskDataMissing()");
-    Utils.setTasksStamp(this, Utils.UNKNOWN_ID);
-    showMessageInSnackBar("Task data is missing from Firebase, cannot update local database.");
-  }
-
-  @Override
-  public void onTaskDataPopulated() {
-
-    Log.d(TAG, "++onTaskDataPopulate()");
-    replaceFragment(WildlifeDataFragment.newInstance());
-  }
-
-  @Override
-  public void onTaskDataSynced() {
-
-    Log.d(TAG, "++onTaskDataSynced()");
-    replaceFragment(WildlifeDataFragment.newInstance());
-  }
-
-  @Override
   public void onTaskListSet(String titleUpdate) {
 
     setTitle(titleUpdate);
@@ -328,57 +294,9 @@ public class MainActivity extends AppCompatActivity implements
     Log.d(TAG, "onUnknownList()");
   }
 
-  @Override
-  public void onWildlifeDataFailed(String message) {
-
-    Log.d(TAG, "++onWildlifeDataFailed(String)");
-    Utils.setWildlifeStamp(this, Utils.UNKNOWN_ID);
-    showMessageInSnackBar(message);
-  }
-
-  @Override
-  public void onWildlifeDataMissing() {
-
-    Log.d(TAG, "++onWildlifeDataMissing()");
-    Utils.setWildlifeStamp(this, Utils.UNKNOWN_ID);
-    showMessageInSnackBar("Task data is missing from Firebase, cannot update local database.");
-  }
-
-  @Override
-  public void onWildlifeDataPopulated() {
-
-    Log.d(TAG, "++onWildlifeDataPopulated()");
-    replaceFragment(EncounterDataFragment.newInstance());
-  }
-
-  @Override
-  public void onWildlifeDataSynced() {
-
-    Log.d(TAG, "++onWildlifeDataSynced()");
-    replaceFragment(EncounterDataFragment.newInstance());
-  }
-
   /*
     Private Method(s)
    */
-  private void manageNotificationChannel() {
-
-    Log.d(TAG, "++manageNotificationChannel()");
-    NotificationManager notificationManager = getSystemService(NotificationManager.class);
-    NotificationChannel notificationChannel = notificationManager.getNotificationChannel(getString(R.string.default_notification_channel_id));
-    if (notificationChannel == null) {
-      Log.d(TAG, "Creating notification channel.");
-      notificationChannel = new NotificationChannel(
-        getString(R.string.default_notification_channel_id),
-        getString(R.string.channel_name),
-        NotificationManager.IMPORTANCE_DEFAULT);
-      notificationChannel.setDescription(getString(R.string.channel_description));
-      notificationManager.createNotificationChannel(notificationChannel);
-    } else {
-      Log.d(TAG, "Notification channel already exists.");
-    }
-  }
-
   private void replaceFragment(Fragment fragment) {
 
     Log.d(TAG, "++replaceFragment()");

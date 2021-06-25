@@ -34,6 +34,7 @@ public class Utils {
   public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
   public static final String ARG_MESSAGE = "message";
+  public static final String ARG_DATA_TO_SYNC = "data_to_sync";
   public static final String ARG_SUMMARY_ID = "summary_id";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";

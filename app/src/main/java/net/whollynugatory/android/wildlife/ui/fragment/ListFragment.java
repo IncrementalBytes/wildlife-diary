@@ -108,6 +108,7 @@ public class ListFragment extends Fragment {
     String followingUserId = Utils.getFollowingUserId(getContext());
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
 
+    // TODO: add support for clicking of items displayed in list
     if (mSummaryId == R.id.summary_card_unique_encounters) {
       wildlifeViewModel.getUniqueEncountered(followingUserId).observe(getViewLifecycleOwner(), uniqueEncounteredList -> {
 
