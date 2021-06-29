@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,9 +33,10 @@ import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+import net.whollynugatory.android.wildlife.ui.CleanUpAdapter;
+import net.whollynugatory.android.wildlife.ui.EncounterAdapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -53,8 +53,6 @@ public class ListFragment extends Fragment {
   }
 
   private OnSimpleListListener mCallback;
-
-  private EncounterAdapter mEncounterAdapter;
 
   private int mSummaryId;
 
@@ -102,8 +100,8 @@ public class ListFragment extends Fragment {
     final View view = inflater.inflate(R.layout.fragment_simple_list, container, false);
     RecyclerView recyclerView = view.findViewById(R.id.simple_list_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    mEncounterAdapter = new EncounterAdapter(getContext());
-    recyclerView.setAdapter(mEncounterAdapter);
+    EncounterAdapter encounterAdapter = new EncounterAdapter(getContext());
+    recyclerView.setAdapter(encounterAdapter);
 
     String followingUserId = Utils.getFollowingUserId(getContext());
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
@@ -113,13 +111,13 @@ public class ListFragment extends Fragment {
       wildlifeViewModel.getUniqueEncountered(followingUserId).observe(getViewLifecycleOwner(), uniqueEncounteredList -> {
 
         Log.d(TAG, "Unique Encounter list is " + uniqueEncounteredList.size());
-        mEncounterAdapter.setWildlifeSummaryList(uniqueEncounteredList);
+        encounterAdapter.setWildlifeSummaryList(uniqueEncounteredList);
       });
     } else if (mSummaryId == R.id.summary_card_most_encountered) {
       wildlifeViewModel.getMostEncountered(followingUserId).observe(getViewLifecycleOwner(), mostEncounteredList -> {
 
         Log.d(TAG, "Most Encounter list is " + mostEncounteredList.size());
-        mEncounterAdapter.setWildlifeSummaryList(mostEncounteredList);
+        encounterAdapter.setWildlifeSummaryList(mostEncounteredList);
       });
     } else if (mSummaryId == R.id.summary_card_encounters_by_date) {
       wildlifeViewModel.getTotalEncounters(followingUserId).observe(getViewLifecycleOwner(), totalEncounterList -> {
@@ -145,7 +143,15 @@ public class ListFragment extends Fragment {
 
         List<WildlifeSummary> sortedSummaryCollection = new ArrayList<>(wildlifeSummaryMap.values());
         sortedSummaryCollection.sort((s1, s2) -> s2.WildlifeId.compareTo(s1.WildlifeId));
-        mEncounterAdapter.setWildlifeSummaryList(sortedSummaryCollection);
+        encounterAdapter.setWildlifeSummaryList(sortedSummaryCollection);
+      });
+    } else if (mSummaryId == R.id.menu_cleanup) {
+      CleanUpAdapter cleanUpAdapter = new CleanUpAdapter(getContext());
+      recyclerView.setAdapter(cleanUpAdapter);
+      wildlifeViewModel.getCleanUpItems().observe(getViewLifecycleOwner(), cleanUpDetailsList -> {
+
+        Log.d(TAG, "CleanUp list is " + cleanUpDetailsList.size());
+        cleanUpAdapter.setCleanUpList(cleanUpDetailsList);
       });
     } else {
       String taskName = "";
@@ -182,7 +188,7 @@ public class ListFragment extends Fragment {
         wildlifeViewModel.getEncountersByTaskName(followingUserId, taskName).observe(getViewLifecycleOwner(), encounterDetailsList -> {
 
           Log.d(TAG, "Encounters list is " + encounterDetailsList.size());
-          mEncounterAdapter.setEncounterDetailsList(encounterDetailsList);
+          encounterAdapter.setEncounterDetailsList(encounterDetailsList);
           mCallback.onTaskListSet(finalTaskName);
         });
       } else {
@@ -191,88 +197,5 @@ public class ListFragment extends Fragment {
     }
 
     return view;
-  }
-
-  private static class EncounterAdapter extends RecyclerView.Adapter<EncounterAdapter.EncounterHolder> {
-
-    private final String TAG = Utils.BASE_TAG + EncounterAdapter.class.getSimpleName();
-
-    private final LayoutInflater mInflater;
-    private List<EncounterDetails> mEncounterDetails;
-    private List<WildlifeSummary> mWildlifeSummaries;
-
-    public EncounterAdapter(Context context) {
-
-      mInflater = LayoutInflater.from(context);
-    }
-
-    @NonNull
-    @Override
-    public EncounterAdapter.EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-      View itemView = mInflater.inflate(R.layout.simple_list_item, parent, false);
-      return new EncounterHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull EncounterAdapter.EncounterHolder holder, int position) {
-
-      if (mEncounterDetails != null) {
-        EncounterDetails encounterDetails = mEncounterDetails.get(position);
-        holder.bind(encounterDetails);
-      } else if (mWildlifeSummaries != null) {
-        WildlifeSummary wildlifeSummary = mWildlifeSummaries.get(position);
-        holder.bind(wildlifeSummary);
-      } else {
-        Log.w(TAG, "EncounterDetails is empty at this time.");
-      }
-    }
-
-    @Override
-    public int getItemCount() {
-
-      return mEncounterDetails != null ? mEncounterDetails.size() : mWildlifeSummaries != null ? mWildlifeSummaries.size() : 0;
-    }
-
-    public void setEncounterDetailsList(Collection<EncounterDetails> encounterDetailsCollection) {
-
-      Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterDetails>)");
-      mEncounterDetails = new ArrayList<>(encounterDetailsCollection);
-      mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
-      notifyDataSetChanged();
-    }
-
-    public void setWildlifeSummaryList(Collection<WildlifeSummary> wildlifeSummaryCollection) {
-
-      Log.d(TAG, "++setWildlifeSummaryList(Collection<WildlifeSummary>)");
-      mWildlifeSummaries = new ArrayList<>(wildlifeSummaryCollection);
-      notifyDataSetChanged();
-    }
-
-    static class EncounterHolder extends RecyclerView.ViewHolder {
-
-      private final TextView mTitleTextView;
-      private final TextView mDetailsTextView;
-
-      EncounterHolder(View itemView) {
-        super(itemView);
-
-        mTitleTextView = itemView.findViewById(R.id.simple_list_item_text_name);
-        mDetailsTextView = itemView.findViewById(R.id.simple_list_item_text_desc);
-        mDetailsTextView.setTextSize(18f);
-      }
-
-      void bind(EncounterDetails encounterDetails) {
-
-        mTitleTextView.setText(encounterDetails.WildlifeSpecies);
-        mDetailsTextView.setText(Utils.fromTimestamp(encounterDetails.Date));
-      }
-
-      void bind(WildlifeSummary wildlifeSummary) {
-
-        mTitleTextView.setText(wildlifeSummary.WildlifeSpecies);
-        mDetailsTextView.setText(String.valueOf(wildlifeSummary.EncounterCount));
-      }
-    }
   }
 }

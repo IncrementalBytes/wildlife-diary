@@ -25,6 +25,7 @@ import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
 import net.whollynugatory.android.wildlife.db.dao.EncounterDao;
 import net.whollynugatory.android.wildlife.db.dao.TaskDao;
 import net.whollynugatory.android.wildlife.db.dao.WildlifeDao;
+import net.whollynugatory.android.wildlife.db.entity.CleanUpDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
@@ -48,6 +49,11 @@ public class WildlifeRepository {
     mEncounterDao = db.encounterDao();
     mTaskDao = db.taskDao();
     mWildlifeDao = db.wildlifeDao();
+  }
+
+  public LiveData<List<CleanUpDetails>> getCleanUpItems() {
+
+    return mEncounterDao.cleanUp();
   }
 
   public LiveData<List<TaskEntity>> getTasks() {

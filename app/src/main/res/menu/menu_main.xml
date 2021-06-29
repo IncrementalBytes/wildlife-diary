@@ -11,5 +11,15 @@
     android:icon="@drawable/ic_setting_dark"
     android:title="@string/menu_settings"
     app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/menu_sync"
+    android:icon="@drawable/ic_sync_dark"
+    android:title="@string/menu_sync"
+    app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/menu_cleanup"
+    android:icon="@drawable/ic_cleanup_dark"
+    android:title="@string/menu_cleanup"
+    app:showAsAction="ifRoom" />
   <item android:id="@+id/menu_logout" android:title="@string/menu_logout"/>
 </menu>

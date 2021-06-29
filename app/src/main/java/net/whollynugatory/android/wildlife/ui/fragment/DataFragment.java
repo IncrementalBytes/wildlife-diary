@@ -112,13 +112,13 @@ public class DataFragment extends Fragment {
             String localDataStamp = Utils.UNKNOWN_ID;
             switch (mDataToSync) {
               case Utils.ENCOUNTER_ROOT:
-                localDataStamp = Utils.getEncountersStamp(getActivity());
+                localDataStamp = Utils.getLocalEncountersStamp(getActivity());
                 break;
               case Utils.TASK_ROOT:
-                localDataStamp = Utils.getTasksStamp(getActivity());
+                localDataStamp = Utils.getLocalTasksStamp(getActivity());
                 break;
               case Utils.WILDLIFE_ROOT:
-                localDataStamp = Utils.getWildlifeStamp(getActivity());
+                localDataStamp = Utils.getLocalWildlifeStamp(getActivity());
                 break;
             }
 
@@ -159,7 +159,7 @@ public class DataFragment extends Fragment {
     return view;
   }
 
-  private void populateTable(String dataRoot, String updatedDataStamp) {
+  private void populateTable(String dataRoot, String remoteDataStamp) {
 
     Log.d(TAG, "++populateTable(String, String)");
     FirebaseDatabase.getInstance().getReference().child(dataRoot).get()
@@ -221,15 +221,15 @@ public class DataFragment extends Fragment {
 
                 switch (dataRoot) {
                   case Utils.ENCOUNTER_ROOT:
-                    Utils.setEncountersStamp(getActivity(), updatedDataStamp);
+                    Utils.setLocalEncountersStamp(getActivity(), remoteDataStamp);
                     mCallback.onDataEncountersPopulated();
                     break;
                   case Utils.TASK_ROOT:
-                    Utils.setTasksStamp(getActivity(), updatedDataStamp);
+                    Utils.setLocalTasksStamp(getActivity(), remoteDataStamp);
                     mCallback.onDataTasksPopulated();
                     break;
                   case Utils.WILDLIFE_ROOT:
-                    Utils.setWildlifeStamp(getActivity(), updatedDataStamp);
+                    Utils.setLocalWildlifeStamp(getActivity(), remoteDataStamp);
                     mCallback.onDataWildlifePopulated();
                     break;
                 }

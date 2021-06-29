@@ -55,7 +55,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 
 public class EncounterFragment extends Fragment {
@@ -241,7 +240,7 @@ public class EncounterFragment extends Fragment {
     mRecordEncountersButton.setEnabled(false);
     mRecordEncountersButton.setOnClickListener(v -> {
 
-      updateDataStamp();
+      Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
       mCallback.onEncountersRecorded();
     });
 
@@ -255,7 +254,7 @@ public class EncounterFragment extends Fragment {
       deleteImage.setOnClickListener(v -> {
 
         deleteEncounter();
-        updateDataStamp();
+        Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
         mCallback.onEncounterDeleted();
       });
 
@@ -345,7 +344,7 @@ public class EncounterFragment extends Fragment {
             mCallback.onEncounterAdded();
             mRecordEncountersButton.setEnabled(true);
           } else { // encounter updated
-            updateDataStamp();
+            Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
             mCallback.onEncountersRecorded();
           }
 
@@ -398,20 +397,6 @@ public class EncounterFragment extends Fragment {
         new ArrayList<>(mWildlifeMap.keySet()));
       mWildlifeText.setAdapter(adapter);
     });
-  }
-
-  private void updateDataStamp() {
-
-    Log.d(TAG, "++updateDataStamp()");
-    Map<String, Object> childUpdates = new HashMap<>();
-    childUpdates.put(Utils.ENCOUNTER_ROOT, UUID.randomUUID().toString());
-    FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).updateChildren(childUpdates)
-      .addOnCompleteListener(task -> {
-
-        if (!task.isSuccessful()) {
-          Log.w(TAG, "Unable to update remote data stamp for changes.", task.getException());
-        }
-      });
   }
 
   private void setupForEditing() {

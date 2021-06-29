@@ -20,6 +20,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import net.whollynugatory.android.wildlife.db.entity.CleanUpDetails;
 import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
@@ -37,6 +38,11 @@ public class WildlifeViewModel extends AndroidViewModel {
     super(application);
 
     mWildlifeRepository = new WildlifeRepository(application);
+  }
+
+  public LiveData<List<CleanUpDetails>> getCleanUpItems() {
+
+    return mWildlifeRepository.getCleanUpItems();
   }
 
   public LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId) {

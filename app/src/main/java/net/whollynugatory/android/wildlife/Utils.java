@@ -17,19 +17,28 @@ package net.whollynugatory.android.wildlife;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
 import androidx.preference.PreferenceManager;
 
 import androidx.annotation.StringRes;
 import androidx.room.TypeConverter;
+
+import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 public class Utils {
+
+  private static final String TAG = Utils.BASE_TAG + Utils.class.getSimpleName();
 
   public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
@@ -77,19 +86,24 @@ public class Utils {
     return getBooleanPref(context, R.string.pref_key_is_contributor, false);
   }
 
-  public static String getEncountersStamp(Context context) {
+  public static String getFollowingUserId(Context context) {
+
+    return getStringPref(context, R.string.pref_key_following_user_id, Utils.UNKNOWN_USER_ID);
+  }
+
+  public static String getLocalEncountersStamp(Context context) {
 
     return getStringPref(context, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
   }
 
-  public static String getTasksStamp(Context context) {
+  public static String getLocalTasksStamp(Context context) {
 
     return getStringPref(context, R.string.pref_key_stamp_tasks, Utils.UNKNOWN_ID);
   }
 
-  public static String getFollowingUserId(Context context) {
+  public static String getLocalWildlifeStamp(Context context) {
 
-    return getStringPref(context, R.string.pref_key_following_user_id, Utils.UNKNOWN_USER_ID);
+    return getStringPref(context, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
   }
 
   public static boolean getShowSensitive(Context context) {
@@ -102,19 +116,9 @@ public class Utils {
     return getStringPref(context, R.string.pref_key_user_id, Utils.UNKNOWN_USER_ID);
   }
 
-  public static String getWildlifeStamp(Context context) {
-
-    return getStringPref(context, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
-  }
-
   public static void setIsContributor(Context context, boolean canAdd) {
 
     setBooleanPref(context, R.string.pref_key_is_contributor, canAdd);
-  }
-
-  public static void setEncountersStamp(Context context, String newEncountersStamp) {
-
-    setStringPref(context, R.string.pref_key_stamp_encounters, newEncountersStamp);
   }
 
   public static void setFollowingUserId(Context context, String newFollowingUserId) {
@@ -122,24 +126,29 @@ public class Utils {
     setStringPref(context, R.string.pref_key_following_user_id, newFollowingUserId);
   }
 
+  public static void setLocalEncountersStamp(Context context, String newEncountersStamp) {
+
+    setStringPref(context, R.string.pref_key_stamp_encounters, newEncountersStamp);
+  }
+
+  public static void setLocalTasksStamp(Context context, String newTasksStamp) {
+
+    setStringPref(context, R.string.pref_key_stamp_tasks, newTasksStamp);
+  }
+
+  public static void setLocalWildlifeStamp(Context context, String newWildlifeStamp) {
+
+    setStringPref(context, R.string.pref_key_stamp_wildlife, newWildlifeStamp);
+  }
+
   public static void setShowSensitive(Context context, boolean showSensitive) {
 
     setBooleanPref(context, R.string.pref_key_enable_sensitive, showSensitive);
   }
 
-  public static void setTasksStamp(Context context, String newTasksStamp) {
-
-    setStringPref(context, R.string.pref_key_stamp_tasks, newTasksStamp);
-  }
-
   public static void setUserId(Context context, String userId) {
 
     setStringPref(context, R.string.pref_key_user_id, userId);
-  }
-
-  public static void setWildlifeStamp(Context context, String newWildlifeStamp) {
-
-    setStringPref(context, R.string.pref_key_stamp_wildlife, newWildlifeStamp);
   }
 
   @TypeConverter
@@ -161,6 +170,27 @@ public class Utils {
     year = (year < 1900) ? 1900 : Math.min(year, 2100);
     calendar.set(Calendar.YEAR, year);
     return calendar.getTimeInMillis();
+  }
+
+  /**
+   * Changes remote data stamp value to force application for refresh on next data sync.
+   * NOTE: only handling Encounters data for now.
+   */
+  public static void updateRemoteDataStamp(String dataStampRoot) {
+
+    Log.d(TAG, "++updateRemoteDataStamp(String)");
+    Map<String, Object> childUpdates = new HashMap<>();
+    final String remoteDataStamp = UUID.randomUUID().toString();
+    childUpdates.put(dataStampRoot, remoteDataStamp);
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).updateChildren(childUpdates)
+      .addOnCompleteListener(task -> {
+
+        if (!task.isSuccessful()) {
+          Log.w(TAG, "Unable to update remote data stamp for changes.", task.getException());
+        } else {
+          Log.d(TAG, "Setting remote data stamp for " + dataStampRoot + " to " + remoteDataStamp);
+        }
+      });
   }
 
   /*

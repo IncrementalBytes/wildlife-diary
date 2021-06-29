@@ -21,6 +21,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.db.entity.CleanUpDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
@@ -30,6 +32,13 @@ import java.util.List;
 
 @Dao
 public interface EncounterDao {
+
+  @Query("SELECT id AS Id, name AS Name, '" + Utils.TASK_ROOT + "' AS Type FROM task_table " +
+    "WHERE id NOT IN (SELECT task_id FROM encounter_table WHERE task_id IS NOT NULL) " +
+    "UNION ALL " +
+    "SELECT id AS Id, friendly_name AS Name, '" + Utils.WILDLIFE_ROOT + "' AS Type FROM wildlife_table " +
+    "WHERE id NOT IN ( SELECT wildlife_id FROM encounter_table WHERE wildlife_id IS NOT NULL)")
+  LiveData<List<CleanUpDetails>> cleanUp();
 
   @Query("SELECT Encounter.date AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +

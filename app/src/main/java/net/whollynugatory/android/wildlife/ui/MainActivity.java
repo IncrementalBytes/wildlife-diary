@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements
     super.onCreate(savedInstanceState);
 
     Log.d(TAG, "++onCreate(Bundle)");
+
     setContentView(R.layout.activity_main);
 
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
@@ -77,9 +78,7 @@ public class MainActivity extends AppCompatActivity implements
       Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
       if (fragment != null) {
         String fragmentClassName = fragment.getClass().getName();
-        if (fragmentClassName.equals(SummaryFragment.class.getName())) {
-          setTitle(getString(R.string.app_name));
-        } else if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
+        if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
           setTitle(getString(R.string.title_settings));
         } else {
           setTitle(getString(R.string.app_name));
@@ -129,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements
                 TryAgainLaterFragment.newInstance(
                   "UserData returned from server was unexpected. Try again later."));
             }
+
+            invalidateOptionsMenu();
           }
         });
     }
@@ -150,6 +151,13 @@ public class MainActivity extends AppCompatActivity implements
       replaceFragment(SummaryFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_settings) {
       replaceFragment(UserSettingsFragment.newInstance());
+    } else if (item.getItemId() == R.id.menu_cleanup) {
+      replaceFragment(ListFragment.newInstance(R.id.menu_cleanup));
+    } else if (item.getItemId() == R.id.menu_sync) {
+      Utils.setLocalTasksStamp(this, Utils.UNKNOWN_ID);
+      Utils.setLocalWildlifeStamp(this, Utils.UNKNOWN_ID);
+      Utils.setLocalEncountersStamp(this, Utils.UNKNOWN_ID);
+      replaceFragment(DataFragment.newInstance(Utils.TASK_ROOT));
     } else if (item.getItemId() == R.id.menu_logout) {
       AlertDialog alertDialog = new AlertDialog.Builder(this)
         .setMessage(R.string.logout_message)
@@ -160,6 +168,18 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+
+    Log.d(TAG, "++onPrepareOptionsMenu(Menu)");
+    if (mUserEntity != null) {
+      MenuItem menuItem = menu.findItem(R.id.menu_cleanup);
+      menuItem.setVisible(mUserEntity.IsContributor);
+    }
+
+    return super.onPrepareOptionsMenu(menu);
   }
 
   /*
@@ -176,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements
   public void onDataFailed(String message) {
 
     Log.d(TAG, "++onDataFailed(String)");
-    Utils.setEncountersStamp(this, Utils.UNKNOWN_ID);
+    Utils.setLocalEncountersStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }
 
@@ -184,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements
   public void onDataMissing() {
 
     Log.d(TAG, "++onDataMissing()");
-    Utils.setEncountersStamp(this, Utils.UNKNOWN_ID);
+    Utils.setLocalEncountersStamp(this, Utils.UNKNOWN_ID);
     showMessageInSnackBar(
       String.format(
         Locale.US,
