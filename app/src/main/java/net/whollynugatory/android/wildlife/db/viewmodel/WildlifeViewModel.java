@@ -55,9 +55,14 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getEncountersByTaskName(userId, taskName);
   }
 
-  public LiveData<List<EncounterDetails>> getTotalEncounters(String userId) {
+  public LiveData<List<WildlifeSummary>> getMostEncountered(String userId) {
 
-    return mWildlifeRepository.getTotalEncounters(userId);
+    return mWildlifeRepository.getMostEncountered(userId);
+  }
+
+  public LiveData<Integer> getNewEncountersCount(String userId, long timeStamp) {
+
+    return mWildlifeRepository.getNewEncountersCount(userId, timeStamp);
   }
 
   public LiveData<SummaryDetails> getSummary(String userId) {
@@ -65,14 +70,14 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getSummary(userId);
   }
 
-  public LiveData<List<WildlifeSummary>> getMostEncountered(String userId) {
-
-    return mWildlifeRepository.getMostEncountered(userId);
-  }
-
   public LiveData<List<TaskEntity>> getTasks() {
 
     return mWildlifeRepository.getTasks();
+  }
+
+  public LiveData<List<EncounterDetails>> getTotalEncounters(String userId) {
+
+    return mWildlifeRepository.getTotalEncounters(userId);
   }
 
   public LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId) {

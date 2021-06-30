@@ -56,16 +56,6 @@ public class WildlifeRepository {
     return mEncounterDao.cleanUp();
   }
 
-  public LiveData<List<TaskEntity>> getTasks() {
-
-    return mTaskDao.getAll();
-  }
-
-  public LiveData<List<WildlifeEntity>> getAllWildlife() {
-
-    return mWildlifeDao.getAll();
-  }
-
   public LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId) {
 
     return mEncounterDao.getEncounterDetails(userId, encounterId);
@@ -81,9 +71,19 @@ public class WildlifeRepository {
     return mEncounterDao.getMostEncountered(userId);
   }
 
+  public LiveData<Integer> getNewEncountersCount(String userId, long timeStamp) {
+
+    return mEncounterDao.getNewEncountersCount(userId, timeStamp);
+  }
+
   public LiveData<SummaryDetails> getSummary(String userId) {
 
     return mEncounterDao.getSummary(userId);
+  }
+
+  public LiveData<List<TaskEntity>> getTasks() {
+
+    return mTaskDao.getAll();
   }
 
   public LiveData<List<EncounterDetails>> getTotalEncounters(String userId) {
@@ -94,5 +94,10 @@ public class WildlifeRepository {
   public LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId) {
 
     return mEncounterDao.getUniqueEncountered(userId);
+  }
+
+  public LiveData<List<WildlifeEntity>> getAllWildlife() {
+
+    return mWildlifeDao.getAll();
   }
 }

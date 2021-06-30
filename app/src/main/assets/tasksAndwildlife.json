@@ -69,7 +69,9 @@
     },
     "9f4cfe52-707a-4ed8-a228-f84c9d96230c": {
       "FriendlyName": "American Crow",
-      "Abbreviation": "AMCR"
+      "Abbreviation": "AMCR",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/4/41/AmCrow_2234.JPG",
+      "ImageAttribution":"DDWESQ, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "60ba9fa8-9a46-4c3b-8a6c-972bb69352f7": {
       "FriendlyName": "American Dipper",
@@ -93,7 +95,9 @@
     },
     "4cebe59d-d324-432a-8a5c-51d729b4a19d": {
       "FriendlyName": "American Robin",
-      "Abbreviation": "AMRO"
+      "Abbreviation": "AMRO",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/b/b8/Turdus-migratorius-002.jpg",
+      "ImageAttribution":"en:User:Mdf, CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons"
     },
     "50d82284-5c09-43ca-a986-4f96be502789": {
       "FriendlyName": "American Wigeon",
@@ -113,11 +117,15 @@
     },
     "35b927c5-7c7e-41e8-bf73-19dc6cff83af": {
       "FriendlyName": "Bald Eagle",
-      "Abbreviation": "BAEA"
+      "Abbreviation": "BAEA",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/1/1e/Bald_Eagle_Portrait.jpg",
+      "ImageAttribution":"Saffron Blaze, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "0001f9cf-cbb3-4bd7-b092-5784a8614e1f": {
       "FriendlyName": "Band-tailed Pigeon",
-      "Abbreviation": "BTPI"
+      "Abbreviation": "BTPI",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/b/ba/Patagioenas_fasciata_-San_Luis_Obispo%2C_California%2C_USA-8_%281%29.jpg",
+      "ImageAttribution":"aroid from San Luis Obispo, CA, USA, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "4ad27494-7bed-473d-bcff-b669334d6f59": {
       "FriendlyName": "Bank Swallow",
@@ -125,7 +133,9 @@
     },
     "be502307-ca71-423e-ad1f-4c6c6f7e7cc7": {
       "FriendlyName": "Barn Owl",
-      "Abbreviation": "BANO"
+      "Abbreviation": "BANO",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/e/e8/American_Barn_Owl%2C_Bear_River%2C_Utah_%289637780911%29.jpg",
+      "ImageAttribution":"USFWS Mountain-Prairie, Public domain, via Wikimedia Commons"
     },
     "2d52f651-6df0-4693-8b0b-a0eccd30694d": {
       "FriendlyName": "Barn Swallow",
@@ -133,7 +143,9 @@
     },
     "db40cead-55a0-40d6-a62f-a74beaa17055": {
       "FriendlyName": "Barred Owl",
-      "Abbreviation": "BADO"
+      "Abbreviation": "BADO",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/2/21/Barred_Owl_%28Canada%29.jpg",
+      "ImageAttribution":"Peter K Burian, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "de281824-4fa0-4b1e-89d8-08fd31946ceb": {
       "FriendlyName": "Barrow's Goldeneye",
@@ -181,7 +193,9 @@
     },
     "8192d3eb-d61a-4358-9b3a-891815f0d4de": {
       "FriendlyName": "Black-capped Chickadee",
-      "Abbreviation": "BCCH"
+      "Abbreviation": "BCCH",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/4/4a/Poecile-atricapilla-001.jpg",
+      "ImageAttribution":"CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons"
     },
     "2013ac31-f0f3-4cd2-acd0-88a71c564590": {
       "FriendlyName": "Black-crowned Night Heron",
@@ -293,7 +307,9 @@
     },
     "5d496266-db10-4b5f-8f18-fdeb69452719": {
       "FriendlyName": "Canada Goose",
-      "Abbreviation": "CANG"
+      "Abbreviation": "CANG",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/2/2f/Canada_Goose_close_up.jpg",
+      "ImageAttribution":"Dig deeper, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "7b31e133-877d-40f6-97dc-f64b72c1882c": {
       "FriendlyName": "Canvasback",
@@ -405,7 +421,9 @@
     },
     "25ce1f9b-2195-4771-87a3-c011d56e2270": {
       "FriendlyName": "Cooper's Hawk",
-      "Abbreviation": "COHA"
+      "Abbreviation": "COHA",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/3/38/Accipiter.jpg",
+      "ImageAttribution" : "William H. Majoros, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "67825655-a375-4c32-a368-8a9cd5d86746": {
       "FriendlyName": "Cougar",
@@ -421,7 +439,9 @@
     },
     "3a33be89-cc3f-4119-bf77-e01549964efa": {
       "FriendlyName": "Dark-eyed Junco",
-      "Abbreviation": "DEJU"
+      "Abbreviation": "DEJU",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/e/e5/Dark-eyed_Junco_%282%29.jpg",
+      "ImageAttribution":"Steven Pavlov, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "05f66435-9b0c-410a-8b9c-71174251ed07": {
       "FriendlyName": "Deer Mouse",
@@ -465,11 +485,15 @@
     },
     "78fc4a56-0abc-47f5-be75-b3a984c42d6e": {
       "FriendlyName": "Douglas Squirrel",
-      "Abbreviation": "DOSQ"
+      "Abbreviation": "DOSQ",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/1/15/Douglas_Squirrel_DSC3742vvc.jpg",
+      "ImageAttribution":"VJAnderson, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "12b34605-5b32-4182-a26f-83fd8218f405": {
       "FriendlyName": "Downy Woodpecker",
-      "Abbreviation": "DOWO"
+      "Abbreviation": "DOWO",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/2/20/Downy_Woodpecker01.jpg",
+      "ImageAttribution":"Wolfgang Wander, CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons"
     },
     "d7cc75e1-4d2a-4979-8e11-2f61af820646": {
       "FriendlyName": "Dusky Shrew",
@@ -501,7 +525,9 @@
     },
     "483540b4-6c35-4007-a2f6-5c5130b4b38c": {
       "FriendlyName": "Evening Grosbeak",
-      "Abbreviation": "EVGR"
+      "Abbreviation": "EVGR",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/7/7a/Coccothraustes-vespertinus-001.jpg",
+      "ImageAttribution":"Mdf assumed (based on copyright claims)., CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons"
     },
     "46fc6945-a3d5-4591-9935-03f752c4525e": {
       "FriendlyName": "Exotic Snake",
@@ -509,7 +535,9 @@
     },
     "a6e23128-0d45-40b5-b39f-c39bf4b607e7": {
       "FriendlyName": "Fox Sparrow",
-      "Abbreviation": "FOSP"
+      "Abbreviation": "FOSP",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/3/35/Passerella_schistacea%2C_Flux_Canyon_Road%2C_Arizona_1.jpg",
+      "ImageAttribution":"ALAN SCHMIERER from near Patagonia, AZ, USA, CC0, via Wikimedia Commons"
     },
     "366bb645-890c-47fd-b1c4-62ae17b8fb7e": {
       "FriendlyName": "Fox Squirrel",
@@ -533,11 +561,15 @@
     },
     "5bb681a4-c677-4ab3-8ffb-30826a5c9818": {
       "FriendlyName": "Glaucous-winged Gull",
-      "Abbreviation": "GWGU"
+      "Abbreviation": "GWGU",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/7/70/Glaucous-winged_gull.jpg",
+      "ImageAttribution":"Drfred55, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "f6932a42-3aef-423f-bf2b-06d5ce0ac9d5": {
       "FriendlyName": "Glaucous-winged/Western Gull",
-      "Abbreviation": "GWGUxWEGU"
+      "Abbreviation": "GWGUxWEGU",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/6/69/Larus_occidentalis_%28Western_Gull%29%2C_Point_Lobos%2C_CA%2C_US_-_May_2013.jpg",
+      "ImageAttribution":"Diliff, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "70e747b7-2461-46f1-bc92-fcee50c442b8": {
       "FriendlyName": "Golden Eagle",
@@ -565,7 +597,9 @@
     },
     "274b44de-ac77-4e72-8f90-41dc8c68f2b2": {
       "FriendlyName": "Great Blue Heron",
-      "Abbreviation": "GBHE"
+      "Abbreviation": "GBHE",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/b/b3/Great_Blue_Heron_at_Sunnyvale_California.jpg",
+      "ImageAttribution":"Alpinekid, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "8f019e75-6dfb-4dd2-b11f-3851dd7e687c": {
       "FriendlyName": "Great Egret",
@@ -573,7 +607,9 @@
     },
     "785a8c4c-d030-444f-8368-d5ee28e2d33e": {
       "FriendlyName": "Great Horned Owl",
-      "Abbreviation": "GHOW"
+      "Abbreviation": "GHOW",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/e/eb/Bubo_virginianus_-Canada-6.jpg",
+      "ImageAttribution":"brendan.lally, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "8b9d12db-d2cf-4356-99e0-4b1253905130": {
       "FriendlyName": "Greater Sage Grouse",
@@ -597,11 +633,15 @@
     },
     "31a958d0-f1e7-444c-a30e-5ba1b19496c0": {
       "FriendlyName": "Hairy Woodpecker",
-      "Abbreviation": "HAWO"
+      "Abbreviation": "HAWO",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/1/1f/Picoides-villosus-001.jpg",
+      "ImageAttribution":"User:Mdf, CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons"
     },
     "88d9d999-7f1e-4739-a7bf-0bc924592490": {
       "FriendlyName": "Harbor Seal",
-      "Abbreviation": "HASE"
+      "Abbreviation": "HASE",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/4/45/Helgoland_bmn5.jpg",
+      "ImageAttribution":"Maximilian Narr, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "09bff594-db64-4743-9319-6c110219c1cb": {
       "FriendlyName": "Harlequin Duck",
@@ -613,7 +653,9 @@
     },
     "b83836ab-f531-4546-aee1-647258e8cb91": {
       "FriendlyName": "Hermit Thrush",
-      "Abbreviation": "HETH"
+      "Abbreviation": "HETH",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/c/c9/HermitThrush63.jpg",
+      "ImageAttribution":"Albuttlee at English Wikipedia, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "37b3c169-bdb3-4e37-8134-76705b7b8c42": {
       "FriendlyName": "Herring Gull",
@@ -637,7 +679,9 @@
     },
     "c0e7c493-d965-4aec-b8a2-0e9a91c0f7b3": {
       "FriendlyName": "House Finch",
-      "Abbreviation": "HOFI"
+      "Abbreviation": "HOFI",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/3/30/Carpodacus_mexicanus_-Madison%2C_Wisconsin%2C_USA-8.jpg",
+      "ImageAttribution":"John Benson, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "76f545f8-5803-4ad9-a9b4-db0d1c9dc7b4": {
       "FriendlyName": "House Mouse",
@@ -645,7 +689,9 @@
     },
     "9427c590-f4e7-4b0c-81fe-dfd85c990be7": {
       "FriendlyName": "House Sparrow",
-      "Abbreviation": "HOSP"
+      "Abbreviation": "HOSP",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/b/bb/1_House_Sparrow_04.jpg",
+      "ImageAttribution":"Zeynel Cebeci, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "f5055ffa-ba05-480a-87bf-f3e757a692b0": {
       "FriendlyName": "House Wren",
@@ -745,7 +791,9 @@
     },
     "57aade50-1ba6-47b6-8b65-d26686d378df": {
       "FriendlyName": "Mallard",
-      "Abbreviation": "MALL"
+      "Abbreviation": "MALL",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/b/bf/Anas_platyrhynchos_male_female_quadrat.jpg",
+      "ImageAttribution":"Richard Bartz, CC BY-SA 2.5 <https://creativecommons.org/licenses/by-sa/2.5>, via Wikimedia Commons"
     },
     "84031ec9-0989-4687-a5a9-e9c969adf824": {
       "FriendlyName": "Manx Shearwater",
@@ -769,7 +817,9 @@
     },
     "1bbd0fbf-8666-4aac-bd39-5d6db477c234": {
       "FriendlyName": "Merlin",
-      "Abbreviation": "MERL"
+      "Abbreviation": "MERL",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/a/a8/Merlin_%28_Falco_columbarius_%29_-_panoramio.jpg",
+      "ImageAttribution":"Loco Steve, CC BY 3.0 <https://creativecommons.org/licenses/by/3.0>, via Wikimedia Commons"
     },
     "f0e0ce82-f118-499b-b632-f803660ddafa": {
       "FriendlyName": "Mesquite Lizard",
@@ -793,7 +843,9 @@
     },
     "68420dd9-ddce-4ac0-80f1-ab5efdb3fd05": {
       "FriendlyName": "Mourning Dove",
-      "Abbreviation": "MODO"
+      "Abbreviation": "MODO",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/b/b7/Mourning_Dove_2006.jpg",
+      "ImageAttribution":"http://www.naturespicsonline.com/, CC BY-SA 2.5 <https://creativecommons.org/licenses/by-sa/2.5>, via Wikimedia Commons"
     },
     "cb436a1b-6394-48b3-a1ca-64c15be60b9b": {
       "FriendlyName": "Mule Deer",
@@ -821,7 +873,9 @@
     },
     "a0ff280e-cb34-4fc0-b2a3-cf8c539e5c4e": {
       "FriendlyName": "Northern Flicker",
-      "Abbreviation": "NOFL"
+      "Abbreviation": "NOFL",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/0/02/NorthernFlicker-male.jpg",
+      "ImageAttribution":"Greg Hume, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "10cee443-0a2a-43b9-8eb4-6aecddc59d19": {
       "FriendlyName": "Northern Flying Squirrel",
@@ -941,7 +995,9 @@
     },
     "ec21171b-954b-4498-9e04-35f61d85764c": {
       "FriendlyName": "Peregrine Falcon",
-      "Abbreviation": "PEFA"
+      "Abbreviation": "PEFA",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/b/b5/A_Relaxed_Peregrine_Falcon_%2849524471588%29.jpg",
+      "ImageAttribution":"Hari K  Patibanda, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "3cb80048-fe04-44da-930d-18a55cbf7579": {
       "FriendlyName": "Pied-billed Grebe",
@@ -953,11 +1009,15 @@
     },
     "25d24d26-fd2d-446d-8ee4-3d36e0f0ddf5": {
       "FriendlyName": "Pileated Woodpecker",
-      "Abbreviation": "PIWO"
+      "Abbreviation": "PIWO",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pileated_Woodpecker_%289597212081%29%2C_crop.jpg",
+      "ImageAttribution":"Shenandoah National Park from Virginia, Public domain, via Wikimedia Commons"
     },
     "66435e8d-2bd3-45dd-b814-013cacabaf9b": {
       "FriendlyName": "Pine Siskin",
-      "Abbreviation": "PISI"
+      "Abbreviation": "PISI",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/3/33/Bird_portrait_%2817280710612%29.jpg",
+      "ImageAttribution":"photochem_PA from State College, PA, USA, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "ff5971b5-a0ac-458b-9681-15ff8d3ae75f": {
       "FriendlyName": "Porcupine",
@@ -969,7 +1029,9 @@
     },
     "90173e39-293f-4179-83aa-fbdd82442a15": {
       "FriendlyName": "Purple Finch",
-      "Abbreviation": "PUFI"
+      "Abbreviation": "PUFI",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/4/42/Purple_Finch_on_a_Fir_branch.jpg",
+      "ImageAttribution":"Billyshiverstick, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "6985f62a-18b6-487b-b51f-85df681e2b92": {
       "FriendlyName": "Purple Martin",
@@ -977,7 +1039,9 @@
     },
     "680e86ac-dccc-446b-a733-8a440f7aab97": {
       "FriendlyName": "Raccoon",
-      "Abbreviation": "RACC"
+      "Abbreviation": "RACC",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/9/9f/Raccoon_climbing_in_tree_-_Cropped_and_color_corrected.jpg",
+      "ImageAttribution":"David Menke, Public domain, via Wikimedia Commons"
     },
     "55d29e82-5fd1-4d14-94eb-a728f4965710": {
       "FriendlyName": "Red Crossbill",
@@ -997,11 +1061,15 @@
     },
     "f408a416-cfaa-4362-9586-03042c5bd417": {
       "FriendlyName": "Red-breasted Nuthatch",
-      "Abbreviation": "RBNU"
+      "Abbreviation": "RBNU",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/8/81/Red-breasted_Nuthatch_%2831333055948%29.jpg",
+      "ImageAttribution":"Andy Reago & Chrissy McClarren, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "d5c1c056-928f-4f77-bf3c-d8643b246ded": {
       "FriendlyName": "Red-breasted Sapsucker",
-      "Abbreviation": "RBSA"
+      "Abbreviation": "RBSA",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/c/cb/Sphyrapicus_ruber_-El_Chorro_Regional_Park%2C_San_Luis_Obispo_County%2C_California%2C_USA-8_%283%29.jpg",
+      "ImageAttribution":"marlin harms, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "5b683afc-e249-4939-9143-7ad2c0dd5bd7": {
       "FriendlyName": "Red-eared Slider",
@@ -1025,7 +1093,9 @@
     },
     "8e880dc2-1342-4d67-9f5e-f827e9fe3351": {
       "FriendlyName": "Red-tailed Hawk",
-      "Abbreviation": "RTHA"
+      "Abbreviation": "RTHA",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/8/89/Red_tailed_Hawk_visits_Salem_%2815799079219%29.jpg",
+      "ImageAttribution":"Oregon Department of Transportation, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "6216b9bb-581d-4ee6-937d-ef82105d8d87": {
       "FriendlyName": "Red-tailed Tropic Bird",
@@ -1061,7 +1131,9 @@
     },
     "e2b95f76-ac01-4cdc-b198-827366e421d5": {
       "FriendlyName": "Rock Pigeon",
-      "Abbreviation": "ROPI"
+      "Abbreviation": "ROPI",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/5/56/Paloma_brav%C3%ADa_%28Columba_livia%29%2C_Palacio_de_Nymphenburg%2C_M%C3%BAnich%2C_Alemania01.JPG",
+      "ImageAttribution":"Diego Delso, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "af6813ff-5178-4b73-b9dc-e5eec4ebbc13": {
       "FriendlyName": "Rocky Mountain Elk",
@@ -1117,7 +1189,9 @@
     },
     "95e7bc33-b108-4b81-bf71-7e75bbbef38d": {
       "FriendlyName": "Sharp-shinned Hawk",
-      "Abbreviation": "SSHA"
+      "Abbreviation": "SSHA",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/c/c9/Accipiter_striatus%2C_Canet_Road%2C_San_Luis_Obispo_1.jpg",
+      "ImageAttribution":"ALAN SCHMIERER from near Patagonia, AZ, USA, CC0, via Wikimedia Commons"
     },
     "ce94db98-2596-44ec-8e30-8bb0b5ff26db": {
       "FriendlyName": "Short-eared Owl",
@@ -1161,7 +1235,9 @@
     },
     "7ba077ec-9b06-4347-b210-bcf99da16626": {
       "FriendlyName": "Song Sparrow",
-      "Abbreviation": "SOSP"
+      "Abbreviation": "SOSP",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/6/64/Song_Sparrow_%28133877360%29.jpg",
+      "ImageAttribution":"Derek Bakken from Minneapolis, MN, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "faa0816b-8c97-46be-b065-3f6ed600226d": {
       "FriendlyName": "Sooty Shearwater",
@@ -1193,11 +1269,15 @@
     },
     "60732c1b-8c02-4cc7-a10f-94f079b7a6c1": {
       "FriendlyName": "Spotted Towhee",
-      "Abbreviation": "SPTO"
+      "Abbreviation": "SPTO",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/c/c0/Pipilo_maculatus_2.jpg",
+      "ImageAttribution":"Hamma085, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "42869a00-b0c9-4fff-9637-6ee044d3c28d": {
       "FriendlyName": "Steller's Jay",
-      "Abbreviation": "STJA"
+      "Abbreviation": "STJA",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/6/65/Steller%27s_Jay_%28Coastal%29.jpg",
+      "ImageAttribution":"Ruby Feng, CC BY 4.0 <https://creativecommons.org/licenses/by/4.0>, via Wikimedia Commons"
     },
     "0a9fb89e-f1da-4560-8f67-55f7ad9611fa": {
       "FriendlyName": "Steller's Sea Lion",
@@ -1233,7 +1313,9 @@
     },
     "c222dad0-be83-43af-9de3-e184e32fd3e2": {
       "FriendlyName": "Townsend's Chipmunk",
-      "Abbreviation": "TOCH"
+      "Abbreviation": "TOCH",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/9/98/Tamias_townsendii_4516.JPG",
+      "ImageAttribution":"Walter Siegmund, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "77abd8d8-9e40-4309-8fa5-4788aec842fb": {
       "FriendlyName": "Townsend's Mole",
@@ -1273,7 +1355,9 @@
     },
     "84e20c70-c85f-436f-bf4e-e2fab8b87cf2": {
       "FriendlyName": "Varied Thrush",
-      "Abbreviation": "VATH"
+      "Abbreviation": "VATH",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/f/f5/Varied_Thrush_%2815243384813%29.jpg",
+      "ImageAttribution":"Mike's Birds from Riverside, CA, US, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons"
     },
     "17df3cac-f340-4c59-bc39-bf0686eb7bbb": {
       "FriendlyName": "Vaux's Swift",
@@ -1285,7 +1369,9 @@
     },
     "c36b9122-6e4e-4922-bf6d-83a972c677d7": {
       "FriendlyName": "Virginia Opossum",
-      "Abbreviation": "OPUS"
+      "Abbreviation": "OPUS",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Didelphis_virginiana_westerncanada20072.jpg",
+      "ImageAttribution":"(Drcyrus), CC BY-SA 2.1 AU <https://creativecommons.org/licenses/by-sa/2.1/au/deed.en>, via Wikimedia Commons"
     },
     "aec2ea21-a57d-40b2-95a4-977dfb564de0": {
       "FriendlyName": "Virginia Rail",
@@ -1333,7 +1419,9 @@
     },
     "6a05e60a-7a6d-4759-b121-77a21214778c": {
       "FriendlyName": "Western Painted Turtle",
-      "Abbreviation": "WPAT"
+      "Abbreviation": "WPAT",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/4/43/Painted_Turtle_%2814541060047%29.jpg",
+      "ImageAttribution":"USFWS Mountain-Prairie, Public domain, via Wikimedia Commons"
     },
     "34c95069-2168-4d40-b4e9-a4a8e9087e6f": {
       "FriendlyName": "Western Pond Turtle",
@@ -1349,7 +1437,9 @@
     },
     "daff6d66-5e28-4c61-bdbd-f5b7fb5b7e41": {
       "FriendlyName": "Western Screech Owl",
-      "Abbreviation": "WESO"
+      "Abbreviation": "WESO",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/e/e1/Western_Screech_Owl.jpg",
+      "ImageAttribution":"Randy R. Magnuson, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "da6b0076-5af3-4b43-b55b-194829b21e09": {
       "FriendlyName": "Western Scrub Jay",
@@ -1361,7 +1451,9 @@
     },
     "c705e659-da63-41ae-b4d1-deb150807750": {
       "FriendlyName": "Western Tanager",
-      "Abbreviation": "WETA"
+      "Abbreviation": "WETA",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/7/7b/Western_Tanager_%28male%29.jpg",
+      "ImageAttribution":"http://www.naturespicsonline.com/, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "f6ba4b78-7a98-4d02-80d5-fff248994027": {
       "FriendlyName": "White-breasted Nuthatch",
@@ -1369,7 +1461,9 @@
     },
     "80a715f9-7068-4e9b-8716-1a8852fbdc0d": {
       "FriendlyName": "White-crowned Sparrow",
-      "Abbreviation": "WCSP"
+      "Abbreviation": "WCSP",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/9/92/White-crowned-Sparrow.jpg",
+      "ImageAttribution":"Wolfgang Wander, CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons"
     },
     "d5e39f19-d8fe-4123-bea2-c6ae21756afa": {
       "FriendlyName": "White Dove",
@@ -1393,7 +1487,9 @@
     },
     "89690781-f6e4-4bb0-bff6-deb2ae1f4a04": {
       "FriendlyName": "White-throated Sparrow",
-      "Abbreviation": "WTSP"
+      "Abbreviation": "WTSP",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/f/f3/Zonotrichia_albicollis_CT1.jpg",
+      "ImageAttribution":"Cephas, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "7edfe127-c814-4f74-a312-e70c43329061": {
       "FriendlyName": "White-winged Scoter",

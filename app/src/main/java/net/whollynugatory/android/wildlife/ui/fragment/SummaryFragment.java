@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -35,6 +36,12 @@ import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentSummaryBinding;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class SummaryFragment extends Fragment {
@@ -51,6 +58,8 @@ public class SummaryFragment extends Fragment {
   private FragmentSummaryBinding mBinding;
 
   private CardView mEuthanasiaCard;
+  private ImageView mNewTotalEncountersImage;
+  private ImageView mNewUniqueEncountersImage;
 
   private OnSummaryListListener mCallback;
 
@@ -85,7 +94,12 @@ public class SummaryFragment extends Fragment {
 
     View view = mBinding.getRoot();
     mEuthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
+    mNewTotalEncountersImage = view.findViewById(R.id.summary_image_total_encounters_new);
+    mNewUniqueEncountersImage = view.findViewById(R.id.summary_image_unique_encounters_new);
     FloatingActionButton addEncounterButton = view.findViewById(R.id.summary_fab_add);
+
+    mNewTotalEncountersImage.setVisibility(View.GONE);
+    mNewUniqueEncountersImage.setVisibility(View.GONE);
     addEncounterButton.setOnClickListener(v -> mCallback.onSummaryAddEncounter());
 
     if (Utils.getIsContributor(getContext())) {
@@ -98,8 +112,21 @@ public class SummaryFragment extends Fragment {
     String followingUserId = Utils.getFollowingUserId(getActivity());
     wildlifeViewModel.getSummary(followingUserId).observe(
       getViewLifecycleOwner(),
-      // TODO: add "new" to tasks with recent additions
       summaryDetails -> mBinding.setSummary(summaryDetails));
+    Date in = new Date();
+    LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(7);
+    ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+    wildlifeViewModel.getNewEncountersCount(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+      getViewLifecycleOwner(),
+      newEncountersCount -> {
+
+        if (newEncountersCount != null && newEncountersCount > 0) {
+          mNewTotalEncountersImage.setVisibility(View.VISIBLE);
+        } else {
+          mNewTotalEncountersImage.setVisibility(View.GONE);
+        }
+    });
+
     return view;
   }
 

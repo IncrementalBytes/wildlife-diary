@@ -45,12 +45,23 @@
             <TextView
               android:id="@+id/summary_text_total_encounters"
               style="@style/SummaryHeader"
-              android:layout_width="match_parent"
+              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/header_total_encounters"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+              android:id="@+id/summary_image_total_encounters_new"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="@dimen/default_view_margin"
+              app:layout_constraintStart_toEndOf="@id/summary_text_total_encounters"
+              app:layout_constraintTop_toTopOf="@id/summary_text_total_encounters"
+              app:layout_constraintBottom_toBottomOf="@id/summary_text_total_encounters"
+              android:src="@drawable/ic_new_dark"
+              android:contentDescription="@string/desc_new_encounters"/>
 
             <TextView
               android:id="@+id/summary_text_total_encounters_value"
@@ -84,12 +95,23 @@
             <TextView
               android:id="@+id/summary_text_unique_encounters"
               style="@style/SummaryHeader"
-              android:layout_width="match_parent"
+              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/header_unique_encounters"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+              android:id="@+id/summary_image_unique_encounters_new"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="@dimen/default_view_margin"
+              app:layout_constraintStart_toEndOf="@id/summary_text_unique_encounters"
+              app:layout_constraintTop_toTopOf="@id/summary_text_unique_encounters"
+              app:layout_constraintBottom_toBottomOf="@id/summary_text_unique_encounters"
+              android:src="@drawable/ic_new_dark"
+              android:contentDescription="@string/desc_new_encounters"/>
 
             <TextView
               android:id="@+id/summary_text_unique_encounters_value"

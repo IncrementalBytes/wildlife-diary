@@ -58,4 +58,5 @@
   <string name="menu_cleanup">Clean up Tables</string>
   <string name="menu_sync">Sync</string>
   <string name="desc_remove_unused_entry">Remove unused entry.</string>
+  <string name="desc_new_encounters">New encounters!</string>
 </resources>
