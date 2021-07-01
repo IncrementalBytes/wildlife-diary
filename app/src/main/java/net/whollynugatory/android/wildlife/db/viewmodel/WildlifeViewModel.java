@@ -65,6 +65,11 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getNewEncountersCount(userId, timeStamp);
   }
 
+  public LiveData<Integer> getNewUniqueCount(String userId, long timeStamp) {
+
+    return mWildlifeRepository.getNewUniqueCount(userId, timeStamp);
+  }
+
   public LiveData<SummaryDetails> getSummary(String userId) {
 
     return mWildlifeRepository.getSummary(userId);

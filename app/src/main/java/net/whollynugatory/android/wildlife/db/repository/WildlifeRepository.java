@@ -76,6 +76,11 @@ public class WildlifeRepository {
     return mEncounterDao.getNewEncountersCount(userId, timeStamp);
   }
 
+  public LiveData<Integer> getNewUniqueCount(String userId, long timeStamp) {
+
+    return mEncounterDao.getNewUniqueCount(userId, timeStamp);
+  }
+
   public LiveData<SummaryDetails> getSummary(String userId) {
 
     return mEncounterDao.getSummary(userId);

@@ -93,6 +93,12 @@ public interface EncounterDao {
   @Query("SELECT COUNT(*) FROM encounter_table WHERE user_id == :userId AND date > :timeStamp")
   LiveData<Integer> getNewEncountersCount(String userId, long timeStamp);
 
+  @Query("SELECT COUNT(*) FROM (" +
+    "SELECT wildlife_id FROM encounter_table WHERE user_id == :userId AND date > :timeStamp " +
+    "EXCEPT " +
+    "SELECT wildlife_id AS Count FROM encounter_table WHERE user_id == :userId AND date <= :timeStamp)")
+  LiveData<Integer> getNewUniqueCount(String userId, long timeStamp);
+
   @Query("SELECT COUNT(DISTINCT encounter_id) AS TotalEncounters, " +
     "COUNT(DISTINCT wildlife_id) AS TotalSpeciesEncountered, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = 'd91114ce-6b33-4798-804a-0e0ca6adca0d') AS TotalBanded, " +
@@ -148,7 +154,7 @@ public interface EncounterDao {
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "WHERE user_id == :userId " +
     "GROUP BY Wildlife.abbreviation " +
-    "ORDER BY EncounterCount ASC, WildlifeSpecies ASC")
+    "ORDER BY EncounterCount ASC, encounter_table.date DESC")
   LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)

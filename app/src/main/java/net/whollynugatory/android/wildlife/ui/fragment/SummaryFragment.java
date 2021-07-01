@@ -36,11 +36,9 @@ import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentSummaryBinding;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -114,7 +112,7 @@ public class SummaryFragment extends Fragment {
       getViewLifecycleOwner(),
       summaryDetails -> mBinding.setSummary(summaryDetails));
     Date in = new Date();
-    LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(7);
+    LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(6);
     ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
     wildlifeViewModel.getNewEncountersCount(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
       getViewLifecycleOwner(),
@@ -125,7 +123,20 @@ public class SummaryFragment extends Fragment {
         } else {
           mNewTotalEncountersImage.setVisibility(View.GONE);
         }
-    });
+      }
+    );
+
+    wildlifeViewModel.getNewUniqueCount(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+      getViewLifecycleOwner(),
+      newUniqueCount -> {
+
+        if (newUniqueCount != null && newUniqueCount > 0) {
+          mNewUniqueEncountersImage.setVisibility(View.VISIBLE);
+        } else {
+          mNewUniqueEncountersImage.setVisibility(View.GONE);
+        }
+      }
+    );
 
     return view;
   }
