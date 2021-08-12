@@ -3,7 +3,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="2dp">
+  android:layout_marginBottom="1dp">
 
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
@@ -18,7 +18,7 @@
 
       <TextView
         android:id="@+id/encounter_item_wildlife"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_view_margin"
         android:ellipsize="end"
@@ -28,9 +28,20 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/secondaryTextColor"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/encounter_item_image_new"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+      <ImageView
+        android:id="@+id/encounter_item_image_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_view_margin"
+        app:layout_constraintStart_toEndOf="@id/encounter_item_wildlife"
+        app:layout_constraintTop_toTopOf="@id/encounter_item_wildlife"
+        app:layout_constraintBottom_toBottomOf="@id/encounter_item_wildlife"
+        android:src="@drawable/ic_new_dark"
+        android:contentDescription="@string/desc_new_encounters"/>
 
       <TextView
         android:id="@+id/encounter_item_abbreviation"

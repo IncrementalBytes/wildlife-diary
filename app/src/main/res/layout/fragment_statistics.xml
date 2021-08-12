@@ -6,8 +6,8 @@
   <data>
     <import type="android.view.View"/>
     <import type="net.whollynugatory.android.wildlife.Utils"/>
-    <variable name="summary" type="net.whollynugatory.android.wildlife.db.entity.SummaryDetails"/>
-    <variable name="fragment" type="net.whollynugatory.android.wildlife.ui.fragment.SummaryFragment" />
+    <variable name="statistics" type="net.whollynugatory.android.wildlife.db.entity.StatisticsDetails"/>
+    <variable name="fragment" type="net.whollynugatory.android.wildlife.ui.fragment.StatisticsFragment" />
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,27 +23,27 @@
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/summary_guideline"
+          android:id="@+id/statistics_guideline"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           app:layout_constraintGuide_percent=".5"
           android:orientation="vertical"/>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_total_encounters"
+          android:id="@+id/statistics_card_total_encounters"
           style="@style/SummaryCard"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
-          android:onClick="@{(view) -> summary.TotalEncounters > 0 ? fragment.onCardClick(view) : null}">
+          android:onClick="@{(view) -> statistics.TotalEncounters > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_total_encounters"
+              android:id="@+id/statistics_text_total_encounters"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -53,47 +53,47 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-              android:id="@+id/summary_image_total_encounters_new"
+              android:id="@+id/statistics_image_total_encounters_new"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginStart="@dimen/default_view_margin"
-              app:layout_constraintStart_toEndOf="@id/summary_text_total_encounters"
-              app:layout_constraintTop_toTopOf="@id/summary_text_total_encounters"
-              app:layout_constraintBottom_toBottomOf="@id/summary_text_total_encounters"
+              app:layout_constraintStart_toEndOf="@id/statistics_text_total_encounters"
+              app:layout_constraintTop_toTopOf="@id/statistics_text_total_encounters"
+              app:layout_constraintBottom_toBottomOf="@id/statistics_text_total_encounters"
               android:src="@drawable/ic_new_dark"
               android:contentDescription="@string/desc_new_encounters"/>
 
             <TextView
-              android:id="@+id/summary_text_total_encounters_value"
+              android:id="@+id/statistics_text_total_encounters_value"
               style="@style/SummaryValue"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalEncounters)}"
+              android:text="@{String.valueOf(statistics.TotalEncounters)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_total_encounters" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_total_encounters" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_unique_encounters"
+          android:id="@+id/statistics_card_unique_encounters"
           style="@style/SummaryCard"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_total_encounters"
-          android:onClick="@{(view) -> summary.TotalSpeciesEncountered > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_total_encounters"
+          android:onClick="@{(view) -> statistics.TotalSpeciesEncountered > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_unique_encounters"
+              android:id="@+id/statistics_text_unique_encounters"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -103,47 +103,47 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-              android:id="@+id/summary_image_unique_encounters_new"
+              android:id="@+id/statistics_image_unique_encounters_new"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginStart="@dimen/default_view_margin"
-              app:layout_constraintStart_toEndOf="@id/summary_text_unique_encounters"
-              app:layout_constraintTop_toTopOf="@id/summary_text_unique_encounters"
-              app:layout_constraintBottom_toBottomOf="@id/summary_text_unique_encounters"
+              app:layout_constraintStart_toEndOf="@id/statistics_text_unique_encounters"
+              app:layout_constraintTop_toTopOf="@id/statistics_text_unique_encounters"
+              app:layout_constraintBottom_toBottomOf="@id/statistics_text_unique_encounters"
               android:src="@drawable/ic_new_dark"
               android:contentDescription="@string/desc_new_encounters"/>
 
             <TextView
-              android:id="@+id/summary_text_unique_encounters_value"
+              android:id="@+id/statistics_text_unique_encounters_value"
               style="@style/SummaryValue"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalSpeciesEncountered)}"
+              android:text="@{String.valueOf(statistics.TotalSpeciesEncountered)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_unique_encounters" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_unique_encounters" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_most_encountered"
+          android:id="@+id/statistics_card_most_encountered"
           style="@style/SummaryCard"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_unique_encounters"
-          android:onClick="@{(view) -> summary.MostEncountered != null || summary.MostEncountered != Utils.UNKNOWN_ID ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_unique_encounters"
+          android:onClick="@{(view) -> statistics.MostEncountered != null || statistics.MostEncountered != Utils.UNKNOWN_ID ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_most_encountered"
+              android:id="@+id/statistics_text_most_encountered"
               style="@style/SummaryHeader"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -153,74 +153,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_most_encountered_value"
+              android:id="@+id/statistics_text_most_encountered_value"
               style="@style/SummaryValue"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:text="@{summary.MostEncountered}"
+              android:text="@{statistics.MostEncountered}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_most_encountered" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_most_encountered" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_encounters_by_date"
-          style="@style/SummaryCard"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_most_encountered"
-          android:onClick="@{(view) -> summary.TotalEncounters > 0 ? fragment.onCardClick(view) : null}">
-
-          <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-              android:id="@+id/summary_text_encounters_by_date"
-              style="@style/SummaryHeader"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/header_encounters_by_date"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-              style="@style/SummaryValue"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text=""
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_encounters_by_date" />
-
-          </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_banded"
+          android:id="@+id/statistics_card_banded"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+          app:layout_constraintEnd_toStartOf="@id/statistics_guideline"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_encounters_by_date"
-          android:onClick="@{(view) -> summary.TotalBanded > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_most_encountered"
+          android:onClick="@{(view) -> statistics.TotalBanded > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_banded"
+              android:id="@+id/statistics_text_banded"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -230,14 +192,14 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_banded_value"
+              android:id="@+id/statistics_text_banded_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalBanded)}"
+              android:text="@{String.valueOf(statistics.TotalBanded)}"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_banded"
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_banded"
               app:layout_constraintBottom_toBottomOf="parent"/>
 
           </androidx.constraintlayout.widget.ConstraintLayout>
@@ -245,21 +207,21 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_force_fed"
+          android:id="@+id/statistics_card_force_fed"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@id/summary_guideline"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_encounters_by_date"
-          android:onClick="@{(view) -> summary.TotalForceFed > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintStart_toEndOf="@id/statistics_guideline"
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_most_encountered"
+          android:onClick="@{(view) -> statistics.TotalForceFed > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_force_fed"
+              android:id="@+id/statistics_text_force_fed"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -269,36 +231,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_force_fed_value"
+              android:id="@+id/statistics_text_force_fed_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalForceFed)}"
+              android:text="@{String.valueOf(statistics.TotalForceFed)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_force_fed" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_force_fed" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_gavage"
+          android:id="@+id/statistics_card_gavage"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+          app:layout_constraintEnd_toStartOf="@id/statistics_guideline"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_banded"
-          android:onClick="@{(view) -> summary.TotalGavage > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_banded"
+          android:onClick="@{(view) -> statistics.TotalGavage > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_gavage"
+              android:id="@+id/statistics_text_gavage"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -308,36 +270,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_gavage_value"
+              android:id="@+id/statistics_text_gavage_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalGavage)}"
+              android:text="@{String.valueOf(statistics.TotalGavage)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_gavage" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_gavage" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_medication_ocular"
+          android:id="@+id/statistics_card_medication_ocular"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@id/summary_guideline"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_force_fed"
-          android:onClick="@{(view) -> summary.TotalOcularMedicated > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintStart_toEndOf="@id/statistics_guideline"
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_force_fed"
+          android:onClick="@{(view) -> statistics.TotalOcularMedicated > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_medication_ocular"
+              android:id="@+id/statistics_text_medication_ocular"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -347,36 +309,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_medication_ocular_value"
+              android:id="@+id/statistics_text_medication_ocular_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalOcularMedicated)}"
+              android:text="@{String.valueOf(statistics.TotalOcularMedicated)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_medication_ocular" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_medication_ocular" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_medication_oral"
+          android:id="@+id/statistics_card_medication_oral"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+          app:layout_constraintEnd_toStartOf="@id/statistics_guideline"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_gavage"
-          android:onClick="@{(view) -> summary.TotalOralMedicated > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_gavage"
+          android:onClick="@{(view) -> statistics.TotalOralMedicated > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_medication_oral"
+              android:id="@+id/statistics_text_medication_oral"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -386,36 +348,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_medication_oral_value"
+              android:id="@+id/statistics_text_medication_oral_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalOralMedicated)}"
+              android:text="@{String.valueOf(statistics.TotalOralMedicated)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_medication_oral" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_medication_oral" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_subcutaneous"
+          android:id="@+id/statistics_card_subcutaneous"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@id/summary_guideline"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_medication_ocular"
-          android:onClick="@{(view) -> summary.TotalSubcutaneous > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintStart_toEndOf="@id/statistics_guideline"
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_medication_ocular"
+          android:onClick="@{(view) -> statistics.TotalSubcutaneous > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_subcutaneous"
+              android:id="@+id/statistics_text_subcutaneous"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -425,36 +387,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_subcutaneous_value"
+              android:id="@+id/statistics_text_subcutaneous_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalSubcutaneous)}"
+              android:text="@{String.valueOf(statistics.TotalSubcutaneous)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_subcutaneous" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_subcutaneous" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_syringe_fed"
+          android:id="@+id/statistics_card_syringe_fed"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+          app:layout_constraintEnd_toStartOf="@id/statistics_guideline"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_medication_oral"
-          android:onClick="@{(view) -> summary.TotalSyringeFed > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_medication_oral"
+          android:onClick="@{(view) -> statistics.TotalSyringeFed > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_syringe_fed"
+              android:id="@+id/statistics_text_syringe_fed"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -464,36 +426,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_syringe_fed_value"
+              android:id="@+id/statistics_text_syringe_fed_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalSyringeFed)}"
+              android:text="@{String.valueOf(statistics.TotalSyringeFed)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_syringe_fed" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_syringe_fed" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_handled_exam"
+          android:id="@+id/statistics_card_handled_exam"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          app:layout_constraintStart_toEndOf="@id/summary_guideline"
+          app:layout_constraintStart_toEndOf="@id/statistics_guideline"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_subcutaneous"
-          android:onClick="@{(view) -> summary.TotalHandledExam > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_subcutaneous"
+          android:onClick="@{(view) -> statistics.TotalHandledExam > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_handled_exam"
+              android:id="@+id/statistics_text_handled_exam"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -503,36 +465,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_handled_exam_value"
+              android:id="@+id/statistics_text_handled_exam_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalHandledExam)}"
+              android:text="@{String.valueOf(statistics.TotalHandledExam)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_handled_exam" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_handled_exam" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_handled_force_fed"
+          android:id="@+id/statistics_card_handled_force_fed"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+          app:layout_constraintEnd_toStartOf="@id/statistics_guideline"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_syringe_fed"
-          android:onClick="@{(view) -> summary.TotalHandledForceFed > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_syringe_fed"
+          android:onClick="@{(view) -> statistics.TotalHandledForceFed > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_handled_force_fed"
+              android:id="@+id/statistics_text_handled_force_fed"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -542,36 +504,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_handled_force_fed_value"
+              android:id="@+id/statistics_text_handled_force_fed_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalHandledForceFed)}"
+              android:text="@{String.valueOf(statistics.TotalHandledForceFed)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_handled_force_fed" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_handled_force_fed" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_handled_gavage"
+          android:id="@+id/statistics_card_handled_gavage"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@id/summary_guideline"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_handled_exam"
-          android:onClick="@{(view) -> summary.TotalHandledGavage > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintStart_toEndOf="@id/statistics_guideline"
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_handled_exam"
+          android:onClick="@{(view) -> statistics.TotalHandledGavage > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_handled_gavage"
+              android:id="@+id/statistics_text_handled_gavage"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -581,36 +543,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_handled_gavage_value"
+              android:id="@+id/statistics_text_handled_gavage_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalHandledGavage)}"
+              android:text="@{String.valueOf(statistics.TotalHandledGavage)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_handled_gavage" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_handled_gavage" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_handled_medication"
+          android:id="@+id/statistics_card_handled_medication"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          app:layout_constraintEnd_toStartOf="@id/summary_guideline"
+          app:layout_constraintEnd_toStartOf="@id/statistics_guideline"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_handled_force_fed"
-          android:onClick="@{(view) -> summary.TotalHandledMedication > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_handled_force_fed"
+          android:onClick="@{(view) -> statistics.TotalHandledMedication > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_handled_medication"
+              android:id="@+id/statistics_text_handled_medication"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -620,36 +582,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_handled_medication_value"
+              android:id="@+id/statistics_text_handled_medication_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalHandledMedication)}"
+              android:text="@{String.valueOf(statistics.TotalHandledMedication)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_handled_medication" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_handled_medication" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_handled_subcutaneous"
+          android:id="@+id/statistics_card_handled_subcutaneous"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@id/summary_guideline"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_handled_gavage"
-          android:onClick="@{(view) -> summary.TotalHandledSubcutaneous > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintStart_toEndOf="@id/statistics_guideline"
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_handled_gavage"
+          android:onClick="@{(view) -> statistics.TotalHandledSubcutaneous > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_handled_subcutaneous"
+              android:id="@+id/statistics_text_handled_subcutaneous"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -659,36 +621,36 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_handled_subcutaneous_value"
+              android:id="@+id/statistics_text_handled_subcutaneous_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalHandledSubcutaneous)}"
+              android:text="@{String.valueOf(statistics.TotalHandledSubcutaneous)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_handled_subcutaneous" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_handled_subcutaneous" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-          android:id="@+id/summary_card_handled_euthanasia"
+          android:id="@+id/statistics_card_handled_euthanasia"
           style="@style/SummaryCard"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintEnd_toStartOf="@id/summary_guideline"
-          app:layout_constraintTop_toBottomOf="@id/summary_card_handled_medication"
-          android:onClick="@{(view) -> summary.TotalHandledEuthanasia > 0 ? fragment.onCardClick(view) : null}">
+          app:layout_constraintEnd_toStartOf="@id/statistics_guideline"
+          app:layout_constraintTop_toBottomOf="@id/statistics_card_handled_medication"
+          android:onClick="@{(view) -> statistics.TotalHandledEuthanasia > 0 ? fragment.onCardClick(view) : null}">
 
           <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/summary_text_handled_euthanasia"
+              android:id="@+id/statistics_text_handled_euthanasia"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -698,15 +660,15 @@
               app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-              android:id="@+id/summary_text_handled_euthanasia_value"
+              android:id="@+id/statistics_text_handled_euthanasia_value"
               style="@style/SummaryValue"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@{String.valueOf(summary.TotalHandledEuthanasia)}"
+              android:text="@{String.valueOf(statistics.TotalHandledEuthanasia)}"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/summary_text_handled_euthanasia" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_handled_euthanasia" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -717,7 +679,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-      android:id="@+id/summary_fab_add"
+      android:id="@+id/statistics_fab_add"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/fab_margin"

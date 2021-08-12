@@ -33,7 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.databinding.FragmentSummaryBinding;
+import net.whollynugatory.android.wildlife.databinding.FragmentStatisticsBinding;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
 import java.time.LocalDateTime;
@@ -42,32 +42,31 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Locale;
 
-public class SummaryFragment extends Fragment {
+public class StatisticsFragment extends Fragment {
 
-  private static final String TAG = Utils.BASE_TAG + SummaryFragment.class.getSimpleName();
+  private static final String TAG = Utils.BASE_TAG + StatisticsFragment.class.getSimpleName();
 
-  public interface OnSummaryListListener {
+  public interface OnStatisticsListListener {
 
-    void onSummaryAddEncounter();
-    void onSummaryClicked(int summaryId);
-    void onSummaryTotalEncounters();
+    void onStatisticsAddEncounter();
+
+    void onStatisticsTotalEncounters();
+
+    void onStatisticsUniqueEncounters();
   }
 
-  private FragmentSummaryBinding mBinding;
+  private FragmentStatisticsBinding mBinding;
 
   private CardView mEuthanasiaCard;
   private ImageView mNewTotalEncountersImage;
   private ImageView mNewUniqueEncountersImage;
 
-  private OnSummaryListListener mCallback;
+  private OnStatisticsListListener mCallback;
 
-  public static SummaryFragment newInstance() {
+  public static StatisticsFragment newInstance() {
 
     Log.d(TAG, "++newInstance()");
-    SummaryFragment fragment = new SummaryFragment();
-    Bundle arguments = new Bundle();
-    fragment.setArguments(arguments);
-    return fragment;
+    return new StatisticsFragment();
   }
 
   @Override
@@ -76,7 +75,7 @@ public class SummaryFragment extends Fragment {
 
     Log.d(TAG, "++onAttach(Context)");
     try {
-      mCallback = (OnSummaryListListener) context;
+      mCallback = (OnStatisticsListListener) context;
     } catch (ClassCastException e) {
       throw new ClassCastException(
         String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
@@ -87,18 +86,18 @@ public class SummaryFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false);
+    mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false);
     mBinding.setFragment(this);
 
     View view = mBinding.getRoot();
-    mEuthanasiaCard = view.findViewById(R.id.summary_card_handled_euthanasia);
-    mNewTotalEncountersImage = view.findViewById(R.id.summary_image_total_encounters_new);
-    mNewUniqueEncountersImage = view.findViewById(R.id.summary_image_unique_encounters_new);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.summary_fab_add);
+    mEuthanasiaCard = view.findViewById(R.id.statistics_card_handled_euthanasia);
+    mNewTotalEncountersImage = view.findViewById(R.id.statistics_image_total_encounters_new);
+    mNewUniqueEncountersImage = view.findViewById(R.id.statistics_image_unique_encounters_new);
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.statistics_fab_add);
 
     mNewTotalEncountersImage.setVisibility(View.GONE);
     mNewUniqueEncountersImage.setVisibility(View.GONE);
-    addEncounterButton.setOnClickListener(v -> mCallback.onSummaryAddEncounter());
+    addEncounterButton.setOnClickListener(v -> mCallback.onStatisticsAddEncounter());
 
     if (Utils.getIsContributor(getContext())) {
       addEncounterButton.setVisibility(View.VISIBLE);
@@ -108,17 +107,17 @@ public class SummaryFragment extends Fragment {
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     String followingUserId = Utils.getFollowingUserId(getActivity());
-    wildlifeViewModel.getSummary(followingUserId).observe(
+    wildlifeViewModel.getStatistics(followingUserId).observe(
       getViewLifecycleOwner(),
-      summaryDetails -> mBinding.setSummary(summaryDetails));
+      statisticsDetails -> mBinding.setStatistics(statisticsDetails));
     Date in = new Date();
     LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(6);
     ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-    wildlifeViewModel.getNewEncountersCount(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+    wildlifeViewModel.getNewEncounters(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
       getViewLifecycleOwner(),
-      newEncountersCount -> {
+      newEncounters -> {
 
-        if (newEncountersCount != null && newEncountersCount > 0) {
+        if (newEncounters != null && newEncounters.size() > 0) {
           mNewTotalEncountersImage.setVisibility(View.VISIBLE);
         } else {
           mNewTotalEncountersImage.setVisibility(View.GONE);
@@ -126,11 +125,11 @@ public class SummaryFragment extends Fragment {
       }
     );
 
-    wildlifeViewModel.getNewUniqueCount(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+    wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
       getViewLifecycleOwner(),
-      newUniqueCount -> {
+      newUnique -> {
 
-        if (newUniqueCount != null && newUniqueCount > 0) {
+        if (newUnique != null && newUnique.size() > 0) {
           mNewUniqueEncountersImage.setVisibility(View.VISIBLE);
         } else {
           mNewUniqueEncountersImage.setVisibility(View.GONE);
@@ -158,12 +157,12 @@ public class SummaryFragment extends Fragment {
 
   public void onCardClick(View view) {
 
-    if (view == null) {
-      Log.d(TAG, "No-op");
-    } else if (view.getId() == R.id.summary_card_total_encounters) {
-      mCallback.onSummaryTotalEncounters();
-    } else {
-      mCallback.onSummaryClicked(view.getId());
+    if (view != null) {
+      if (view.getId() == R.id.statistics_card_total_encounters) {
+        mCallback.onStatisticsTotalEncounters();
+      } else if (view.getId() == R.id.statistics_card_unique_encounters) {
+        mCallback.onStatisticsUniqueEncounters();
+      }
     }
   }
 

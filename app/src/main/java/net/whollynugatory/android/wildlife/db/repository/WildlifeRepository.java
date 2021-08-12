@@ -27,7 +27,8 @@ import net.whollynugatory.android.wildlife.db.dao.TaskDao;
 import net.whollynugatory.android.wildlife.db.dao.WildlifeDao;
 import net.whollynugatory.android.wildlife.db.entity.CleanUpDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
-import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
+import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
+import net.whollynugatory.android.wildlife.db.entity.StatisticsDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
@@ -71,19 +72,19 @@ public class WildlifeRepository {
     return mEncounterDao.getMostEncountered(userId);
   }
 
-  public LiveData<Integer> getNewEncountersCount(String userId, long timeStamp) {
+  public LiveData<List<EncounterEntity>> getNewEncounters(String userId, long timeStamp) {
 
-    return mEncounterDao.getNewEncountersCount(userId, timeStamp);
+    return mEncounterDao.getNewEncounters(userId, timeStamp);
   }
 
-  public LiveData<Integer> getNewUniqueCount(String userId, long timeStamp) {
+  public LiveData<List<String>> getNewUnique(String userId, long timeStamp) {
 
-    return mEncounterDao.getNewUniqueCount(userId, timeStamp);
+    return mEncounterDao.getNewUnique(userId, timeStamp);
   }
 
-  public LiveData<SummaryDetails> getSummary(String userId) {
+  public LiveData<StatisticsDetails> getStatistics(String userId) {
 
-    return mEncounterDao.getSummary(userId);
+    return mEncounterDao.getStatistics(userId);
   }
 
   public LiveData<List<TaskEntity>> getTasks() {
@@ -91,9 +92,9 @@ public class WildlifeRepository {
     return mTaskDao.getAll();
   }
 
-  public LiveData<List<EncounterDetails>> getTotalEncounters(String userId) {
+  public LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId) {
 
-    return mEncounterDao.getTotalEncounters(userId);
+    return mEncounterDao.getAllEncounterDetails(userId);
   }
 
   public LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId) {

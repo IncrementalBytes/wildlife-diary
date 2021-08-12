@@ -20,7 +20,7 @@ import net.whollynugatory.android.wildlife.Utils;
 /**
  * Class containing total tasks and other overall details for all encounters.
  */
-public class SummaryDetails {
+public class StatisticsDetails {
 
   public String MostEncountered;
 
@@ -54,7 +54,7 @@ public class SummaryDetails {
 
   public int TotalSyringeFed;
 
-  public SummaryDetails() {
+  public StatisticsDetails() {
 
     MostEncountered = Utils.UNKNOWN_ID;
     TotalBanded = 0;

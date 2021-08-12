@@ -25,13 +25,19 @@ import androidx.annotation.StringRes;
 import androidx.room.TypeConverter;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -44,7 +50,6 @@ public class Utils {
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
   public static final String ARG_MESSAGE = "message";
   public static final String ARG_DATA_TO_SYNC = "data_to_sync";
-  public static final String ARG_SUMMARY_ID = "summary_id";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String DATA_STAMPS_ROOT = "DataStamps";
@@ -52,6 +57,7 @@ public class Utils {
   public static final String DEFAULT_FOLLOWING_USER_ID = "pHuFQzKKwJhI0KNTc6UoCvtMXEI2";
   public static final String ENCOUNTER_ROOT = "Encounters";
   public static final String TASK_ROOT = "Tasks";
+  public static final String UNKNOWN_DATE = "00000000";
   public static final String UNKNOWN_ID = "000000000-0000-0000-0000-000000000000";
   public static final String UNKNOWN_STRING = "UNKNOWN";
   public static final String UNKNOWN_USER_ID = "0000000000000000000000000000";
@@ -81,14 +87,22 @@ public class Utils {
     return new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(calendar.getTime());
   }
 
-  public static boolean getIsContributor(Context context) {
+  public static List<EncounterDetails> getEncounterDetailsList(Context context) {
 
-    return getBooleanPref(context, R.string.pref_key_is_contributor, false);
+    Gson gson = new Gson();
+    String json = getStringPref(context, R.string.pref_key_encounter_details_list, "");
+    Type type = new TypeToken<ArrayList<EncounterDetails>>() { }.getType();
+    return gson.fromJson(json, type);
   }
 
   public static String getFollowingUserId(Context context) {
 
     return getStringPref(context, R.string.pref_key_following_user_id, Utils.UNKNOWN_USER_ID);
+  }
+
+  public static boolean getIsContributor(Context context) {
+
+    return getBooleanPref(context, R.string.pref_key_is_contributor, false);
   }
 
   public static String getLocalEncountersStamp(Context context) {
@@ -114,6 +128,16 @@ public class Utils {
   public static String getUserId(Context context) {
 
     return getStringPref(context, R.string.pref_key_user_id, Utils.UNKNOWN_USER_ID);
+  }
+
+  public static void setEncounterDetailsList(Context context, List<EncounterDetails> encounterDetailsList) {
+
+    Gson gson = new Gson();
+    String json = gson.toJson(encounterDetailsList);
+    PreferenceManager.getDefaultSharedPreferences(context)
+      .edit()
+      .putString(context.getString(R.string.pref_key_encounter_details_list), json)
+      .apply();
   }
 
   public static void setIsContributor(Context context, boolean canAdd) {

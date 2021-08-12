@@ -6,7 +6,7 @@
       android:defaultValue="false"
       android:key="@string/pref_key_enable_sensitive"
       android:persistent="true"
-      android:summary="@string/pref_summary_enable_sensitive"
+      android:summary="@string/pref_statistics_enable_sensitive"
       android:title="@string/pref_title_enable_sensitive"/>
   </androidx.preference.PreferenceCategory>
 

@@ -16,6 +16,7 @@
 package net.whollynugatory.android.wildlife.db.entity;
 
 import androidx.annotation.NonNull;
+import androidx.room.Ignore;
 
 import net.whollynugatory.android.wildlife.Utils;
 
@@ -36,6 +37,9 @@ public class EncounterDetails implements Serializable {
   public String ImageAttribution;
 
   public String ImageUrl;
+
+  @Ignore
+  public boolean IsNew;
 
   public String TaskDescription;
 
@@ -61,6 +65,7 @@ public class EncounterDetails implements Serializable {
     ImageAttribution = Utils.DEFAULT_ATTRIBUTION;
     ImageUrl = Utils.UNKNOWN_STRING;
     Id = Utils.UNKNOWN_ID;
+    IsNew = false;
     TaskDescription = Utils.UNKNOWN_STRING;
     TaskId = Utils.UNKNOWN_ID;
     TaskIsSensitive = false;

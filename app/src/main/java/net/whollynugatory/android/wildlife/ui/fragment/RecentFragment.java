@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,47 +30,54 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class EncounterListFragment extends Fragment {
+public class RecentFragment extends Fragment {
 
-  private static final String TAG = Utils.BASE_TAG + EncounterListFragment.class.getSimpleName();
+  private static final String TAG = Utils.BASE_TAG + RecentFragment.class.getSimpleName();
 
-  public interface OnEncounterListListener {
+  public interface OnRecentListener {
 
-    void onEncounterDetailsClicked(String encounterId);
+    void onRecentAddEncounter();
+
+    void onRecentItemClicked(String encounterId);
   }
 
-  private OnEncounterListListener mCallback;
+  private OnRecentListener mCallback;
 
-  private EncounterAdapter mEncounterAdapter;
-
-  public static EncounterListFragment newInstance() {
+  public static RecentFragment newInstance() {
 
     Log.d(TAG, "++newInstance()");
-    return new EncounterListFragment();
+    RecentFragment fragment = new RecentFragment();
+    Bundle arguments = new Bundle();
+    fragment.setArguments(arguments);
+    return fragment;
   }
 
-  /*
-    Fragment Override(s)
-  */
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
 
     Log.d(TAG, "++onAttach(Context)");
     try {
-      mCallback = (OnEncounterListListener) context;
+      mCallback = (OnRecentListener) context;
     } catch (ClassCastException e) {
-      throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
+      throw new ClassCastException(
+        String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
     }
   }
 
@@ -77,26 +85,54 @@ public class EncounterListFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.fragment_encounter_list, container, false);
-    RecyclerView recyclerView = view.findViewById(R.id.encounter_list_view);
+    final View view = inflater.inflate(R.layout.fragment_recent, container, false);
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.recent_fab_add);
+    addEncounterButton.setOnClickListener(v -> mCallback.onRecentAddEncounter());
+    RecyclerView recyclerView = view.findViewById(R.id.recent_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    mEncounterAdapter = new EncounterAdapter(getContext());
-    recyclerView.setAdapter(mEncounterAdapter);
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    String followingUserId = Utils.getFollowingUserId(getContext());
-    wildlifeViewModel.getTotalEncounters(followingUserId).observe(getViewLifecycleOwner(), totalEncounters -> {
+    EncounterAdapter encounterAdapter = new EncounterAdapter(getContext());
+    recyclerView.setAdapter(encounterAdapter);
 
-      List<String> encounterIds = new ArrayList<>();
-      List<EncounterDetails> condensedEncounters = new ArrayList<>();
-      for (EncounterDetails encounterDetails : totalEncounters) {
-        if (!encounterIds.contains(encounterDetails.EncounterId)) {
-          condensedEncounters.add(encounterDetails);
-          encounterIds.add(encounterDetails.EncounterId);
+    if (Utils.getIsContributor(getContext())) {
+      addEncounterButton.setVisibility(View.VISIBLE);
+    } else {
+      addEncounterButton.setVisibility(View.GONE);
+    }
+
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    String followingUserId = Utils.getFollowingUserId(getActivity());
+    Date in = new Date();
+    LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(6);
+    ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+    wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
+
+      List<EncounterDetails> recentEncounterDetailsList = new ArrayList<>();
+      String targetDate = Utils.fromTimestamp(encounterDetailsList.get(0).Date);
+      for (EncounterDetails encounterDetails : encounterDetailsList) {
+        String currentDate = Utils.fromTimestamp(encounterDetails.Date);
+        if (currentDate.equals(targetDate)) {
+          recentEncounterDetailsList.add(encounterDetails);
+        } else {
+          // probably safe to break the loop since collection from view model was sorted when we got
+          break;
         }
       }
 
-      Log.d(TAG, "Encounter list is " + condensedEncounters.size());
-      mEncounterAdapter.setEncounterDetailsList(condensedEncounters);
+      // TODO: enable 'NEW' on first encounter of wildlife species
+      wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+        getViewLifecycleOwner(),
+        uniqueList -> {
+
+        for (String uniqueId : uniqueList) {
+          for (EncounterDetails encounterDetails : recentEncounterDetailsList) {
+            if (encounterDetails.WildlifeId.equals(uniqueId)) {
+              encounterDetails.IsNew = true;
+            }
+          }
+        }
+
+        encounterAdapter.setEncounterDetailsList(recentEncounterDetailsList);
+      });
     });
 
     return view;
@@ -116,14 +152,14 @@ public class EncounterListFragment extends Fragment {
 
     @NonNull
     @Override
-    public EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public EncounterAdapter.EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
       View itemView = mInflater.inflate(R.layout.encounter_item, parent, false);
-      return new EncounterHolder(itemView);
+      return new EncounterAdapter.EncounterHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EncounterHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EncounterAdapter.EncounterHolder holder, int position) {
 
       if (mEncounterDetails != null) {
         EncounterDetails encounterDetails = mEncounterDetails.get(position);
@@ -154,6 +190,7 @@ public class EncounterListFragment extends Fragment {
       private final TextView mAbbreviationTextView;
       private final TextView mEncounterDateTextView;
       private final TextView mWildlifeTextView;
+      private final ImageView mNewEncounterImageView;
 
       private EncounterDetails mEncounterDetails;
 
@@ -163,6 +200,7 @@ public class EncounterListFragment extends Fragment {
         mAbbreviationTextView = itemView.findViewById(R.id.encounter_item_abbreviation);
         mEncounterDateTextView = itemView.findViewById(R.id.encounter_item_date);
         mWildlifeTextView = itemView.findViewById(R.id.encounter_item_wildlife);
+        mNewEncounterImageView = itemView.findViewById(R.id.encounter_item_image_new);
         itemView.setOnClickListener(this);
       }
 
@@ -173,13 +211,14 @@ public class EncounterListFragment extends Fragment {
         mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
         mEncounterDateTextView.setText(Utils.fromTimestamp(mEncounterDetails.Date));
         mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
+        mNewEncounterImageView.setVisibility(mEncounterDetails.IsNew ? View.VISIBLE : View.GONE);
       }
 
       @Override
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        mCallback.onEncounterDetailsClicked(mEncounterDetails.EncounterId);
+        mCallback.onRecentItemClicked(mEncounterDetails.EncounterId);
       }
     }
   }

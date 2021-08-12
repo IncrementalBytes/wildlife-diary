@@ -161,7 +161,9 @@
     },
     "64fd2c95-963c-4f65-9fa7-85eac7834b9b": {
       "FriendlyName": "Bewick's Wren",
-      "Abbreviation": "BEWR"
+      "Abbreviation": "BEWR",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/0/03/Bewick%27s_Wren_%2828360487929%29.jpg",
+      "ImageAttribution": "Becky Matsubara from El Sobrante, California, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "cff0a5c4-fd49-437e-b567-0f85f47afe65": {
       "FriendlyName": "Big Brown Bat",
@@ -337,7 +339,9 @@
     },
     "cf1fd10a-d831-49f0-898d-0bc9387a3494": {
       "FriendlyName": "Cedar Waxwing",
-      "Abbreviation": "CEDW"
+      "Abbreviation": "CEDW",
+      "ImageSrc" : "https://commons.wikimedia.org/wiki/File:Cedar_Waxwing_(15810301858).jpg",
+      "ImageAttribution":"Mike's Birds from Riverside, CA, US, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons"
     },
     "a4d56efb-e2b4-43ca-9916-33de7a916f63": {
       "FriendlyName": "Chestnut-backed Chickadee",
@@ -955,7 +959,9 @@
     },
     "046c3e1c-229f-49d0-8171-666b1180ed37": {
       "FriendlyName": "Osprey",
-      "Abbreviation": "OSPR"
+      "Abbreviation": "OSPR",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Wild_Pandion.jpg",
+      "ImageAttribution": "Psylexic at English Wikipedia, CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons"
     },
     "df6dd429-40e5-4aa0-972b-743a747e050e": {
       "FriendlyName": "Pacific Giant Salamander",
@@ -1107,7 +1113,9 @@
     },
     "6c1589e5-d906-427d-af37-c0b71c309ec1": {
       "FriendlyName": "Red-winged Blackbird",
-      "Abbreviation": "RWBL"
+      "Abbreviation": "RWBL",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/1/12/Red_winged_blackbird_-_natures_pics.jpg",
+      "ImageAttribution": "Alan D. Wilson, www.naturespicsonline.com, CC BY-SA 2.5 <https://creativecommons.org/licenses/by-sa/2.5>, via Wikimedia Commons"
     },
     "e6ecf3b8-f3d3-4a13-82b4-57dee7a02816": {
       "FriendlyName": "Rhinoceros Auklet",

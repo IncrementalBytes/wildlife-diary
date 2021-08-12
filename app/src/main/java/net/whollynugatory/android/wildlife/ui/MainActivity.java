@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,24 +38,29 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.db.entity.UserEntity;
 import net.whollynugatory.android.wildlife.R;
+import net.whollynugatory.android.wildlife.ui.fragment.CleanUpListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.DataFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.DateListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailsListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.EncounterListFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.ListFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.SummaryFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.RecentFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.StatisticsFragment;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
+  CleanUpListFragment.OnCleanUpListListener,
   DataFragment.OnDataListener,
+  DateListFragment.OnDateListListener,
+  EncounterDetailsListFragment.OnEncounterListListener,
   EncounterFragment.OnEncounterListener,
-  EncounterListFragment.OnEncounterListListener,
-  ListFragment.OnSimpleListListener,
-  SummaryFragment.OnSummaryListListener,
+  RecentFragment.OnRecentListener,
+  StatisticsFragment.OnStatisticsListListener,
   TryAgainLaterFragment.OnTryAgainLaterListener {
 
   private static final String TAG = Utils.BASE_TAG + MainActivity.class.getSimpleName();
@@ -71,19 +77,21 @@ public class MainActivity extends AppCompatActivity implements
 
     setContentView(R.layout.activity_main);
 
+    BottomNavigationView bottomNavigationView = findViewById(R.id.main_bottom_navigation);
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
     setSupportActionBar(mainToolbar);
 
-    getSupportFragmentManager().addOnBackStackChangedListener(() -> {
-      Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
-      if (fragment != null) {
-        String fragmentClassName = fragment.getClass().getName();
-        if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
-          setTitle(getString(R.string.title_settings));
-        } else {
-          setTitle(getString(R.string.app_name));
-        }
+    bottomNavigationView.setOnItemSelectedListener(item -> {
+
+      if (item.getItemId() == R.id.navigation_statistics) {
+        replaceFragment(StatisticsFragment.newInstance());
+      } else if (item.getItemId() == R.id.navigation_date) {
+        replaceFragment(DateListFragment.newInstance());
+      } else if (item.getItemId() == R.id.navigation_recent) {
+        replaceFragment(RecentFragment.newInstance());
       }
+
+      return true;
     });
 
     String userId = getIntent().getStringExtra(Utils.ARG_FIREBASE_USER_ID);
@@ -148,11 +156,11 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
     if (item.getItemId() == R.id.menu_home) {
-      replaceFragment(SummaryFragment.newInstance());
+      replaceFragment(StatisticsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_settings) {
       replaceFragment(UserSettingsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_cleanup) {
-      replaceFragment(ListFragment.newInstance(R.id.menu_cleanup));
+      replaceFragment(CleanUpListFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_sync) {
       Utils.setLocalTasksStamp(this, Utils.UNKNOWN_ID);
       Utils.setLocalWildlifeStamp(this, Utils.UNKNOWN_ID);
@@ -186,10 +194,16 @@ public class MainActivity extends AppCompatActivity implements
     Fragment Override(s)
    */
   @Override
+  public void onCleanUpListSet(String titleUpdate) {
+
+    Log.d(TAG, "++onCleanUpListSet(String)");
+  }
+
+  @Override
   public void onDataEncountersPopulated() {
 
     Log.d(TAG, "++onDataEncountersPopulated(String)");
-    replaceFragment(SummaryFragment.newInstance());
+    replaceFragment(RecentFragment.newInstance());
   }
 
   @Override
@@ -210,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements
         Locale.US,
         "No encounters found. %s",
         mUserEntity.IsContributor ? "Try adding some!" : "Please try again later."));
-    replaceFragment(SummaryFragment.newInstance());
+    replaceFragment(StatisticsFragment.newInstance());
   }
 
   @Override
@@ -225,6 +239,13 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onDataWildlifePopulated(String)");
     replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
+  }
+
+  @Override
+  public void onDateListItemClicked() {
+
+    Log.d(TAG, "++onDateListItemClicked()");
+    replaceFragment(EncounterDetailsListFragment.newInstance());
   }
 
   @Override
@@ -246,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onEncountersRecorded()");
     replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
+    // TODO: try sending notification via FirebaseMessaging directly (not via function monitoring)
   }
 
   @Override
@@ -267,30 +289,43 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onSummaryAddEncounter() {
+  public void onRecentAddEncounter() {
 
-    Log.d(TAG, "++onSummaryAddEncounter()");
+    Log.d(TAG, "++onRecentAddEncounter()");
     replaceFragment(EncounterFragment.newInstance());
   }
 
   @Override
-  public void onSummaryClicked(int summaryId) {
+  public void onRecentItemClicked(String encounterId) {
 
-    Log.d(TAG, "++onSummaryClicked(int)");
-    replaceFragment(ListFragment.newInstance(summaryId));
+    Log.d(TAG, "++onRecentItemClicked(String)");
+    if (mUserEntity.IsContributor) {
+      replaceFragment(EncounterFragment.newInstance(encounterId));
+    } else {
+      replaceFragment(EncounterDetailFragment.newInstance(encounterId));
+    }
   }
 
   @Override
-  public void onSummaryTotalEncounters() {
+  public void onStatisticsAddEncounter() {
 
-    Log.d(TAG, "++onSummaryTotalEncounters()");
-    replaceFragment(EncounterListFragment.newInstance());
+    Log.d(TAG, "++onStatisticsAddEncounter()");
+    replaceFragment(EncounterFragment.newInstance());
   }
 
   @Override
-  public void onTaskListSet(String titleUpdate) {
+  public void onStatisticsTotalEncounters() {
 
-    setTitle(titleUpdate);
+    Log.d(TAG, "++onStatisticsTotalEncounters()");
+    Utils.setEncounterDetailsList(this, new ArrayList<>());
+    replaceFragment(EncounterDetailsListFragment.newInstance());
+  }
+
+  @Override
+  public void onStatisticsUniqueEncounters() {
+
+    Log.d(TAG, "++onStatisticsUniqueEncounters()");
+    // TODO: add fragment for viewing unique encounters
   }
 
   @Override
@@ -306,12 +341,6 @@ public class MainActivity extends AppCompatActivity implements
     Log.d(TAG, "++onTryAgainLaterTryAgain()");
     finish();
     startActivity(getIntent());
-  }
-
-  @Override
-  public void onUnknownList() {
-
-    Log.d(TAG, "onUnknownList()");
   }
 
   /*

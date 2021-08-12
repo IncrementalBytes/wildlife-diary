@@ -25,7 +25,7 @@ import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.CleanUpDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
-import net.whollynugatory.android.wildlife.db.entity.SummaryDetails;
+import net.whollynugatory.android.wildlife.db.entity.StatisticsDetails;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
 
 import java.util.List;
@@ -90,14 +90,14 @@ public interface EncounterDao {
     "ORDER BY EncounterCount DESC, WildlifeSpecies ASC")
   LiveData<List<WildlifeSummary>> getMostEncountered(String userId);
 
-  @Query("SELECT COUNT(*) FROM encounter_table WHERE user_id == :userId AND date > :timeStamp")
-  LiveData<Integer> getNewEncountersCount(String userId, long timeStamp);
+  @Query("SELECT * FROM encounter_table WHERE user_id == :userId AND date > :timeStamp")
+  LiveData<List<EncounterEntity>> getNewEncounters(String userId, long timeStamp);
 
-  @Query("SELECT COUNT(*) FROM (" +
+  @Query("SELECT * FROM (" +
     "SELECT wildlife_id FROM encounter_table WHERE user_id == :userId AND date > :timeStamp " +
     "EXCEPT " +
     "SELECT wildlife_id AS Count FROM encounter_table WHERE user_id == :userId AND date <= :timeStamp)")
-  LiveData<Integer> getNewUniqueCount(String userId, long timeStamp);
+  LiveData<List<String>> getNewUnique(String userId, long timeStamp);
 
   @Query("SELECT COUNT(DISTINCT encounter_id) AS TotalEncounters, " +
     "COUNT(DISTINCT wildlife_id) AS TotalSpeciesEncountered, " +
@@ -125,7 +125,7 @@ public interface EncounterDao {
     "FROM encounter_table " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "WHERE user_id == :userId")
-  LiveData<SummaryDetails> getSummary(String userId);
+  LiveData<StatisticsDetails> getStatistics(String userId);
 
   @Query("SELECT Encounter.date AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +
@@ -145,7 +145,7 @@ public interface EncounterDao {
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
     "WHERE user_id == :userId " +
     "ORDER BY Date DESC, EncounterId")
-  LiveData<List<EncounterDetails>> getTotalEncounters(String userId);
+  LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId);
 
   @Query("SELECT Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.id AS WildlifeId, " +
