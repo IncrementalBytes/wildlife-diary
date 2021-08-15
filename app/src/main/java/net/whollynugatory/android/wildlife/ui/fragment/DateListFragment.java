@@ -15,9 +15,6 @@
  */
 package net.whollynugatory.android.wildlife.ui.fragment;
 
-import static java.util.Map.Entry.comparingByKey;
-import static java.util.stream.Collectors.toMap;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,12 +37,8 @@ import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
 public class DateListFragment extends Fragment {
 
@@ -96,27 +89,32 @@ public class DateListFragment extends Fragment {
       getViewLifecycleOwner(),
       totalEncounterList -> {
 
-      HashMap<String, DateItem> dateMap = new HashMap<>();
-      for (EncounterDetails encounterDetails : totalEncounterList) {
-        String simplifiedDateString = Utils.fromTimestamp(encounterDetails.Date);
-        if (dateMap.containsKey(simplifiedDateString)) {
-          DateItem dateItem = dateMap.get(simplifiedDateString);
-          if (dateItem != null) {
-            dateItem.Value++;
+        HashMap<String, DateItem> dateMap = new HashMap<>();
+        List<String> encounterIds = new ArrayList<>();
+        for (EncounterDetails encounterDetails : totalEncounterList) {
+          String simplifiedDateString = Utils.fromTimestamp(encounterDetails.Date);
+          if (dateMap.containsKey(simplifiedDateString)) {
+            DateItem dateItem = dateMap.get(simplifiedDateString);
+            if (dateItem != null) {
+              if (!encounterIds.contains(encounterDetails.EncounterId)) {
+                dateItem.EncounterDetailsList.add(encounterDetails);
+                encounterIds.add(encounterDetails.EncounterId);
+              }
+            } else {
+              Log.w(TAG, "Could not get date instance from map: " + simplifiedDateString);
+            }
           } else {
-            Log.w(TAG, "Could not get date instance from map: " + simplifiedDateString);
+            dateMap.put(
+              simplifiedDateString,
+              new DateItem(String.valueOf(encounterDetails.Date), simplifiedDateString, encounterDetails));
+            encounterIds.add(encounterDetails.EncounterId);
           }
-        } else {
-          dateMap.put(
-            simplifiedDateString,
-            new DateItem(String.valueOf(encounterDetails.Date), simplifiedDateString, 1));
         }
-      }
 
-      List<DateItem> sortedDateCollection = new ArrayList<>(dateMap.values());
-      sortedDateCollection.sort((s1, s2) -> s2.TimeStamp.compareTo(s1.TimeStamp));
-      dateAdapter.setDateSummaryList(sortedDateCollection);
-    });
+        List<DateItem> sortedDateCollection = new ArrayList<>(dateMap.values());
+        sortedDateCollection.sort((s1, s2) -> s2.TimeStamp.compareTo(s1.TimeStamp));
+        dateAdapter.setDateSummaryList(sortedDateCollection);
+      });
 
     return view;
   }
@@ -178,22 +176,26 @@ public class DateListFragment extends Fragment {
         mDateTextView = itemView.findViewById(R.id.date_list_item_text_name);
         mCountTextView = itemView.findViewById(R.id.date_list_item_text_desc);
         mCountTextView.setTextSize(18f);
+        itemView.setOnClickListener(this);
       }
 
       void bind(DateItem dateItem) {
 
         mDateItem = dateItem;
-
         mDateTextView.setText(mDateItem.Identifier);
-        mCountTextView.setText(String.valueOf(mDateItem.Value));
+        mCountTextView.setText(
+          String.format(
+            Locale.US,
+            getString(R.string.format_number_of_encounters),
+            mDateItem.EncounterDetailsList.size()));
       }
 
       @Override
       public void onClick(View view) {
 
-//        Log.d(TAG, "++EncounterHolder::onClick(View)");
-//        Utils.setEncounterDetailsList(getContext(), mDateItem.Identifier);
-//        mCallback.onDateListItemClicked();
+        Log.d(TAG, "++EncounterHolder::onClick(View)");
+        Utils.setEncounterDetailsList(getContext(), mDateItem.EncounterDetailsList);
+        mCallback.onDateListItemClicked();
       }
     }
   }
@@ -202,13 +204,14 @@ public class DateListFragment extends Fragment {
 
     public String Identifier;
     public String TimeStamp;
-    public int Value;
+    public List<EncounterDetails> EncounterDetailsList;
 
-    public DateItem(String timeStamp, String identifier, int value) {
+    public DateItem(String timeStamp, String identifier, EncounterDetails encounterDetails) {
 
       TimeStamp = timeStamp;
       Identifier = identifier;
-      Value = value;
+      EncounterDetailsList = new ArrayList<>();
+      EncounterDetailsList.add(encounterDetails);
     }
 
     @Override

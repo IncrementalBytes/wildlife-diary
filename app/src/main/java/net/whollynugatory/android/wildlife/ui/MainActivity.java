@@ -48,6 +48,7 @@ import net.whollynugatory.android.wildlife.ui.fragment.RecentFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.StatisticsFragment;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.UniqueEncounterListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment;
 
 import java.util.ArrayList;
@@ -92,6 +93,26 @@ public class MainActivity extends AppCompatActivity implements
       }
 
       return true;
+    });
+
+    getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+      Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
+      if (fragment != null) {
+        String fragmentClassName = fragment.getClass().getName();
+        if (fragmentClassName.equals(UserSettingsFragment.class.getName())) {
+          setTitle(getString(R.string.title_settings));
+        } else if (fragmentClassName.equals(StatisticsFragment.class.getName())) {
+          setTitle(getString(R.string.title_statistics));
+        } else if (fragmentClassName.equals(DateListFragment.class.getName())) {
+          setTitle(getString(R.string.title_encounters_by_date));
+        } else if (fragmentClassName.equals(EncounterDetailFragment.class.getName())) {
+          setTitle(getString(R.string.title_encounter_details));
+        } else if (fragmentClassName.equals(UniqueEncounterListFragment.class.getName())) {
+          setTitle(getString(R.string.title_unique_encounters));
+        } else {
+          setTitle(getString(R.string.app_name));
+        }
+      }
     });
 
     String userId = getIntent().getStringExtra(Utils.ARG_FIREBASE_USER_ID);
@@ -156,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
     if (item.getItemId() == R.id.menu_home) {
-      replaceFragment(StatisticsFragment.newInstance());
+      replaceFragment(RecentFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_settings) {
       replaceFragment(UserSettingsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_cleanup) {
@@ -325,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements
   public void onStatisticsUniqueEncounters() {
 
     Log.d(TAG, "++onStatisticsUniqueEncounters()");
-    // TODO: add fragment for viewing unique encounters
+    replaceFragment(UniqueEncounterListFragment.newInstance());
   }
 
   @Override

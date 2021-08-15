@@ -7,6 +7,7 @@
   <string name="title_settings">Settings</string>
   <string name="logout_message">Are you sure you want to log out?</string>
   <string name="desc_encounter_list">List of most recent encounters.</string>
+  <string name="desc_unique_encounter_list">List of unique encounters.</string>
   <string name="desc_cleanup_list">List of tasks and wildlife no longer being used.</string>
   <string name="placeholder"> </string>
   <string name="label_species">Wildlife Species:</string>
@@ -45,7 +46,7 @@
   <string name="header_most_encountered">Most Encountered</string>
   <string name="desc_task_completed">Shows whether or not task was completed during this encounter</string>
   <string name="menu_home">Home</string>
-  <string name="tap_for_details">Tap for details</string>
+  <string name="tap_for_details">Tap for encounter details</string>
   <string name="header_syringe_fed">Syringe Fed</string>
   <string name="number_in_group">Number in group:</string>
   <string name="label_try_again">Try Again?</string>
@@ -66,4 +67,9 @@
   <string name="menu_all">All</string>
   <string name="menu_statistics">Statistics</string>
   <string name="format_number_of_encounters">Number of Encounter(s): %d</string>
+  <string name="format_first_encountered">First Encountered: %s</string>
+  <string name="title_statistics">Statistics</string>
+  <string name="title_encounters_by_date">Encounters by Date</string>
+  <string name="title_encounter_details">Encounter Details</string>
+  <string name="title_unique_encounters">Unique Encounters</string>
 </resources>

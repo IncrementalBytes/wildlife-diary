@@ -56,6 +56,26 @@ public interface EncounterDao {
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
+    "WHERE user_id == :userId " +
+    "ORDER BY Date DESC, EncounterId")
+  LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId);
+
+  @Query("SELECT Encounter.date AS Date, " +
+    "Encounter.encounter_id AS EncounterId, " +
+    "Encounter.wildlife_id AS WildlifeId, " +
+    "Encounter.user_id AS UserId, " +
+    "Encounter.id AS Id, " +
+    "Wildlife.friendly_name AS WildlifeSpecies, " +
+    "Wildlife.abbreviation AS WildlifeAbbreviation, " +
+    "Wildlife.image_attribution AS ImageAttribution, " +
+    "Wildlife.image_src AS ImageUrl, " +
+    "Tasks.name AS TaskName, " +
+    "Tasks.id AS TaskId, " +
+    "Tasks.is_sensitive AS TaskIsSensitive, " +
+    "Tasks.description AS TaskDescription " +
+    "FROM encounter_table AS Encounter " +
+    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
+    "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
     "WHERE user_id == :userId AND Tasks.name = :taskName " +
     "ORDER BY Date DESC")
   LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName);
@@ -136,26 +156,18 @@ public interface EncounterDao {
     "Wildlife.abbreviation AS WildlifeAbbreviation, " +
     "Wildlife.image_attribution AS ImageAttribution, " +
     "Wildlife.image_src AS ImageUrl, " +
-    "Tasks.name AS TaskName, " +
-    "Tasks.id AS TaskId, " +
-    "Tasks.is_sensitive AS TaskIsSensitive, " +
-    "Tasks.description AS TaskDescription " +
-    "FROM encounter_table AS Encounter " +
-    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
-    "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
-    "WHERE user_id == :userId " +
-    "ORDER BY Date DESC, EncounterId")
-  LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId);
-
-  @Query("SELECT Wildlife.friendly_name AS WildlifeSpecies, " +
-    "Wildlife.id AS WildlifeId, " +
+    "'' AS TaskName, " +
+    "'' AS TaskId, " +
+    "'' AS TaskIsSensitive, " +
+    "'' AS TaskDescription, " +
     "COUNT(DISTINCT(encounter_id)) AS EncounterCount  " +
-    "FROM encounter_table " +
-    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
+    "FROM encounter_table AS Encounter " +
+    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == Encounter.wildlife_id " +
     "WHERE user_id == :userId " +
     "GROUP BY Wildlife.abbreviation " +
-    "ORDER BY EncounterCount ASC, encounter_table.date DESC")
-  LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId);
+    "HAVING EncounterCount == 1 " +
+    "ORDER BY EncounterCount ASC, Encounter.date DESC")
+  LiveData<List<EncounterDetails>> getUniqueEncountered(String userId);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(EncounterEntity encounterEntity);

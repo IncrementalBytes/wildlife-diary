@@ -31,9 +31,6 @@ public interface TaskDao {
   @Query("SELECT * FROM task_table ORDER BY name ASC")
   LiveData<List<TaskEntity>> getAll();
 
-  // TODO: order list by number of times task has been used
-//  LiveData<List<TaskEntity>> getAllByUsage();
-
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(TaskEntity taskEntity);
 }

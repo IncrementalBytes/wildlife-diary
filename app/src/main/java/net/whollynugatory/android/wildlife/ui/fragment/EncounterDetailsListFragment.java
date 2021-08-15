@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -160,6 +161,7 @@ public class EncounterDetailsListFragment extends Fragment {
 
       private final TextView mAbbreviationTextView;
       private final TextView mEncounterDateTextView;
+      private final ImageView mNewEncounterImageView;
       private final TextView mWildlifeTextView;
 
       private EncounterDetails mEncounterDetails;
@@ -169,6 +171,7 @@ public class EncounterDetailsListFragment extends Fragment {
 
         mAbbreviationTextView = itemView.findViewById(R.id.encounter_item_abbreviation);
         mEncounterDateTextView = itemView.findViewById(R.id.encounter_item_date);
+        mNewEncounterImageView = itemView.findViewById(R.id.encounter_item_image_new);
         mWildlifeTextView = itemView.findViewById(R.id.encounter_item_wildlife);
         itemView.setOnClickListener(this);
       }
@@ -179,6 +182,7 @@ public class EncounterDetailsListFragment extends Fragment {
 
         mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
         mEncounterDateTextView.setText(Utils.fromTimestamp(mEncounterDetails.Date));
+        mNewEncounterImageView.setVisibility(mEncounterDetails.IsNew ? View.VISIBLE : View.GONE);
         mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
       }
 

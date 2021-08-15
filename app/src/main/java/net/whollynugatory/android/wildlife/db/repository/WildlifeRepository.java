@@ -97,7 +97,7 @@ public class WildlifeRepository {
     return mEncounterDao.getAllEncounterDetails(userId);
   }
 
-  public LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId) {
+  public LiveData<List<EncounterDetails>> getUniqueEncountered(String userId) {
 
     return mEncounterDao.getUniqueEncountered(userId);
   }

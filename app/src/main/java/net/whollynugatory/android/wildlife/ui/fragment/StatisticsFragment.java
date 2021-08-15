@@ -63,6 +63,9 @@ public class StatisticsFragment extends Fragment {
 
   private OnStatisticsListListener mCallback;
 
+  private String mFollowingUserId;
+  private WildlifeViewModel mWildlifeViewModel;
+
   public static StatisticsFragment newInstance() {
 
     Log.d(TAG, "++newInstance()");
@@ -105,15 +108,15 @@ public class StatisticsFragment extends Fragment {
       addEncounterButton.setVisibility(View.GONE);
     }
 
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    String followingUserId = Utils.getFollowingUserId(getActivity());
-    wildlifeViewModel.getStatistics(followingUserId).observe(
+    mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    mFollowingUserId = Utils.getFollowingUserId(getActivity());
+    mWildlifeViewModel.getStatistics(mFollowingUserId).observe(
       getViewLifecycleOwner(),
       statisticsDetails -> mBinding.setStatistics(statisticsDetails));
     Date in = new Date();
     LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(6);
     ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-    wildlifeViewModel.getNewEncounters(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+    mWildlifeViewModel.getNewEncounters(mFollowingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
       getViewLifecycleOwner(),
       newEncounters -> {
 
@@ -125,7 +128,7 @@ public class StatisticsFragment extends Fragment {
       }
     );
 
-    wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+    mWildlifeViewModel.getNewUnique(mFollowingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
       getViewLifecycleOwner(),
       newUnique -> {
 
@@ -159,9 +162,21 @@ public class StatisticsFragment extends Fragment {
 
     if (view != null) {
       if (view.getId() == R.id.statistics_card_total_encounters) {
-        mCallback.onStatisticsTotalEncounters();
+        mWildlifeViewModel.getAllEncounterDetails(mFollowingUserId).observe(
+          getViewLifecycleOwner(),
+          encounterDetailsList -> {
+
+            Utils.setEncounterDetailsList(getContext(), encounterDetailsList);
+            mCallback.onStatisticsTotalEncounters();
+          });
       } else if (view.getId() == R.id.statistics_card_unique_encounters) {
-        mCallback.onStatisticsUniqueEncounters();
+        mWildlifeViewModel.getUniqueEncountered(mFollowingUserId).observe(
+          getViewLifecycleOwner(),
+          uniqueEncounters -> {
+
+            Utils.setEncounterDetailsList(getContext(), uniqueEncounters);
+            mCallback.onStatisticsUniqueEncounters();
+          });
       }
     }
   }

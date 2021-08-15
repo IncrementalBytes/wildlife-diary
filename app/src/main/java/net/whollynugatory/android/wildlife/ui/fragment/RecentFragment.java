@@ -104,36 +104,41 @@ public class RecentFragment extends Fragment {
     Date in = new Date();
     LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(6);
     ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-    wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
+    Log.d(TAG, "Local dateTime (epoch): " + zonedDateTime.toInstant().toEpochMilli());
+    wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(
+      getViewLifecycleOwner(),
+      encounterDetailsList -> {
 
-      List<EncounterDetails> recentEncounterDetailsList = new ArrayList<>();
-      String targetDate = Utils.fromTimestamp(encounterDetailsList.get(0).Date);
-      for (EncounterDetails encounterDetails : encounterDetailsList) {
-        String currentDate = Utils.fromTimestamp(encounterDetails.Date);
-        if (currentDate.equals(targetDate)) {
-          recentEncounterDetailsList.add(encounterDetails);
-        } else {
-          // probably safe to break the loop since collection from view model was sorted when we got
-          break;
-        }
-      }
-
-      // TODO: enable 'NEW' on first encounter of wildlife species
-      wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
-        getViewLifecycleOwner(),
-        uniqueList -> {
-
-        for (String uniqueId : uniqueList) {
-          for (EncounterDetails encounterDetails : recentEncounterDetailsList) {
-            if (encounterDetails.WildlifeId.equals(uniqueId)) {
-              encounterDetails.IsNew = true;
+        String targetDate = Utils.fromTimestamp(encounterDetailsList.get(0).Date);
+        List<String> encounterIds = new ArrayList<>();
+        List<EncounterDetails> recentEncounterDetailsList = new ArrayList<>();
+        for (EncounterDetails encounterDetails : encounterDetailsList) {
+          String currentDate = Utils.fromTimestamp(encounterDetails.Date);
+          if (currentDate.equals(targetDate)) {
+            if (!encounterIds.contains(encounterDetails.EncounterId)) {
+              recentEncounterDetailsList.add(encounterDetails);
+              encounterIds.add(encounterDetails.EncounterId);
             }
+          } else {
+            break;
           }
         }
 
-        encounterAdapter.setEncounterDetailsList(recentEncounterDetailsList);
+        wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+          getViewLifecycleOwner(),
+          uniqueList -> {
+
+            for (String uniqueId : uniqueList) {
+              for (EncounterDetails encounterDetails : recentEncounterDetailsList) {
+                if (encounterDetails.WildlifeId.equals(uniqueId)) {
+                  encounterDetails.IsNew = true;
+                }
+              }
+            }
+
+            encounterAdapter.setEncounterDetailsList(recentEncounterDetailsList);
+          });
       });
-    });
 
     return view;
   }

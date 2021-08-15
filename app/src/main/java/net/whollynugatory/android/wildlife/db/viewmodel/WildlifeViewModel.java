@@ -86,7 +86,7 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getAllEncounterDetails(userId);
   }
 
-  public LiveData<List<WildlifeSummary>> getUniqueEncountered(String userId) {
+  public LiveData<List<EncounterDetails>> getUniqueEncountered(String userId) {
 
     return mWildlifeRepository.getUniqueEncountered(userId);
   }
