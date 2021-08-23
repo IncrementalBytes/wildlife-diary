@@ -144,7 +144,7 @@ public class UniqueEncounterListFragment extends Fragment {
 
       void bind(EncounterDetails encounterDetails) {
 
-        if (!encounterDetails.ImageUrl.equals(Utils.UNKNOWN_STRING)) {
+        if (!encounterDetails.ImageUrl.equals(Utils.UNKNOWN_STRING) && getContext() != null) {
           Glide.with(getContext())
             .load(encounterDetails.ImageUrl)
             .placeholder(R.drawable.ic_placeholder_dark)

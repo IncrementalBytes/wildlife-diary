@@ -289,7 +289,9 @@
     },
     "30a85670-3ff3-499b-a039-7a1b5edd822c": {
       "FriendlyName": "California Gull",
-      "Abbreviation": "CAGU"
+      "Abbreviation": "CAGU",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/b/b5/California_Gull_%28Larus_californicus%29_RWD2.jpg",
+      "ImageAttribution": "Dick Daniels (http://carolinabirds.org/), CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "e0a3e9e8-de64-4be2-8f0b-4289ca131bd3": {
       "FriendlyName": "California Myotis",

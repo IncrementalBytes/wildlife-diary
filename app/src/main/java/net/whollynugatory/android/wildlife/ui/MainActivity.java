@@ -16,7 +16,13 @@
 package net.whollynugatory.android.wildlife.ui;
 
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +31,7 @@ import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -75,13 +82,12 @@ public class MainActivity extends AppCompatActivity implements
     super.onCreate(savedInstanceState);
 
     Log.d(TAG, "++onCreate(Bundle)");
-
     setContentView(R.layout.activity_main);
 
     BottomNavigationView bottomNavigationView = findViewById(R.id.main_bottom_navigation);
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
-    setSupportActionBar(mainToolbar);
 
+    setSupportActionBar(mainToolbar);
     bottomNavigationView.setOnItemSelectedListener(item -> {
 
       if (item.getItemId() == R.id.navigation_statistics) {
@@ -288,7 +294,36 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onEncountersRecorded()");
     replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
-    // TODO: try sending notification via FirebaseMessaging directly (not via function monitoring)
+
+    if (mUserEntity.IsContributor) {
+      Intent intent = new Intent(this, MainActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      PendingIntent pendingIntent = PendingIntent.getActivity(
+        this,
+        Utils.NOTIFICATION_REQUEST_CODE,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE);
+
+      String channelId = getString(R.string.default_notification_channel_id);
+      Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+      NotificationCompat.Builder notificationBuilder =
+        new NotificationCompat.Builder(this, channelId)
+          .setSmallIcon(R.drawable.ic_notification_dark)
+          .setContentTitle(getString(R.string.app_name))
+          .setContentText(getString(R.string.channel_name))
+          .setAutoCancel(true)
+          .setSound(defaultSoundUri)
+          .setContentIntent(pendingIntent);
+
+      NotificationManager notificationManager =
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+      NotificationChannel channel = new NotificationChannel(
+        channelId,
+        getString(R.string.channel_description),
+        NotificationManager.IMPORTANCE_DEFAULT);
+      notificationManager.createNotificationChannel(channel);
+      notificationManager.notify(Utils.NOTIFICATION_REQUEST_CODE, notificationBuilder.build());
+    }
   }
 
   @Override
