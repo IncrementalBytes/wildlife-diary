@@ -17,10 +17,11 @@ package net.whollynugatory.android.wildlife.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -45,7 +46,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
   private static final String TAG = Utils.BASE_TAG + SignInActivity.class.getSimpleName();
 
-  private ProgressBar mProgressBar;
+  AnimationDrawable mPawAnimation;
+  ImageView mPawImage;
   private Snackbar mSnackbar;
 
   private ActivityResultLauncher<Intent> mActivityResultLauncher;
@@ -62,15 +64,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     Log.d(TAG, "++onCreate(Bundle)");
     setContentView(R.layout.activity_sign_in);
 
+    mPawImage = findViewById(R.id.sign_in_image);
+    mPawImage.setBackgroundResource(R.drawable.anim_paw_dark);
+    mPawAnimation = (AnimationDrawable) mPawImage.getBackground();
+
     SignInButton signInWithGoogleButton = findViewById(R.id.sign_in_button_google);
     signInWithGoogleButton.setSize(SignInButton.SIZE_STANDARD);
     signInWithGoogleButton.setOnClickListener(this);
 
-    mProgressBar = findViewById(R.id.sign_in_progress);
-    mProgressBar.setVisibility(View.INVISIBLE);
-
     mAuth = FirebaseAuth.getInstance();
-
     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
       .requestIdToken(getString(R.string.default_web_client_id))
       .requestEmail()
@@ -118,6 +120,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     Log.d(TAG, "++onClick()");
     if (view.getId() == R.id.sign_in_button_google) {
+      mPawAnimation.start();
       Intent signInIntent = mGoogleSignInClient.getSignInIntent();
       mActivityResultLauncher.launch(signInIntent);
     }
@@ -134,6 +137,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
       intent.putExtra(Utils.ARG_FIREBASE_USER_ID, mAuth.getCurrentUser().getUid());
       startActivity(intent);
       finish();
+      mPawAnimation.stop();
     } else {
       String message = "Authentication did not return expected account information; please try again.";
       showErrorInSnackBar(message);
@@ -143,8 +147,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
   private void firebaseAuthenticateWithGoogle(String tokenId) {
 
     Log.d(TAG, "++firebaseAuthWithGoogle(String)");
-    mProgressBar.setVisibility(View.VISIBLE);
-    mProgressBar.setIndeterminate(true);
     AuthCredential credential = GoogleAuthProvider.getCredential(tokenId, null);
     mAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
 
@@ -155,9 +157,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
           Log.w(TAG, "signInWithCredential:failure", task.getException());
           showErrorInSnackBar("Authentication Failed.");
         }
-
-        mProgressBar.setIndeterminate(false);
-      });
+     });
   }
 
   private void showErrorInSnackBar(String message) {
@@ -170,6 +170,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
       Log.e(TAG, message);
     } else {
       Log.e(TAG, message, ex);
+    }
+
+    if (mPawAnimation != null) {
+      mPawAnimation.stop();
     }
 
     mSnackbar = Snackbar.make(

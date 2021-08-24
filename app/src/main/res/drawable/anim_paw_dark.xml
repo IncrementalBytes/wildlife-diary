@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false">
+
+  <item android:drawable="@drawable/ic_paw0_dark" android:duration="100" />
+  <item android:drawable="@drawable/ic_paw1_dark" android:duration="100" />
+  <item android:drawable="@drawable/ic_paw2_dark" android:duration="100" />
+  <item android:drawable="@drawable/ic_paw3_dark" android:duration="100" />
+  <item android:drawable="@drawable/ic_paw4_dark" android:duration="100" />
+  <item android:drawable="@drawable/ic_paw5_dark" android:duration="100" />
+  <item android:drawable="@drawable/ic_paw6_dark" android:duration="100" />
+  <item android:drawable="@drawable/ic_paw7_dark" android:duration="100" />
+
+</animation-list>

@@ -217,7 +217,7 @@ public class EncounterDetailFragment extends Fragment {
       Log.d(TAG, "++setTaskEntityList(Collection<TaskEntity>, boolean)");
       mTaskEntityList = new ArrayList<>(taskEntityCollection);
       mTaskEntityList.sort(new Utils.SortByName());
-      notifyDataSetChanged();
+      notifyItemRangeChanged(0, taskEntityCollection.size());
     }
 
     static class TaskHolder extends RecyclerView.ViewHolder {

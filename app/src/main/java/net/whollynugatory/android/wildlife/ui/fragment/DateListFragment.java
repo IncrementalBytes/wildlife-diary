@@ -160,7 +160,7 @@ public class DateListFragment extends Fragment {
 
       Log.d(TAG, "++setDateSummaryList(Collection<DateItem>)");
       mDateItems = new ArrayList<>(dateItemCollection);
-      notifyDataSetChanged();
+      notifyItemRangeChanged(0, dateItemCollection.size());
     }
 
     class DateHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

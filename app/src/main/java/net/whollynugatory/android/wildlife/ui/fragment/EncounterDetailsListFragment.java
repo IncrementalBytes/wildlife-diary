@@ -152,7 +152,7 @@ public class EncounterDetailsListFragment extends Fragment {
       Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterDetails>)");
       mEncounterDetails = new ArrayList<>(encounterDetailsCollection);
       mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
-      notifyDataSetChanged();
+      notifyItemRangeChanged(0, encounterDetailsCollection.size());
     }
 
     class EncounterHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

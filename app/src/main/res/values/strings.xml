@@ -57,14 +57,12 @@
   <string name="label_delete">Delete</string>
   <string name="format_number_in_group">Number of %s in this encounter: %d</string>
   <string name="desc_sample_image_of_wildlife">Sample image of wildlife.</string>
-  <string name="header_encounters_by_date">Encounters by Date</string>
   <string name="menu_cleanup">Clean up Tables</string>
   <string name="menu_sync">Sync</string>
   <string name="desc_remove_unused_entry">Remove unused entry.</string>
   <string name="desc_new_encounters">New encounters!</string>
   <string name="menu_recent">Recent</string>
   <string name="menu_date">By Date</string>
-  <string name="menu_all">All</string>
   <string name="menu_statistics">Statistics</string>
   <string name="format_number_of_encounters">Number of Encounter(s): %d</string>
   <string name="format_first_encountered">First Encountered: %s</string>

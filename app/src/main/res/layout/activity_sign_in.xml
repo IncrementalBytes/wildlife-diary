@@ -17,15 +17,15 @@
     android:textAlignment="center"
     android:textAllCaps="true"
     android:textSize="36sp"
-    app:layout_constraintBottom_toTopOf="@id/sign_in_progress"
+    app:layout_constraintBottom_toTopOf="@id/sign_in_image"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent" />
 
-  <ProgressBar
-    android:id="@+id/sign_in_progress"
+  <ImageView
+    android:id="@+id/sign_in_image"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
+    android:contentDescription="@string/app_name"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
@@ -38,6 +38,6 @@
     android:layout_margin="@dimen/default_view_margin"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/sign_in_progress" />
+    app:layout_constraintTop_toBottomOf="@id/sign_in_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

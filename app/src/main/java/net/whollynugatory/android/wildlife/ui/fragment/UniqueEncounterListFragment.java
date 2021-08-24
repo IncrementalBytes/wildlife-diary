@@ -125,7 +125,7 @@ public class UniqueEncounterListFragment extends Fragment {
       Log.d(TAG, "++setUniqueEncountersList(Collection<EncounterDetails>)");
       mEncounterDetails = new ArrayList<>(encounterDetailsCollection);
       mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
-      notifyDataSetChanged();
+      notifyItemRangeChanged(0, encounterDetailsCollection.size());
     }
 
     class EncounterHolder extends RecyclerView.ViewHolder {

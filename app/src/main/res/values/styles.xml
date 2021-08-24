@@ -5,6 +5,9 @@
     <item name="android:layout_margin">@dimen/default_card_margin</item>
     <item name="cardBackgroundColor">@color/secondaryDarkColor</item>
   </style>
+  <style name="SummaryCardDisabled" parent="SummaryCard">
+    <item name="cardBackgroundColor">#737373</item>
+  </style>
   <style name="SummaryHeader" parent="Widget.AppCompat.TextView">
     <item name="android:textSize">18sp</item>
     <item name="font">@font/basic</item>

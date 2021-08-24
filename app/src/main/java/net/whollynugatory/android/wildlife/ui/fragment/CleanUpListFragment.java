@@ -41,18 +41,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class CleanUpListFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + CleanUpListFragment.class.getSimpleName();
-
-  public interface OnCleanUpListListener {
-
-    void onCleanUpListSet(String titleUpdate);
-  }
-
-  private OnCleanUpListListener mCallback;
 
   public static CleanUpListFragment newInstance() {
 
@@ -61,21 +53,8 @@ public class CleanUpListFragment extends Fragment {
   }
 
   /*
-  Fragment Override(s)
-*/
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    try {
-      mCallback = (OnCleanUpListListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(
-        String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
-  }
-
+    Fragment Override(s)
+  */
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -86,13 +65,13 @@ public class CleanUpListFragment extends Fragment {
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
 
-      CleanUpAdapter cleanUpAdapter = new CleanUpAdapter(getContext());
-      recyclerView.setAdapter(cleanUpAdapter);
-      wildlifeViewModel.getCleanUpItems().observe(getViewLifecycleOwner(), cleanUpDetailsList -> {
+    CleanUpAdapter cleanUpAdapter = new CleanUpAdapter(getContext());
+    recyclerView.setAdapter(cleanUpAdapter);
+    wildlifeViewModel.getCleanUpItems().observe(getViewLifecycleOwner(), cleanUpDetailsList -> {
 
-        Log.d(TAG, "CleanUp list is " + cleanUpDetailsList.size());
-        cleanUpAdapter.setCleanUpList(cleanUpDetailsList);
-      });
+      Log.d(TAG, "CleanUp list is " + cleanUpDetailsList.size());
+      cleanUpAdapter.setCleanUpList(cleanUpDetailsList);
+    });
 
     return view;
   }
@@ -139,7 +118,7 @@ public class CleanUpListFragment extends Fragment {
 
       Log.d(TAG, "++setCleanUpList(Collection<CleanUpDetails>)");
       mCleanUpDetailsList = new ArrayList<>(cleanUpDetailsCollection);
-      notifyDataSetChanged();
+      notifyItemRangeChanged(0, cleanUpDetailsCollection.size());
     }
 
     static class CleanUpHolder extends RecyclerView.ViewHolder {

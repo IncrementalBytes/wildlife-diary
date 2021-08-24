@@ -126,37 +126,46 @@
     android:scrollbars="vertical"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/encounter_button_minus"
-    app:layout_constraintBottom_toTopOf="@id/encounter_button_add"
+    app:layout_constraintBottom_toTopOf="@id/encounter_layout_buttons"
     tools:listitem="@layout/task_list_item"/>
 
-  <Button
-    android:id="@+id/encounter_button_add"
-    android:layout_width="wrap_content"
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/encounter_layout_buttons"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/default_view_margin"
-    android:text="@string/label_add_encounter"
-    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toStartOf="@id/encounter_button_update"/>
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent">
+    <Button
+      android:id="@+id/encounter_button_add"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/default_view_margin"
+      android:text="@string/label_add_encounter"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/encounter_button_update"/>
 
-  <Button
-    android:id="@+id/encounter_button_update"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/default_view_margin"
-    android:text="@string/label_update_encounter"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toEndOf="@id/encounter_button_add"
-    app:layout_constraintEnd_toStartOf="@id/encounter_button_record"/>
+    <Button
+      android:id="@+id/encounter_button_update"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/default_view_margin"
+      android:text="@string/label_update_encounter"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toEndOf="@id/encounter_button_add"
+      app:layout_constraintEnd_toStartOf="@id/encounter_button_record"/>
 
-  <Button
-    android:id="@+id/encounter_button_record"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/default_view_margin"
-    android:text="@string/label_record_encounters"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toEndOf="@id/encounter_button_update"
-    app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+      android:id="@+id/encounter_button_record"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/default_view_margin"
+      android:text="@string/label_record_encounters"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toEndOf="@id/encounter_button_update"
+      app:layout_constraintEnd_toEndOf="parent"/>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

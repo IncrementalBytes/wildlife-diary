@@ -62,7 +62,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
-  CleanUpListFragment.OnCleanUpListListener,
   DataFragment.OnDataListener,
   DateListFragment.OnDateListListener,
   EncounterDetailsListFragment.OnEncounterListListener,
@@ -220,12 +219,6 @@ public class MainActivity extends AppCompatActivity implements
   /*
     Fragment Override(s)
    */
-  @Override
-  public void onCleanUpListSet(String titleUpdate) {
-
-    Log.d(TAG, "++onCleanUpListSet(String)");
-  }
-
   @Override
   public void onDataEncountersPopulated() {
 
