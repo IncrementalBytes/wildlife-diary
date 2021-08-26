@@ -1,11 +1,13 @@
 package net.whollynugatory.android.wildlife.ui.fragment;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,26 +36,18 @@ public class DataFragment extends Fragment {
     void onDataFailed(String message);
 
     void onDataMissing();
-
-    void onDataTasksPopulated();
-
-    void onDataWildlifePopulated();
   }
 
   private OnDataListener mCallback;
 
+  AnimationDrawable mPawAnimation;
+  ImageView mPawImage;
   private TextView mStatusText;
 
-  private String mDataToSync;
+  public static DataFragment newInstance() {
 
-  public static DataFragment newInstance(String specificData) {
-
-    Log.d(TAG, "++newInstance(String)");
-    DataFragment fragment = new DataFragment();
-    Bundle arguments = new Bundle();
-    arguments.putString(Utils.ARG_DATA_TO_SYNC, specificData);
-    fragment.setArguments(arguments);
-    return fragment;
+    Log.d(TAG, "++newInstance()");
+    return new DataFragment();
   }
 
   @Override
@@ -61,15 +55,6 @@ public class DataFragment extends Fragment {
     super.onAttach(context);
 
     Log.d(TAG, "++onAttach(Context)");
-    Bundle arguments = getArguments();
-    if (arguments != null && arguments.containsKey(Utils.ARG_DATA_TO_SYNC)) {
-      mDataToSync = arguments.getString(Utils.ARG_DATA_TO_SYNC);
-      Log.d(TAG, "DataToSync: " + mDataToSync);
-    } else {
-      mDataToSync = Utils.UNKNOWN_STRING;
-      Log.e(TAG, "Arguments were null.");
-    }
-
     try {
       mCallback = (OnDataListener) context;
     } catch (ClassCastException e) {
@@ -82,10 +67,23 @@ public class DataFragment extends Fragment {
   }
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    Log.d(TAG, "++onCreate(Bundle)");
+    Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
+    View view = inflater.inflate(R.layout.fragment_data, container, false);
+    mPawImage = view.findViewById(R.id.data_image_paw);
+    mPawImage.setBackgroundResource(R.drawable.anim_paw_dark);
+    mPawAnimation = (AnimationDrawable) mPawImage.getBackground();
+    mStatusText = view.findViewById(R.id.data_text_status);
+
+    mPawAnimation.start();
+    executeDataProcessing(Utils.TASK_ROOT);
+    return view;
+  }
+
+  private void executeDataProcessing(String dataToSync) {
+
+    Log.d(TAG, "executeDataProcessing()");
     FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).get().addOnCompleteListener(
       task -> {
 
@@ -99,7 +97,7 @@ public class DataFragment extends Fragment {
           if (resultSnapshot != null) {
             for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
               String id = dataSnapshot.getKey();
-              if (id != null && id.equals(mDataToSync)) {
+              if (id != null && id.equals(dataToSync)) {
                 Object valueObject = dataSnapshot.getValue();
                 if (valueObject != null) {
                   remoteDataStamp = dataSnapshot.getValue().toString();
@@ -108,17 +106,17 @@ public class DataFragment extends Fragment {
               }
             }
 
-            updateUI("Comparing local data with " + mDataToSync);
+            updateUI("Comparing local data with " + dataToSync);
             String localDataStamp = Utils.UNKNOWN_ID;
-            switch (mDataToSync) {
+            switch (dataToSync) {
               case Utils.ENCOUNTER_ROOT:
-                localDataStamp = Utils.getLocalEncountersStamp(getActivity());
+                localDataStamp = Utils.getLocalTimeStamp(getActivity(), R.string.pref_key_stamp_encounters);
                 break;
               case Utils.TASK_ROOT:
-                localDataStamp = Utils.getLocalTasksStamp(getActivity());
+                localDataStamp = Utils.getLocalTimeStamp(getActivity(), R.string.pref_key_stamp_tasks);
                 break;
               case Utils.WILDLIFE_ROOT:
-                localDataStamp = Utils.getLocalWildlifeStamp(getActivity());
+                localDataStamp = Utils.getLocalTimeStamp(getActivity(), R.string.pref_key_stamp_wildlife);
                 break;
             }
 
@@ -126,19 +124,19 @@ public class DataFragment extends Fragment {
               Log.w(TAG, "Remote dataStamp was unexpected: " + remoteDataStamp);
               mCallback.onDataMissing();
             } else if (localDataStamp.equals(Utils.UNKNOWN_ID) || !localDataStamp.equalsIgnoreCase(remoteDataStamp)) {
-              populateTable(mDataToSync, remoteDataStamp);
+              populateTable(dataToSync, remoteDataStamp);
             } else if (localDataStamp.equals(remoteDataStamp)){
-              Log.d(TAG, "Local data in-sync with " + mDataToSync);
-              updateUI("Local data matches " + mDataToSync);
-              switch (mDataToSync) {
+              Log.d(TAG, "Local data in-sync with " + dataToSync);
+              updateUI("Local data matches " + dataToSync);
+              switch (dataToSync) {
                 case Utils.ENCOUNTER_ROOT:
                   mCallback.onDataEncountersPopulated();
                   break;
                 case Utils.TASK_ROOT:
-                  mCallback.onDataTasksPopulated();
+                  executeDataProcessing(Utils.WILDLIFE_ROOT);
                   break;
                 case Utils.WILDLIFE_ROOT:
-                  mCallback.onDataWildlifePopulated();
+                  executeDataProcessing(Utils.ENCOUNTER_ROOT);
                   break;
               }
             } else {
@@ -148,15 +146,6 @@ public class DataFragment extends Fragment {
           }
         }
       });
-  }
-
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-    Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    View view = inflater.inflate(R.layout.fragment_data, container, false);
-    mStatusText = view.findViewById(R.id.data_text_status);
-    return view;
   }
 
   private void populateTable(String dataRoot, String remoteDataStamp) {
@@ -221,16 +210,16 @@ public class DataFragment extends Fragment {
 
                 switch (dataRoot) {
                   case Utils.ENCOUNTER_ROOT:
-                    Utils.setLocalEncountersStamp(getActivity(), remoteDataStamp);
+                    Utils.setLocalTimeStamp(getActivity(), R.string.pref_key_stamp_encounters, remoteDataStamp);
                     mCallback.onDataEncountersPopulated();
                     break;
                   case Utils.TASK_ROOT:
-                    Utils.setLocalTasksStamp(getActivity(), remoteDataStamp);
-                    mCallback.onDataTasksPopulated();
+                    Utils.setLocalTimeStamp(getActivity(), R.string.pref_key_stamp_tasks, remoteDataStamp);
+                    executeDataProcessing(Utils.WILDLIFE_ROOT);
                     break;
                   case Utils.WILDLIFE_ROOT:
-                    Utils.setLocalWildlifeStamp(getActivity(), remoteDataStamp);
-                    mCallback.onDataWildlifePopulated();
+                    Utils.setLocalTimeStamp(getActivity(), R.string.pref_key_stamp_wildlife, remoteDataStamp);
+                    executeDataProcessing(Utils.ENCOUNTER_ROOT);
                     break;
                 }
               } else {

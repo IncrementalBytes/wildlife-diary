@@ -160,6 +160,7 @@ public class DateListFragment extends Fragment {
 
       Log.d(TAG, "++setDateSummaryList(Collection<DateItem>)");
       mDateItems = new ArrayList<>(dateItemCollection);
+      notifyItemRangeRemoved(0, getItemCount());
       notifyItemRangeChanged(0, dateItemCollection.size());
     }
 

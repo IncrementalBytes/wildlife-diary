@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements
               Utils.setFollowingUserId(this, mUserEntity.FollowingId);
               Utils.setUserId(this, finalUserId);
               Utils.setIsContributor(this, mUserEntity.IsContributor);
-              replaceFragment(DataFragment.newInstance(Utils.TASK_ROOT));
+              replaceFragment(DataFragment.newInstance());
             } else {
               replaceFragment(
                 TryAgainLaterFragment.newInstance(
@@ -188,10 +188,10 @@ public class MainActivity extends AppCompatActivity implements
     } else if (item.getItemId() == R.id.menu_cleanup) {
       replaceFragment(CleanUpListFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_sync) {
-      Utils.setLocalTasksStamp(this, Utils.UNKNOWN_ID);
-      Utils.setLocalWildlifeStamp(this, Utils.UNKNOWN_ID);
-      Utils.setLocalEncountersStamp(this, Utils.UNKNOWN_ID);
-      replaceFragment(DataFragment.newInstance(Utils.TASK_ROOT));
+      Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
+      Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
+      Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_tasks, Utils.UNKNOWN_ID);
+      replaceFragment(DataFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_logout) {
       AlertDialog alertDialog = new AlertDialog.Builder(this)
         .setMessage(R.string.logout_message)
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements
   public void onDataFailed(String message) {
 
     Log.d(TAG, "++onDataFailed(String)");
-    Utils.setLocalEncountersStamp(this, Utils.UNKNOWN_ID);
+    Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
     showMessageInSnackBar(message);
   }
 
@@ -238,27 +238,13 @@ public class MainActivity extends AppCompatActivity implements
   public void onDataMissing() {
 
     Log.d(TAG, "++onDataMissing()");
-    Utils.setLocalEncountersStamp(this, Utils.UNKNOWN_ID);
+    Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
     showMessageInSnackBar(
       String.format(
         Locale.US,
         "No encounters found. %s",
         mUserEntity.IsContributor ? "Try adding some!" : "Please try again later."));
     replaceFragment(StatisticsFragment.newInstance());
-  }
-
-  @Override
-  public void onDataTasksPopulated() {
-
-    Log.d(TAG, "++onDataTasksPopulated(String)");
-    replaceFragment(DataFragment.newInstance(Utils.WILDLIFE_ROOT));
-  }
-
-  @Override
-  public void onDataWildlifePopulated() {
-
-    Log.d(TAG, "++onDataWildlifePopulated(String)");
-    replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
   }
 
   @Override
@@ -279,14 +265,14 @@ public class MainActivity extends AppCompatActivity implements
   public void onEncounterDeleted() {
 
     Log.d(TAG, "++onEncounterDeleted()");
-    replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
+    replaceFragment(DataFragment.newInstance());
   }
 
   @Override
   public void onEncountersRecorded() {
 
     Log.d(TAG, "++onEncountersRecorded()");
-    replaceFragment(DataFragment.newInstance(Utils.ENCOUNTER_ROOT));
+    replaceFragment(DataFragment.newInstance());
 
     if (mUserEntity.IsContributor) {
       Intent intent = new Intent(this, MainActivity.class);

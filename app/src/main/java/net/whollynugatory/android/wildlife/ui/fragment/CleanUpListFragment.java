@@ -118,6 +118,7 @@ public class CleanUpListFragment extends Fragment {
 
       Log.d(TAG, "++setCleanUpList(Collection<CleanUpDetails>)");
       mCleanUpDetailsList = new ArrayList<>(cleanUpDetailsCollection);
+      notifyItemRangeRemoved(0, getItemCount());
       notifyItemRangeChanged(0, cleanUpDetailsCollection.size());
     }
 

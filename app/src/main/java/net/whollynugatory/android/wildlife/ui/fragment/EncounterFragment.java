@@ -478,6 +478,7 @@ public class EncounterFragment extends Fragment {
       Log.d(TAG, "++setTaskEntityList(Collection<TaskEntity>)");
       mTaskEntityList = new ArrayList<>(taskEntityCollection);
       mTaskEntityList.sort(new Utils.SortByName());
+      notifyItemRangeRemoved(0, getItemCount());
       notifyItemRangeChanged(0, taskEntityCollection.size());
     }
 

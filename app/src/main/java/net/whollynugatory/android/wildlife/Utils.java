@@ -49,7 +49,6 @@ public class Utils {
   public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
   public static final String ARG_MESSAGE = "message";
-  public static final String ARG_DATA_TO_SYNC = "data_to_sync";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String DATA_STAMPS_ROOT = "DataStamps";
@@ -58,7 +57,6 @@ public class Utils {
   public static final String ENCOUNTER_ROOT = "Encounters";
   public static final int NOTIFICATION_REQUEST_CODE = 2468;
   public static final String TASK_ROOT = "Tasks";
-  public static final String UNKNOWN_DATE = "00000000";
   public static final String UNKNOWN_ID = "000000000-0000-0000-0000-000000000000";
   public static final String UNKNOWN_STRING = "UNKNOWN";
   public static final String UNKNOWN_USER_ID = "0000000000000000000000000000";
@@ -106,19 +104,9 @@ public class Utils {
     return getBooleanPref(context, R.string.pref_key_is_contributor, false);
   }
 
-  public static String getLocalEncountersStamp(Context context) {
+  public static String getLocalTimeStamp(Context context, int resourceKeyId) {
 
-    return getStringPref(context, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
-  }
-
-  public static String getLocalTasksStamp(Context context) {
-
-    return getStringPref(context, R.string.pref_key_stamp_tasks, Utils.UNKNOWN_ID);
-  }
-
-  public static String getLocalWildlifeStamp(Context context) {
-
-    return getStringPref(context, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
+    return getStringPref(context, resourceKeyId, Utils.UNKNOWN_ID);
   }
 
   public static boolean getShowSensitive(Context context) {
@@ -151,19 +139,10 @@ public class Utils {
     setStringPref(context, R.string.pref_key_following_user_id, newFollowingUserId);
   }
 
-  public static void setLocalEncountersStamp(Context context, String newEncountersStamp) {
+  public static void setLocalTimeStamp(Context context, int resourceKeyId, String newTimeStamp) {
 
-    setStringPref(context, R.string.pref_key_stamp_encounters, newEncountersStamp);
-  }
-
-  public static void setLocalTasksStamp(Context context, String newTasksStamp) {
-
-    setStringPref(context, R.string.pref_key_stamp_tasks, newTasksStamp);
-  }
-
-  public static void setLocalWildlifeStamp(Context context, String newWildlifeStamp) {
-
-    setStringPref(context, R.string.pref_key_stamp_wildlife, newWildlifeStamp);
+    Log.d(TAG, "Writing local timestamp: " + newTimeStamp);
+    setStringPref(context, resourceKeyId, newTimeStamp);
   }
 
   public static void setShowSensitive(Context context, boolean showSensitive) {

@@ -152,6 +152,7 @@ public class EncounterDetailsListFragment extends Fragment {
       Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterDetails>)");
       mEncounterDetails = new ArrayList<>(encounterDetailsCollection);
       mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
+      notifyItemRangeRemoved(0, getItemCount());
       notifyItemRangeChanged(0, encounterDetailsCollection.size());
     }
 
