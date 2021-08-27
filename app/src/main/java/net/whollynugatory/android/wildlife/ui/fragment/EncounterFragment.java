@@ -436,11 +436,12 @@ public class EncounterFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + TaskAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<TaskEntity> mTaskEntityList;
+    private final List<TaskEntity> mTaskEntityList;
 
     public TaskAdapter(Context context) {
 
       mInflater = LayoutInflater.from(context);
+      mTaskEntityList = new ArrayList<>();
     }
 
     @NonNull
@@ -476,10 +477,12 @@ public class EncounterFragment extends Fragment {
     public void setTaskEntityList(Collection<TaskEntity> taskEntityCollection) {
 
       Log.d(TAG, "++setTaskEntityList(Collection<TaskEntity>)");
-      mTaskEntityList = new ArrayList<>(taskEntityCollection);
+      int currentSize = mTaskEntityList.size();
+      mTaskEntityList.clear();
+      mTaskEntityList.addAll(taskEntityCollection);
       mTaskEntityList.sort(new Utils.SortByName());
-      notifyItemRangeRemoved(0, getItemCount());
-      notifyItemRangeChanged(0, taskEntityCollection.size());
+      notifyItemRangeRemoved(0, currentSize);
+      notifyItemRangeInserted(0, taskEntityCollection.size());
     }
 
     static class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

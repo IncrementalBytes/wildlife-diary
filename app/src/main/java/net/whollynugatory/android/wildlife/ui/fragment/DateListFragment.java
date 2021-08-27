@@ -124,11 +124,12 @@ public class DateListFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + DateAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<DateItem> mDateItems;
+    private final List<DateItem> mDateItems;
 
     public DateAdapter(Context context) {
 
       mInflater = LayoutInflater.from(context);
+      mDateItems = new ArrayList<>();
     }
 
     @NonNull
@@ -159,9 +160,11 @@ public class DateListFragment extends Fragment {
     public void setDateSummaryList(Collection<DateItem> dateItemCollection) {
 
       Log.d(TAG, "++setDateSummaryList(Collection<DateItem>)");
-      mDateItems = new ArrayList<>(dateItemCollection);
-      notifyItemRangeRemoved(0, getItemCount());
-      notifyItemRangeChanged(0, dateItemCollection.size());
+      int currentSize = mDateItems.size();
+      mDateItems.clear();
+      mDateItems.addAll(dateItemCollection);
+      notifyItemRangeRemoved(0, currentSize);
+      notifyItemRangeInserted(0, dateItemCollection.size());
     }
 
     class DateHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -215,10 +215,12 @@ public class EncounterDetailFragment extends Fragment {
     public void setTaskEntityList(Collection<TaskEntity> taskEntityCollection) {
 
       Log.d(TAG, "++setTaskEntityList(Collection<TaskEntity>, boolean)");
-      mTaskEntityList = new ArrayList<>(taskEntityCollection);
+      int currentSize = mTaskEntityList.size();
+      mTaskEntityList.clear();
+      mTaskEntityList.addAll(taskEntityCollection);
       mTaskEntityList.sort(new Utils.SortByName());
-      notifyItemRangeRemoved(0, getItemCount());
-      notifyItemRangeChanged(0, taskEntityCollection.size());
+      notifyItemRangeRemoved(0, currentSize);
+      notifyItemRangeInserted(0, taskEntityCollection.size());
     }
 
     static class TaskHolder extends RecyclerView.ViewHolder {

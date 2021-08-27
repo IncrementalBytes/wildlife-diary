@@ -148,11 +148,12 @@ public class RecentFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + EncounterAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<EncounterDetails> mEncounterDetails;
+    private final List<EncounterDetails> mEncounterDetails;
 
     public EncounterAdapter(Context context) {
 
       mInflater = LayoutInflater.from(context);
+      mEncounterDetails = new ArrayList<>();
     }
 
     @NonNull
@@ -183,9 +184,10 @@ public class RecentFragment extends Fragment {
     public void setEncounterDetailsList(Collection<EncounterDetails> encounterDetailsCollection) {
 
       Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterDetails>)");
-      mEncounterDetails = new ArrayList<>(encounterDetailsCollection);
-      mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
-      notifyItemRangeRemoved(0, getItemCount());
+      int currentSize = mEncounterDetails.size();
+      mEncounterDetails.clear();
+      mEncounterDetails.addAll(encounterDetailsCollection);
+      notifyItemRangeRemoved(0, currentSize);
       notifyItemRangeInserted(0, encounterDetailsCollection.size());
     }
 

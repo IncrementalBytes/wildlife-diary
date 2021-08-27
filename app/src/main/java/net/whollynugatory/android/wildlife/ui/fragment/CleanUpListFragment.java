@@ -81,12 +81,12 @@ public class CleanUpListFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + CleanUpAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-
-    private List<CleanUpDetails> mCleanUpDetailsList;
+    private final List<CleanUpDetails> mCleanUpDetailsList;
 
     public CleanUpAdapter(Context context) {
 
       mInflater = LayoutInflater.from(context);
+      mCleanUpDetailsList = new ArrayList<>();
     }
 
     @NonNull
@@ -117,9 +117,11 @@ public class CleanUpListFragment extends Fragment {
     public void setCleanUpList(Collection<CleanUpDetails> cleanUpDetailsCollection) {
 
       Log.d(TAG, "++setCleanUpList(Collection<CleanUpDetails>)");
-      mCleanUpDetailsList = new ArrayList<>(cleanUpDetailsCollection);
-      notifyItemRangeRemoved(0, getItemCount());
-      notifyItemRangeChanged(0, cleanUpDetailsCollection.size());
+      int currentSize = mCleanUpDetailsList.size();
+      mCleanUpDetailsList.clear();
+      mCleanUpDetailsList.addAll(cleanUpDetailsCollection);
+      notifyItemRangeRemoved(0, currentSize);
+      notifyItemRangeInserted(0, cleanUpDetailsCollection.size());
     }
 
     static class CleanUpHolder extends RecyclerView.ViewHolder {
