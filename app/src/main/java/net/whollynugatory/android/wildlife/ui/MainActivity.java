@@ -187,6 +187,8 @@ public class MainActivity extends AppCompatActivity implements
       replaceFragment(UserSettingsFragment.newInstance());
     } else if (item.getItemId() == R.id.menu_cleanup) {
       replaceFragment(CleanUpListFragment.newInstance());
+    } else if (item.getItemId() == R.id.menu_crash) {
+      throw new RuntimeException("Test Crash"); // Force a crash
     } else if (item.getItemId() == R.id.menu_sync) {
       Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
       Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
@@ -210,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements
     Log.d(TAG, "++onPrepareOptionsMenu(Menu)");
     if (mUserEntity != null) {
       MenuItem menuItem = menu.findItem(R.id.menu_cleanup);
+      menuItem.setVisible(mUserEntity.IsContributor);
+      menuItem = menu.findItem(R.id.menu_crash);
       menuItem.setVisible(mUserEntity.IsContributor);
     }
 

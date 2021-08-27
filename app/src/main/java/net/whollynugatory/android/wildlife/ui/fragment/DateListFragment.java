@@ -206,9 +206,9 @@ public class DateListFragment extends Fragment {
 
   static class DateItem implements Comparable<String> {
 
-    public String Identifier;
-    public String TimeStamp;
-    public List<EncounterDetails> EncounterDetailsList;
+    public final String Identifier;
+    public final String TimeStamp;
+    public final List<EncounterDetails> EncounterDetailsList;
 
     public DateItem(String timeStamp, String identifier, EncounterDetails encounterDetails) {
 
