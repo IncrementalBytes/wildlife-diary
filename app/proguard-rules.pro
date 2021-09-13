@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 # Add this global rule
--keepattributes Signature
+-keepattributes Signature,SourceFile,LineNumberTable
 
 # This rule will properly ProGuard all the model classes in
 # the package com.yourcompany.models.
@@ -28,6 +28,8 @@
 -keepclassmembers class net.whollynugatory.android.wildlife.db.entity** {
   *;
 }
+
+-keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
 
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule {

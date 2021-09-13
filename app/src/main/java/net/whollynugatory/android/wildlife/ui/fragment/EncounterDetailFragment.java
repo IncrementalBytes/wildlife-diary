@@ -180,11 +180,12 @@ public class EncounterDetailFragment extends Fragment {
     private final String TAG = Utils.BASE_TAG + TaskAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<TaskEntity> mTaskEntityList;
+    private final List<TaskEntity> mTaskEntityList;
 
     public TaskAdapter(Context context) {
 
       mInflater = LayoutInflater.from(context);
+      mTaskEntityList = new ArrayList<>();
     }
 
     @NonNull

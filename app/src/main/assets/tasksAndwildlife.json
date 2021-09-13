@@ -1307,7 +1307,9 @@
     },
     "764c81c2-aeed-4b32-966a-8e223a7b9882": {
       "FriendlyName": "Swainson's Thrush",
-      "Abbreviation": "SWTH"
+      "Abbreviation": "SWTH",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/3/35/Catharus_ustulatus_-North_Dakota-8a.jpg",
+      "ImageAttribution": "Matt Reinbold from Bismarck, ND, USA, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons"
     },
     "47ea06e2-7b07-402b-82e7-b766e8c51e2a": {
       "FriendlyName": "Swamp Sparrow",
