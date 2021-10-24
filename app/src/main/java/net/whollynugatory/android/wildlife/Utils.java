@@ -30,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
+import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -119,6 +120,14 @@ public class Utils {
     return getStringPref(context, R.string.pref_key_user_id, Utils.UNKNOWN_USER_ID);
   }
 
+  public static List<WildlifeSummary> getWildlifeSummaryList(Context context) {
+
+    Gson gson = new Gson();
+    String json = getStringPref(context, R.string.pref_key_wildlife_summary_list, "");
+    Type type = new TypeToken<ArrayList<WildlifeSummary>>() { }.getType();
+    return gson.fromJson(json, type);
+  }
+
   public static void setEncounterDetailsList(Context context, List<EncounterDetails> encounterDetailsList) {
 
     Gson gson = new Gson();
@@ -153,6 +162,16 @@ public class Utils {
   public static void setUserId(Context context, String userId) {
 
     setStringPref(context, R.string.pref_key_user_id, userId);
+  }
+
+  public static void setWildlifeSummaryList(Context context, List<WildlifeSummary> wildlifeSummaryList) {
+
+    Gson gson = new Gson();
+    String json = gson.toJson(wildlifeSummaryList);
+    PreferenceManager.getDefaultSharedPreferences(context)
+      .edit()
+      .putString(context.getString(R.string.pref_key_wildlife_summary_list), json)
+      .apply();
   }
 
   @TypeConverter

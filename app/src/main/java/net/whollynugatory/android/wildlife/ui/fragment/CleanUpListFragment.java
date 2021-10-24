@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.R;
@@ -59,12 +60,13 @@ public class CleanUpListFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.fragment_cleanup_list, container, false);
-    RecyclerView recyclerView = view.findViewById(R.id.cleanup_recycler_view);
+    final View view = inflater.inflate(R.layout.content_list, container, false);
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
+    addEncounterButton.setVisibility(View.GONE);
+    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-
     CleanUpAdapter cleanUpAdapter = new CleanUpAdapter(getContext());
     recyclerView.setAdapter(cleanUpAdapter);
     wildlifeViewModel.getCleanUpItems().observe(getViewLifecycleOwner(), cleanUpDetailsList -> {
@@ -93,7 +95,7 @@ public class CleanUpListFragment extends Fragment {
     @Override
     public CleanUpAdapter.CleanUpHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-      View itemView = mInflater.inflate(R.layout.clean_up_item, parent, false);
+      View itemView = mInflater.inflate(R.layout.item_clean_up, parent, false);
       return new CleanUpHolder(itemView);
     }
 

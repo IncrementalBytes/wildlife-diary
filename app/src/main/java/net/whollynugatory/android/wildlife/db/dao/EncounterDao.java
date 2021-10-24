@@ -102,11 +102,13 @@ public interface EncounterDao {
 
   @Query("SELECT Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.id AS WildlifeId, " +
-    "COUNT(DISTINCT(encounter_id)) AS EncounterCount " +
+    "Wildlife.image_attribution AS ImageAttribution, " +
+    "Wildlife.image_src AS ImageUrl, " +
+    "COUNT(encounter_id) AS EncounterCount " +
     "FROM encounter_table " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "WHERE user_id == :userId " +
-    "GROUP BY Wildlife.abbreviation " +
+    "GROUP BY WildlifeSpecies " +
     "ORDER BY EncounterCount DESC, WildlifeSpecies ASC")
   LiveData<List<WildlifeSummary>> getMostEncountered(String userId);
 
@@ -135,7 +137,7 @@ public interface EncounterDao {
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '98bf72f8-f388-4a6a-962e-b3f4cc94f174') AS TotalSubcutaneous, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '88c20461-e306-447c-92bd-196bfbfa9458') AS TotalSyringeFed, " +
     "(SELECT FriendlyName FROM " +
-    "    (SELECT wt.friendly_name AS FriendlyName, wildlife_id, COUNT(DISTINCT encounter_id) AS Count " +
+    "    (SELECT wt.friendly_name AS FriendlyName, wildlife_id, COUNT(encounter_id) AS Count " +
     "        FROM encounter_table " +
     "        INNER JOIN wildlife_table AS wt ON wt.id == encounter_table.wildlife_id " +
     "        WHERE user_id == :userId " +

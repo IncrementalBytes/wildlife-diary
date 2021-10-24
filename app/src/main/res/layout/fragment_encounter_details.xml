@@ -12,6 +12,7 @@
   <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent">
@@ -21,11 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_view_margin"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="@string/placeholder"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/primaryTextColor"
+        android:ellipsize="marquee"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -37,7 +39,7 @@
         android:layout_marginStart="@dimen/default_view_margin"
         android:layout_marginEnd="@dimen/default_view_margin"
         android:layout_marginBottom="@dimen/default_view_margin"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="@string/placeholder"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +80,7 @@
         android:layout_marginBottom="@dimen/default_view_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/encounter_details_text_number_in_group"
-        tools:listitem="@layout/task_list_item"/>
+        tools:listitem="@layout/item_task"/>
 
       <ImageView
         android:id="@+id/encounter_details_image_wildlife"
@@ -99,11 +101,14 @@
         android:layout_margin="@dimen/default_view_margin"
         android:text="@string/placeholder"
         android:textSize="12sp"
+        android:ellipsize="marquee"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/encounter_details_image_wildlife"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
   </androidx.core.widget.NestedScrollView>
+
 </layout>

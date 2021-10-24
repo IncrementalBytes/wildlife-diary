@@ -50,6 +50,8 @@ public class StatisticsFragment extends Fragment {
 
     void onStatisticsAddEncounter();
 
+    void onStatisticsMostEncountered();
+
     void onStatisticsTotalEncounters();
 
     void onStatisticsUniqueEncounters();
@@ -176,6 +178,14 @@ public class StatisticsFragment extends Fragment {
 
             Utils.setEncounterDetailsList(getContext(), uniqueEncounters);
             mCallback.onStatisticsUniqueEncounters();
+          });
+      } else if (view.getId() == R.id.statistics_card_most_encountered) {
+        mWildlifeViewModel.getMostEncountered(mFollowingUserId).observe(
+          getViewLifecycleOwner(),
+          mostEncountered -> {
+
+            Utils.setWildlifeSummaryList(getContext(), mostEncountered);
+            mCallback.onStatisticsMostEncountered();
           });
       }
     }

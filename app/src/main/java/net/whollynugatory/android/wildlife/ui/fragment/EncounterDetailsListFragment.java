@@ -30,6 +30,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
@@ -78,8 +80,10 @@ public class EncounterDetailsListFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.fragment_encounter_list, container, false);
-    RecyclerView recyclerView = view.findViewById(R.id.encounter_list_view);
+    final View view = inflater.inflate(R.layout.content_list, container, false);
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
+    addEncounterButton.setVisibility(View.GONE);
+    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mEncounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(mEncounterAdapter);
@@ -127,7 +131,7 @@ public class EncounterDetailsListFragment extends Fragment {
     @Override
     public EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-      View itemView = mInflater.inflate(R.layout.encounter_item, parent, false);
+      View itemView = mInflater.inflate(R.layout.item_encounter, parent, false);
       return new EncounterHolder(itemView);
     }
 

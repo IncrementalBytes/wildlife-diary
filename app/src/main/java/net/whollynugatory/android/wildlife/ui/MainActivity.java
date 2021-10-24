@@ -51,6 +51,7 @@ import net.whollynugatory.android.wildlife.ui.fragment.DateListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailsListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment;
+import net.whollynugatory.android.wildlife.ui.fragment.MostEncounteredFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.RecentFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.StatisticsFragment;
 import net.whollynugatory.android.wildlife.Utils;
@@ -350,6 +351,13 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onStatisticsAddEncounter()");
     replaceFragment(EncounterFragment.newInstance());
+  }
+
+  @Override
+  public void onStatisticsMostEncountered() {
+
+    Log.d(TAG, "++onStatisticsMostEncountered()");
+    replaceFragment(MostEncounteredFragment.newInstance());
   }
 
   @Override

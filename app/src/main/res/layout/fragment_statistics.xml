@@ -130,7 +130,7 @@
 
         <androidx.cardview.widget.CardView
           android:id="@+id/statistics_card_most_encountered"
-          style="@style/SummaryCardDisabled"
+          style="@style/SummaryCard"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"

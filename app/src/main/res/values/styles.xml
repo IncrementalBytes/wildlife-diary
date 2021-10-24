@@ -14,6 +14,7 @@
     <item name="android:textColor">@color/secondaryTextColor</item>
     <item name="android:gravity">center_horizontal</item>
     <item name="android:layout_margin">@dimen/default_view_margin</item>
+    <item name="android:ellipsize">marquee</item>
   </style>
   <style name="SummaryValue" parent="Widget.AppCompat.TextView">
     <item name="android:textSize">24sp</item>

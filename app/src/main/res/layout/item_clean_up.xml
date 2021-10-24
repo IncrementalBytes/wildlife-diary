@@ -3,7 +3,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="1dp">
+  android:layout_marginBottom="2dp">
 
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
@@ -17,71 +17,46 @@
       android:layout_height="wrap_content">
 
       <TextView
-        android:id="@+id/encounter_item_wildlife"
-        android:layout_width="wrap_content"
+        android:id="@+id/clean_up_item_name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_view_margin"
         android:ellipsize="end"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="@string/placeholder"
         android:textAlignment="textStart"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/secondaryTextColor"
-        app:layout_constraintEnd_toStartOf="@id/encounter_item_image_new"
+        app:layout_constraintEnd_toStartOf="@id/clean_up_item_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-      <ImageView
-        android:id="@+id/encounter_item_image_new"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_view_margin"
-        app:layout_constraintStart_toEndOf="@id/encounter_item_wildlife"
-        app:layout_constraintTop_toTopOf="@id/encounter_item_wildlife"
-        app:layout_constraintBottom_toBottomOf="@id/encounter_item_wildlife"
-        android:src="@drawable/ic_new_dark"
-        android:contentDescription="@string/desc_new_encounters"/>
-
       <TextView
-        android:id="@+id/encounter_item_abbreviation"
-        android:layout_width="wrap_content"
+        android:id="@+id/clean_up_item_type"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_view_margin"
         android:layout_marginEnd="@dimen/default_view_margin"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="@string/placeholder"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/encounter_item_wildlife"/>
+        app:layout_constraintEnd_toStartOf="@id/clean_up_item_image"
+        app:layout_constraintTop_toBottomOf="@id/clean_up_item_name"/>
 
-      <TextView
-        android:id="@+id/encounter_item_date"
+      <ImageView
+        android:id="@+id/clean_up_item_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/default_view_margin"
-        android:layout_marginEnd="@dimen/default_view_margin"
-        android:text="@string/placeholder"
-        android:textColor="@color/primaryTextColor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/encounter_item_abbreviation"
-        app:layout_constraintBottom_toBottomOf="@id/encounter_item_abbreviation"/>
-
-      <TextView
-        android:id="@+id/encounter_item_details"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_view_margin"
         android:layout_marginBottom="@dimen/default_view_margin"
         android:padding="2dp"
-        android:text="@string/tap_for_details"
-        android:textStyle="bold"
-        android:textColor="@color/primaryDarkColor"
-        android:gravity="end"
-        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_delete_dark"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/encounter_item_abbreviation"/>
+        android:contentDescription="@string/desc_remove_unused_entry" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

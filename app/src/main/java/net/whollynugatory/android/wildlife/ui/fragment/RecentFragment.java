@@ -85,10 +85,10 @@ public class RecentFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.fragment_recent, container, false);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.recent_fab_add);
+    final View view = inflater.inflate(R.layout.content_list, container, false);
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
     addEncounterButton.setOnClickListener(v -> mCallback.onRecentAddEncounter());
-    RecyclerView recyclerView = view.findViewById(R.id.recent_recycler_view);
+    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     EncounterAdapter encounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(encounterAdapter);
@@ -160,7 +160,7 @@ public class RecentFragment extends Fragment {
     @Override
     public EncounterAdapter.EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-      View itemView = mInflater.inflate(R.layout.encounter_item, parent, false);
+      View itemView = mInflater.inflate(R.layout.item_encounter, parent, false);
       return new EncounterAdapter.EncounterHolder(itemView);
     }
 

@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
@@ -58,8 +59,10 @@ public class UniqueEncounterListFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.fragment_unique_list, container, false);
-    RecyclerView recyclerView = view.findViewById(R.id.unique_encounter_list_view);
+    final View view = inflater.inflate(R.layout.content_list, container, false);
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
+    addEncounterButton.setVisibility(View.GONE);
+    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mUniqueEncounterAdapter = new UniqueEncounterAdapter(getContext());
     recyclerView.setAdapter(mUniqueEncounterAdapter);
@@ -100,7 +103,7 @@ public class UniqueEncounterListFragment extends Fragment {
     @Override
     public UniqueEncounterAdapter.EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-      View itemView = mInflater.inflate(R.layout.unique_encounter_item, parent, false);
+      View itemView = mInflater.inflate(R.layout.item_unique_encounter, parent, false);
       return new UniqueEncounterAdapter.EncounterHolder(itemView);
     }
 

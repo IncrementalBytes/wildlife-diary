@@ -46,6 +46,7 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
     addPreferencesFromResource(R.xml.app_preferences);
     setupAppVersionPreference();
     setupShowSensitivePreference();
+//    setupOverrideContributorPreference();
   }
 
   /*

@@ -25,10 +25,13 @@ import java.util.Locale;
 
 /**
  * Class defining what tasks were performed during an encounter.
- */
+ **/
 public class EncounterDetails implements Serializable {
 
   public long Date;
+
+  @Ignore
+  public long EncounterCount;
 
   public String EncounterId;
 
@@ -61,6 +64,7 @@ public class EncounterDetails implements Serializable {
   public EncounterDetails() {
 
     Date = 0;
+    EncounterCount = 0;
     EncounterId = Utils.UNKNOWN_ID;
     ImageAttribution = Utils.DEFAULT_ATTRIBUTION;
     ImageUrl = Utils.UNKNOWN_STRING;

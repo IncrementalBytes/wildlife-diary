@@ -192,7 +192,7 @@ public class EncounterDetailFragment extends Fragment {
     @Override
     public TaskAdapter.TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-      View itemView = mInflater.inflate(R.layout.task_list_item, parent, false);
+      View itemView = mInflater.inflate(R.layout.item_task, parent, false);
       return new TaskAdapter.TaskHolder(itemView);
     }
 

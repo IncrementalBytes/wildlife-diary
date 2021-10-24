@@ -513,6 +513,12 @@
       "FriendlyName": "Eastern Cottontail",
       "Abbreviation": "EACO"
     },
+    "d4b42fc3-f698-41ac-a67c-fc5b21fb64ed": {
+      "FriendlyName": "Eurasian Collared Dove",
+      "Abbreviation": "ECDO",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/0/0b/Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg",
+      "ImageAttribution":"Charles J. Sharp, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
+    },
     "13c4b6b0-c58a-417d-8ba7-2f5d0eb601a6": {
       "FriendlyName": "Eastern Gray Squirrel",
       "Abbreviation": "EGSQ"
@@ -624,6 +630,12 @@
     "97f7de97-aadd-4dde-8ede-865aaeaf18fd": {
       "FriendlyName": "Greater Scaup",
       "Abbreviation": "GRSC"
+    },
+    "782c31c8-05ea-47a7-a77a-7da33af9fba4": {
+      "FriendlyName": "Greater White-fronted Goose",
+      "Abbreviation": "GWFG",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/d/d6/Greater_white-fronted_goose_%28cropped%29.jpg",
+      "ImageAttribution":"Ryanx7, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "148268af-9079-440c-bd24-6c2874edb734": {
       "FriendlyName": "Greater Yellowlegs",

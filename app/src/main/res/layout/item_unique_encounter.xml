@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/unique_encounter_item_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/SummaryCard"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+      <ImageView
+        android:id="@+id/unique_encounter_item_image_wildlife"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_margin="@dimen/default_card_margin"
+        android:contentDescription="@string/desc_sample_image_of_wildlife"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+      <TextView
+        android:id="@+id/unique_encounter_item_text_wildlife"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_view_margin"
+        android:ellipsize="marquee"
+        android:maxLines="1"
+        android:text="@string/placeholder"
+        android:textColor="@color/secondaryTextColor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/unique_encounter_item_image_wildlife"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <TextView
+        android:id="@+id/unique_encounter_item_text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_view_margin"
+        android:layout_marginEnd="@dimen/default_view_margin"
+        android:layout_marginBottom="@dimen/default_view_margin"
+        android:text="@string/placeholder"
+        android:textColor="@color/primaryTextColor"
+        app:layout_constraintStart_toEndOf="@id/unique_encounter_item_image_wildlife"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

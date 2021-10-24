@@ -10,10 +10,19 @@
       android:title="@string/pref_title_enable_sensitive"/>
   </androidx.preference.PreferenceCategory>
 
+  <androidx.preference.PreferenceCategory>
+    <androidx.preference.SwitchPreference
+      android:defaultValue="false"
+      android:key="@string/pref_key_override_contributor_setting"
+      android:persistent="true"
+      android:summary="@string/pref_override_contributor_setting"
+      android:title="@string/pref_title_override_contributor_setting"/>
+  </androidx.preference.PreferenceCategory>
+
   <androidx.preference.PreferenceCategory android:title="@string/pref_category_about">
     <androidx.preference.EditTextPreference
       android:key="@string/pref_key_app_version"
-      android:singleLine="true"
+      android:maxLines="1"
       android:title="@string/pref_title_app_version"
       android:summary=""
       android:enabled="false"/>

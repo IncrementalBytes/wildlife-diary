@@ -20,12 +20,16 @@ import net.whollynugatory.android.wildlife.Utils;
 public class WildlifeSummary {
 
   public int EncounterCount;
+  public String ImageAttribution;
+  public String ImageUrl;
   public String WildlifeId;
   public String WildlifeSpecies;
 
   public WildlifeSummary() {
 
     EncounterCount = 0;
+    ImageAttribution = Utils.UNKNOWN_STRING;
+    ImageUrl = Utils.UNKNOWN_STRING;
     WildlifeId = Utils.UNKNOWN_ID;
     WildlifeSpecies = Utils.UNKNOWN_STRING;
   }
