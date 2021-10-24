@@ -48,8 +48,6 @@ public class StatisticsFragment extends Fragment {
 
   public interface OnStatisticsListListener {
 
-    void onStatisticsAddEncounter();
-
     void onStatisticsMostEncountered();
 
     void onStatisticsTotalEncounters();
@@ -98,17 +96,9 @@ public class StatisticsFragment extends Fragment {
     mEuthanasiaCard = view.findViewById(R.id.statistics_card_handled_euthanasia);
     mNewTotalEncountersImage = view.findViewById(R.id.statistics_image_total_encounters_new);
     mNewUniqueEncountersImage = view.findViewById(R.id.statistics_image_unique_encounters_new);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.statistics_fab_add);
 
     mNewTotalEncountersImage.setVisibility(View.GONE);
     mNewUniqueEncountersImage.setVisibility(View.GONE);
-    addEncounterButton.setOnClickListener(v -> mCallback.onStatisticsAddEncounter());
-
-    if (Utils.getIsContributor(getContext())) {
-      addEncounterButton.setVisibility(View.VISIBLE);
-    } else {
-      addEncounterButton.setVisibility(View.GONE);
-    }
 
     mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     mFollowingUserId = Utils.getFollowingUserId(getActivity());

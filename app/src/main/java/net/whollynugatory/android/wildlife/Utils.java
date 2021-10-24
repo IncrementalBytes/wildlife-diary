@@ -56,7 +56,6 @@ public class Utils {
   public static final String DEFAULT_ATTRIBUTION = "CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons";
   public static final String DEFAULT_FOLLOWING_USER_ID = "pHuFQzKKwJhI0KNTc6UoCvtMXEI2";
   public static final String ENCOUNTER_ROOT = "Encounters";
-  public static final int NOTIFICATION_REQUEST_CODE = 2468;
   public static final String TASK_ROOT = "Tasks";
   public static final String UNKNOWN_ID = "000000000-0000-0000-0000-000000000000";
   public static final String UNKNOWN_STRING = "UNKNOWN";

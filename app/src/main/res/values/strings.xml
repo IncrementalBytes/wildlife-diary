@@ -68,8 +68,6 @@
   <string name="title_encounters_by_date">Encounters by Date</string>
   <string name="title_encounter_details">Encounter Details</string>
   <string name="title_unique_encounters">Unique Encounters</string>
-  <string name="channel_name">New Encounter Added</string>
-  <string name="channel_description">Get notified when a new encounter is added.</string>
   <string name="default_notification_channel_id">wildlife-notification-id</string>
   <string name="menu_crash">Force Crash</string>
   <string name="pref_key_override_contributor_setting">override_contributor</string>
