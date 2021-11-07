@@ -27,6 +27,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,60 +37,36 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 public class EncounterDetailsListFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + EncounterDetailsListFragment.class.getSimpleName();
 
-  public interface OnEncounterListListener {
-
-    void onEncounterDetailsClicked(String encounterId);
-  }
-
-  private OnEncounterListListener mCallback;
-
   private EncounterAdapter mEncounterAdapter;
-
-  public static EncounterDetailsListFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    return new EncounterDetailsListFragment();
-  }
 
   /*
     Fragment Override(s)
   */
   @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    try {
-      mCallback = (OnEncounterListListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
-  }
-
-  @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.content_list, container, false);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
-    addEncounterButton.setVisibility(View.GONE);
-    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
+    final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
+    FloatingActionButton fab = view.findViewById(R.id.list_fab_add);
+    fab.setVisibility(View.INVISIBLE);
+    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mEncounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(mEncounterAdapter);
 
-    List<EncounterDetails> encounterDetailsList = Utils.getEncounterDetailsList(getContext());
-    if (encounterDetailsList.size() == 0) {
+    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+    List<EncounterDetails> encounterDetailsList = viewModel.getEncounterDetailsList().getValue();
+    if (encounterDetailsList == null || encounterDetailsList.size() == 0) {
       WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
       String followingUserId = Utils.getFollowingUserId(getContext());
       wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(getViewLifecycleOwner(), totalEncounters -> {
@@ -198,7 +175,10 @@ public class EncounterDetailsListFragment extends Fragment {
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        mCallback.onEncounterDetailsClicked(mEncounterDetails.EncounterId);
+        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
+          .get(FragmentDataViewModel.class);
+        viewModel.setEncounterId(mEncounterDetails.Id);
+        Navigation.findNavController(view).navigate(R.id.action_EncounterDetailsList_to_EncounterDetails);
       }
     }
   }

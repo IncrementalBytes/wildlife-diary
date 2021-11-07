@@ -35,6 +35,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,6 +49,7 @@ import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 import net.whollynugatory.android.wildlife.ui.AutoCompleteAdapter;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,19 +62,6 @@ import java.util.UUID;
 public class EncounterFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + EncounterFragment.class.getSimpleName();
-
-  public interface OnEncounterListener {
-
-    void onEncounterAdded();
-
-    void onEncounterDeleted();
-
-    void onEncounterFailed(String message);
-
-    void onEncountersRecorded();
-  }
-
-  private OnEncounterListener mCallback;
 
   private Button mAdditionButton;
   private EditText mDateEdit;
@@ -149,48 +138,9 @@ public class EncounterFragment extends Fragment {
     }
   };
 
-  public static EncounterFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    return new EncounterFragment();
-  }
-
-  public static EncounterFragment newInstance(String encounterId) {
-
-    Log.d(TAG, "++newInstance(String)");
-    EncounterFragment fragment = new EncounterFragment();
-    Bundle arguments = new Bundle();
-    arguments.putString(Utils.ARG_ENCOUNTER_ID, encounterId);
-    fragment.setArguments(arguments);
-    return fragment;
-  }
-
   /*
     Fragment Override(s)
   */
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    try {
-      mCallback = (OnEncounterListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
-
-    Bundle arguments = getArguments();
-    if (arguments != null) {
-      if (arguments.containsKey(Utils.ARG_ENCOUNTER_ID)) {
-        mEncounterId = arguments.getString(Utils.ARG_ENCOUNTER_ID);
-      } else {
-        mEncounterId = "";
-      }
-    } else {
-      mEncounterId = "";
-    }
-  }
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -199,6 +149,9 @@ public class EncounterFragment extends Fragment {
     mFollowingUserId = Utils.getFollowingUserId(getContext());
     mWildlifeMap = new HashMap<>();
     mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+
+    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+    mEncounterId = viewModel.getEncounterId().getValue();
   }
 
   @Override
@@ -241,7 +194,7 @@ public class EncounterFragment extends Fragment {
     mRecordEncountersButton.setOnClickListener(v -> {
 
       Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-      mCallback.onEncountersRecorded();
+      NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_RecentFragment);
     });
 
     if (mEncounterId.isEmpty()) { // set for adding
@@ -255,7 +208,7 @@ public class EncounterFragment extends Fragment {
 
         deleteEncounter();
         Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-        mCallback.onEncounterDeleted();
+        NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_RecentFragment);
       });
 
       updateEncounterButton.setOnClickListener(v -> {
@@ -320,7 +273,7 @@ public class EncounterFragment extends Fragment {
             Log.d(TAG, "Adding " + newEntity.toString());
             encounterEntities.put(newEntity.Id, newEntity);
           } else {
-            mCallback.onEncounterFailed("Encounter data was unknown: " + encounterEntity.toString());
+            // TODO: alert to user (but not using snackbar)
           }
         }
 
@@ -334,18 +287,18 @@ public class EncounterFragment extends Fragment {
 
           if (!task.isSuccessful()) {
             Log.e(TAG, "Error setting data Encounter data.", task.getException());
-            mCallback.onEncounterFailed("Failed to add encounter(s).");
+            // TODO: alert to user (but not using snackbar)
           } else if (mEncounterId.isEmpty()) { // reset view for additional encounters
             mWildlifeText.setText("");
             mGroupCount = 1;
             mGroupCountEdit.setText(String.valueOf(mGroupCount));
             mMinusButton.setEnabled(false);
             mAdditionButton.setEnabled(true);
-            mCallback.onEncounterAdded();
+            // TODO: alert to user (but not using snackbar)
             mRecordEncountersButton.setEnabled(true);
           } else { // encounter updated
             Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-            mCallback.onEncountersRecorded();
+            NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_RecentFragment);
           }
 
           mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
@@ -480,7 +433,7 @@ public class EncounterFragment extends Fragment {
       int currentSize = mTaskEntityList.size();
       mTaskEntityList.clear();
       mTaskEntityList.addAll(taskEntityCollection);
-      mTaskEntityList.sort(new Utils.SortByName());
+      mTaskEntityList.sort(new TaskEntity.SortByName());
       notifyItemRangeRemoved(0, currentSize);
       notifyItemRangeInserted(0, taskEntityCollection.size());
     }

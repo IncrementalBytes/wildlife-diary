@@ -47,12 +47,6 @@ public class CleanUpListFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + CleanUpListFragment.class.getSimpleName();
 
-  public static CleanUpListFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    return new CleanUpListFragment();
-  }
-
   /*
     Fragment Override(s)
   */
@@ -60,10 +54,10 @@ public class CleanUpListFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.content_list, container, false);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
-    addEncounterButton.setVisibility(View.GONE);
-    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
+    final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
+    FloatingActionButton fab = view.findViewById(R.id.list_fab_add);
+    fab.setVisibility(View.INVISIBLE);
+    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);

@@ -1,6 +1,20 @@
+/*
+ * Copyright 2021 Ryan Ward
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package net.whollynugatory.android.wildlife.ui.fragment;
 
-import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,54 +44,21 @@ public class DataFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + DataFragment.class.getSimpleName();
 
-  public interface OnDataListener {
-
-    void onDataEncountersPopulated();
-
-    void onDataFailed(String message);
-
-    void onDataMissing();
-  }
-
-  private OnDataListener mCallback;
-
-  AnimationDrawable mPawAnimation;
-  ImageView mPawImage;
   private TextView mStatusText;
 
-  public static DataFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    return new DataFragment();
-  }
-
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    try {
-      mCallback = (OnDataListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(
-        String.format(
-          Locale.US,
-          "Missing interface implementations for %s",
-          context.toString()));
-    }
-  }
-
+  /*
+    Fragment Override(s)
+  */
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     View view = inflater.inflate(R.layout.fragment_data, container, false);
-    mPawImage = view.findViewById(R.id.data_image_paw);
-    mPawImage.setBackgroundResource(R.drawable.anim_paw_dark);
-    mPawAnimation = (AnimationDrawable) mPawImage.getBackground();
-    mStatusText = view.findViewById(R.id.data_text_status);
+    ImageView pawImage = view.findViewById(R.id.data_image_paw);
+    pawImage.setBackgroundResource(R.drawable.anim_paw_dark);
+    AnimationDrawable pawAnimation = (AnimationDrawable) pawImage.getBackground();
 
-    mPawAnimation.start();
+    pawAnimation.start();
     executeDataProcessing(Utils.TASK_ROOT);
     return view;
   }
@@ -89,7 +71,7 @@ public class DataFragment extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Retrieving data stamps was unsuccessful.", task.getException());
-          mCallback.onDataFailed("Unable to retrieve data stamps.");
+          // TODO: alert to user, but not using snackbar
         } else {
           updateUI("Grabbing remote data stamps...");
           String remoteDataStamp = Utils.UNKNOWN_ID;
@@ -122,15 +104,15 @@ public class DataFragment extends Fragment {
 
             if (remoteDataStamp.equals(Utils.UNKNOWN_ID)) {
               Log.w(TAG, "Remote dataStamp was unexpected: " + remoteDataStamp);
-              mCallback.onDataMissing();
+              onDataMissing();
             } else if (localDataStamp.equals(Utils.UNKNOWN_ID) || !localDataStamp.equalsIgnoreCase(remoteDataStamp)) {
               populateTable(dataToSync, remoteDataStamp);
-            } else if (localDataStamp.equals(remoteDataStamp)){
+            } else if (localDataStamp.equals(remoteDataStamp)) {
               Log.d(TAG, "Local data in-sync with " + dataToSync);
               updateUI("Local data matches " + dataToSync);
               switch (dataToSync) {
                 case Utils.ENCOUNTER_ROOT:
-                  mCallback.onDataEncountersPopulated();
+                  NavHostFragment.findNavController(this).navigate(R.id.action_DataFragment_to_RecentFragment);
                   break;
                 case Utils.TASK_ROOT:
                   executeDataProcessing(Utils.WILDLIFE_ROOT);
@@ -141,11 +123,18 @@ public class DataFragment extends Fragment {
               }
             } else {
               Log.w(TAG, "Unexpected results between local and remote data stamps.");
-              mCallback.onDataFailed("Unable to sync data at this time.");
+              // TODO: alert to user, but not using snackbar
             }
           }
         }
       });
+  }
+
+  private void onDataMissing() {
+
+    Log.d(TAG, "++onDataMissing()");
+    // TODO: alert to user, but not using snackbar
+    NavHostFragment.findNavController(this).navigate(R.id.action_DataFragment_to_RecentFragment);
   }
 
   private void populateTable(String dataRoot, String remoteDataStamp) {
@@ -156,7 +145,7 @@ public class DataFragment extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data", task.getException());
-          mCallback.onDataFailed("Could not retrieve data from " + dataRoot);
+          // TODO: alert to user, but not using snackbar
         } else {
           DataSnapshot resultSnapshot = task.getResult();
           if (resultSnapshot != null) {
@@ -211,7 +200,7 @@ public class DataFragment extends Fragment {
                 switch (dataRoot) {
                   case Utils.ENCOUNTER_ROOT:
                     Utils.setLocalTimeStamp(getActivity(), R.string.pref_key_stamp_encounters, remoteDataStamp);
-                    mCallback.onDataEncountersPopulated();
+                    NavHostFragment.findNavController(this).navigate(R.id.action_DataFragment_to_RecentFragment);
                     break;
                   case Utils.TASK_ROOT:
                     Utils.setLocalTimeStamp(getActivity(), R.string.pref_key_stamp_tasks, remoteDataStamp);
@@ -223,13 +212,13 @@ public class DataFragment extends Fragment {
                     break;
                 }
               } else {
-                mCallback.onDataFailed("App was not ready for operation at this time.");
+                // TODO: alert to user, but not using snackbar
               }
             } else {
-              mCallback.onDataMissing();
+              onDataMissing();
             }
           } else {
-            mCallback.onDataFailed("Results not found for " + dataRoot);
+            // TODO: alert to user, but not using snackbar
           }
         }
       });

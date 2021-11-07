@@ -25,20 +25,10 @@ import androidx.annotation.StringRes;
 import androidx.room.TypeConverter;
 
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
-import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
-import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
-
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -47,9 +37,7 @@ public class Utils {
 
   private static final String TAG = Utils.BASE_TAG + Utils.class.getSimpleName();
 
-  public static final String ARG_ENCOUNTER_ID = "encounter_id";
   public static final String ARG_FIREBASE_USER_ID = "firebase_user_id";
-  public static final String ARG_MESSAGE = "message";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String DATA_STAMPS_ROOT = "DataStamps";
@@ -86,14 +74,6 @@ public class Utils {
     return new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(calendar.getTime());
   }
 
-  public static List<EncounterDetails> getEncounterDetailsList(Context context) {
-
-    Gson gson = new Gson();
-    String json = getStringPref(context, R.string.pref_key_encounter_details_list, "");
-    Type type = new TypeToken<ArrayList<EncounterDetails>>() { }.getType();
-    return gson.fromJson(json, type);
-  }
-
   public static String getFollowingUserId(Context context) {
 
     return getStringPref(context, R.string.pref_key_following_user_id, Utils.UNKNOWN_USER_ID);
@@ -117,24 +97,6 @@ public class Utils {
   public static String getUserId(Context context) {
 
     return getStringPref(context, R.string.pref_key_user_id, Utils.UNKNOWN_USER_ID);
-  }
-
-  public static List<WildlifeSummary> getWildlifeSummaryList(Context context) {
-
-    Gson gson = new Gson();
-    String json = getStringPref(context, R.string.pref_key_wildlife_summary_list, "");
-    Type type = new TypeToken<ArrayList<WildlifeSummary>>() { }.getType();
-    return gson.fromJson(json, type);
-  }
-
-  public static void setEncounterDetailsList(Context context, List<EncounterDetails> encounterDetailsList) {
-
-    Gson gson = new Gson();
-    String json = gson.toJson(encounterDetailsList);
-    PreferenceManager.getDefaultSharedPreferences(context)
-      .edit()
-      .putString(context.getString(R.string.pref_key_encounter_details_list), json)
-      .apply();
   }
 
   public static void setIsContributor(Context context, boolean canAdd) {
@@ -161,16 +123,6 @@ public class Utils {
   public static void setUserId(Context context, String userId) {
 
     setStringPref(context, R.string.pref_key_user_id, userId);
-  }
-
-  public static void setWildlifeSummaryList(Context context, List<WildlifeSummary> wildlifeSummaryList) {
-
-    Gson gson = new Gson();
-    String json = gson.toJson(wildlifeSummaryList);
-    PreferenceManager.getDefaultSharedPreferences(context)
-      .edit()
-      .putString(context.getString(R.string.pref_key_wildlife_summary_list), json)
-      .apply();
   }
 
   @TypeConverter
@@ -247,16 +199,5 @@ public class Utils {
       .edit()
       .putString(context.getString(preferenceKeyId), preferenceValue)
       .apply();
-  }
-
-  /*
-    Public Class(es)
-   */
-  public static class SortByName implements Comparator<TaskEntity> {
-
-    public int compare(TaskEntity a, TaskEntity b) {
-
-      return a.Name.compareTo(b.Name);
-    }
   }
 }

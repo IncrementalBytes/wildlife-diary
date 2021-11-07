@@ -167,8 +167,7 @@ public interface EncounterDao {
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == Encounter.wildlife_id " +
     "WHERE user_id == :userId " +
     "GROUP BY Wildlife.abbreviation " +
-    "HAVING EncounterCount == 1 " +
-    "ORDER BY EncounterCount ASC, Encounter.date DESC")
+    "ORDER BY Encounter.date DESC")
   LiveData<List<EncounterDetails>> getUniqueEncountered(String userId);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)

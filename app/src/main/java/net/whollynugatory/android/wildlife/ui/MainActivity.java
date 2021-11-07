@@ -22,51 +22,41 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.db.entity.UserEntity;
 import net.whollynugatory.android.wildlife.R;
-import net.whollynugatory.android.wildlife.ui.fragment.CleanUpListFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.DataFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.DateListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailsListFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.MostEncounteredFragment;
-import net.whollynugatory.android.wildlife.ui.fragment.RecentFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.StatisticsFragment;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.UniqueEncounterListFragment;
 import net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
-public class MainActivity extends AppCompatActivity implements
-  DataFragment.OnDataListener,
-  DateListFragment.OnDateListListener,
-  EncounterDetailsListFragment.OnEncounterListListener,
-  EncounterFragment.OnEncounterListener,
-  RecentFragment.OnRecentListener,
-  StatisticsFragment.OnStatisticsListListener,
-  TryAgainLaterFragment.OnTryAgainLaterListener {
+public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = Utils.BASE_TAG + MainActivity.class.getSimpleName();
 
-  private Snackbar mSnackbar;
+  private AppBarConfiguration mAppBarConfiguration;
+  private NavController mNavController;
 
   private UserEntity mUserEntity;
 
@@ -79,16 +69,23 @@ public class MainActivity extends AppCompatActivity implements
 
     BottomNavigationView bottomNavigationView = findViewById(R.id.main_bottom_navigation);
     Toolbar mainToolbar = findViewById(R.id.main_toolbar);
-
     setSupportActionBar(mainToolbar);
+
+    NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+      .findFragmentById(R.id.main_fragment_container);
+    if (navHostFragment != null) {
+      mNavController = navHostFragment.getNavController();
+      mAppBarConfiguration = new AppBarConfiguration.Builder(mNavController.getGraph()).build();
+    }
+
     bottomNavigationView.setOnItemSelectedListener(item -> {
 
       if (item.getItemId() == R.id.navigation_statistics) {
-        replaceFragment(StatisticsFragment.newInstance());
+        mNavController.navigate(R.id.action_Menu_to_StatisticsFragment);
       } else if (item.getItemId() == R.id.navigation_date) {
-        replaceFragment(DateListFragment.newInstance());
+        mNavController.navigate(R.id.action_Menu_to_ByDateFragment);
       } else if (item.getItemId() == R.id.navigation_recent) {
-        replaceFragment(RecentFragment.newInstance());
+        mNavController.navigate(R.id.action_Menu_to_RecentFragment);
       }
 
       return true;
@@ -119,10 +116,11 @@ public class MainActivity extends AppCompatActivity implements
       userId = Utils.getUserId(this);
     }
 
+    FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
     if (userId.isEmpty() || userId.equals(Utils.UNKNOWN_USER_ID)) {
-      replaceFragment(
-        TryAgainLaterFragment.newInstance(
-          "Unable to determine user data. Please sign out of app and try again."));
+      // TODO: disable all other controls
+      viewModel.setMessage("Unable to determine user data. Please sign out of app and try again.");
+      mNavController.navigate(R.id.action_TryAgainFragment);
     } else {
       String finalUserId = userId;
       FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
@@ -130,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements
 
           if (!task.isSuccessful()) {
             Log.e(TAG, "Error getting data", task.getException());
-            replaceFragment(
-              TryAgainLaterFragment.newInstance(
-                "There was a problem accessing data. Try again later."));
+            // TODO: disable all other controls
+            viewModel.setMessage("There was a problem accessing data. Try again later.");
+            mNavController.navigate(R.id.action_TryAgainFragment);
           } else {
             DataSnapshot result = task.getResult();
             if (result != null) {
@@ -150,11 +148,11 @@ public class MainActivity extends AppCompatActivity implements
               Utils.setFollowingUserId(this, mUserEntity.FollowingId);
               Utils.setUserId(this, finalUserId);
               Utils.setIsContributor(this, mUserEntity.IsContributor);
-              replaceFragment(DataFragment.newInstance());
+              mNavController.navigate(R.id.action_DataFragment);
             } else {
-              replaceFragment(
-                TryAgainLaterFragment.newInstance(
-                  "UserData returned from server was unexpected. Try again later."));
+              // TODO: disable all other controls
+              viewModel.setMessage("UserData returned from server was unexpected. Try again later.");
+              mNavController.navigate(R.id.action_TryAgainFragment);
             }
 
             invalidateOptionsMenu();
@@ -176,18 +174,18 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
     if (item.getItemId() == R.id.menu_home) {
-      replaceFragment(RecentFragment.newInstance());
+      mNavController.navigate(R.id.action_Menu_to_RecentFragment);
     } else if (item.getItemId() == R.id.menu_settings) {
-      replaceFragment(UserSettingsFragment.newInstance());
+      mNavController.navigate(R.id.action_Menu_to_SettingsFragment);
     } else if (item.getItemId() == R.id.menu_cleanup) {
-      replaceFragment(CleanUpListFragment.newInstance());
+      mNavController.navigate(R.id.action_Menu_to_CleanupFragment);
     } else if (item.getItemId() == R.id.menu_crash) {
       throw new RuntimeException("Test Crash"); // Force a crash
     } else if (item.getItemId() == R.id.menu_sync) {
       Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
       Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
       Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_tasks, Utils.UNKNOWN_ID);
-      replaceFragment(DataFragment.newInstance());
+      mNavController.navigate(R.id.action_DataFragment);
     } else if (item.getItemId() == R.id.menu_logout) {
       AlertDialog alertDialog = new AlertDialog.Builder(this)
         .setMessage(R.string.logout_message)
@@ -198,6 +196,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+
+    Log.d(TAG, "++onPause()");
   }
 
   @Override
@@ -214,162 +219,36 @@ public class MainActivity extends AppCompatActivity implements
     return super.onPrepareOptionsMenu(menu);
   }
 
-  /*
-    Fragment Override(s)
-   */
   @Override
-  public void onDataEncountersPopulated() {
+  public void onResume() {
+    super.onResume();
 
-    Log.d(TAG, "++onDataEncountersPopulated(String)");
-    replaceFragment(RecentFragment.newInstance());
+    Log.d(TAG, "++onResume()");
   }
 
   @Override
-  public void onDataFailed(String message) {
+  protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
 
-    Log.d(TAG, "++onDataFailed(String)");
-    Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
-    showMessageInSnackBar(message);
+    Log.d(TAG, "++onRestoreInstanceState(Bundle)");
   }
 
   @Override
-  public void onDataMissing() {
+  protected void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
 
-    Log.d(TAG, "++onDataMissing()");
-    Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
-    showMessageInSnackBar(
-      String.format(
-        Locale.US,
-        "No encounters found. %s",
-        mUserEntity.IsContributor ? "Try adding some!" : "Please try again later."));
-    replaceFragment(StatisticsFragment.newInstance());
+    Log.d(TAG, "++onSaveInstanceState(Bundle)");
   }
 
   @Override
-  public void onDateListItemClicked() {
+  public boolean onSupportNavigateUp() {
 
-    Log.d(TAG, "++onDateListItemClicked()");
-    replaceFragment(EncounterDetailsListFragment.newInstance());
-  }
-
-  @Override
-  public void onEncounterAdded() {
-
-    Log.d(TAG, "++onEncounterAdded()");
-    showMessageInSnackBar("Encounter Added!");
-  }
-
-  @Override
-  public void onEncounterDeleted() {
-
-    Log.d(TAG, "++onEncounterDeleted()");
-    replaceFragment(DataFragment.newInstance());
-  }
-
-  @Override
-  public void onEncountersRecorded() {
-
-    Log.d(TAG, "++onEncountersRecorded()");
-    replaceFragment(DataFragment.newInstance());
-  }
-
-  @Override
-  public void onEncounterFailed(String message) {
-
-    Log.d(TAG, "++onEncounterFailed(String)");
-    showMessageInSnackBar(message);
-  }
-
-  @Override
-  public void onEncounterDetailsClicked(String encounterId) {
-
-    Log.d(TAG, "++onEncounterDetailsClicked(String)");
-    if (mUserEntity.IsContributor) {
-      replaceFragment(EncounterFragment.newInstance(encounterId));
-    } else {
-      replaceFragment(EncounterDetailFragment.newInstance(encounterId));
-    }
-  }
-
-  @Override
-  public void onRecentAddEncounter() {
-
-    Log.d(TAG, "++onRecentAddEncounter()");
-    replaceFragment(EncounterFragment.newInstance());
-  }
-
-  @Override
-  public void onRecentItemClicked(String encounterId) {
-
-    Log.d(TAG, "++onRecentItemClicked(String)");
-    if (mUserEntity.IsContributor) {
-      replaceFragment(EncounterFragment.newInstance(encounterId));
-    } else {
-      replaceFragment(EncounterDetailFragment.newInstance(encounterId));
-    }
-  }
-
-  @Override
-  public void onStatisticsMostEncountered() {
-
-    Log.d(TAG, "++onStatisticsMostEncountered()");
-    replaceFragment(MostEncounteredFragment.newInstance());
-  }
-
-  @Override
-  public void onStatisticsTotalEncounters() {
-
-    Log.d(TAG, "++onStatisticsTotalEncounters()");
-    Utils.setEncounterDetailsList(this, new ArrayList<>());
-    replaceFragment(EncounterDetailsListFragment.newInstance());
-  }
-
-  @Override
-  public void onStatisticsUniqueEncounters() {
-
-    Log.d(TAG, "++onStatisticsUniqueEncounters()");
-    replaceFragment(UniqueEncounterListFragment.newInstance());
-  }
-
-  @Override
-  public void onTryAgainLaterSignOut() {
-
-    Log.d(TAG, "++onTryAgainLaterSignOut()");
-    signOut();
-  }
-
-  @Override
-  public void onTryAgainLaterTryAgain() {
-
-    Log.d(TAG, "++onTryAgainLaterTryAgain()");
-    finish();
-    startActivity(getIntent());
+    return NavigationUI.navigateUp(mNavController, mAppBarConfiguration) || super.onSupportNavigateUp();
   }
 
   /*
     Private Method(s)
    */
-  private void replaceFragment(Fragment fragment) {
-
-    Log.d(TAG, "++replaceFragment()");
-    getSupportFragmentManager()
-      .beginTransaction()
-      .replace(R.id.main_fragment_container, fragment)
-      .addToBackStack(null)
-      .commit();
-  }
-
-  private void showMessageInSnackBar(String message) {
-
-    Log.w(TAG, message);
-    mSnackbar = Snackbar.make(
-      findViewById(R.id.activity_main),
-      message,
-      Snackbar.LENGTH_LONG);
-    mSnackbar.setAction(R.string.dismiss, v -> mSnackbar.dismiss());
-    mSnackbar.show();
-  }
-
   private void signOut() {
 
     Log.d(TAG, "++signOut()");

@@ -37,6 +37,7 @@ package net.whollynugatory.android.wildlife.ui.fragment;
   import net.whollynugatory.android.wildlife.Utils;
   import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
   import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+  import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
   import java.util.ArrayList;
   import java.util.Collection;
@@ -49,26 +50,21 @@ public class MostEncounteredFragment extends Fragment {
 
   private MostEncounteredAdapter mMostEncounteredAdapter;
 
-  public static MostEncounteredFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    return new MostEncounteredFragment();
-  }
-
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.content_list, container, false);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
-    addEncounterButton.setVisibility(View.GONE);
-    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
+    final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
+    FloatingActionButton fab = view.findViewById(R.id.list_fab_add);
+    fab.setVisibility(View.INVISIBLE);
+    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mMostEncounteredAdapter = new MostEncounteredAdapter(getContext());
     recyclerView.setAdapter(mMostEncounteredAdapter);
 
-    List<WildlifeSummary> mostEncounteredList = Utils.getWildlifeSummaryList(getContext());
-    if (mostEncounteredList.size() == 0) {
+    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+    List<WildlifeSummary> mostEncounteredList = viewModel.getWildlifeSummaryList().getValue();
+    if (mostEncounteredList == null || mostEncounteredList.size() == 0) {
       WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
       String followingUserId = Utils.getFollowingUserId(getContext());
       wildlifeViewModel.getMostEncountered(followingUserId).observe(

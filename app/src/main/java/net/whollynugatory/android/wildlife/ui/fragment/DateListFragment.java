@@ -26,6 +26,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +36,7 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,43 +48,14 @@ public class DateListFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + DateListFragment.class.getSimpleName();
 
-  public interface OnDateListListener {
-
-    void onDateListItemClicked();
-  }
-
-  private OnDateListListener mCallback;
-
-  public static DateListFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    DateListFragment fragment = new DateListFragment();
-    Bundle arguments = new Bundle();
-    fragment.setArguments(arguments);
-    return fragment;
-  }
-
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    try {
-      mCallback = (OnDateListListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(
-        String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
-  }
-
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.content_list, container, false);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
-    addEncounterButton.setVisibility(View.GONE);
-    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
+    final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
+    FloatingActionButton fab = view.findViewById(R.id.list_fab_add);
+    fab.setVisibility(View.INVISIBLE);
+    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     DateAdapter dateAdapter = new DateAdapter(getContext());
     recyclerView.setAdapter(dateAdapter);
@@ -202,8 +175,10 @@ public class DateListFragment extends Fragment {
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        Utils.setEncounterDetailsList(getContext(), mDateItem.EncounterDetailsList);
-        mCallback.onDateListItemClicked();
+        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
+          .get(FragmentDataViewModel.class);
+        viewModel.setEncounterDetailsList(mDateItem.EncounterDetailsList);
+        Navigation.findNavController(view).navigate(R.id.action_DateList_to_EncounterDetailsList);
       }
     }
   }

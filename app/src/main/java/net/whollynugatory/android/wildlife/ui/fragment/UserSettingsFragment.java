@@ -30,12 +30,6 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
 
   private static final String TAG = Utils.BASE_TAG + UserSettingsFragment.class.getSimpleName();
 
-  public static UserSettingsFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    return new UserSettingsFragment();
-  }
-
   /*
     Fragment Override(s)
    */

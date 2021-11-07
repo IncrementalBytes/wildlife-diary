@@ -27,6 +27,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +38,7 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -44,51 +47,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class RecentFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + RecentFragment.class.getSimpleName();
 
-  public interface OnRecentListener {
-
-    void onRecentAddEncounter();
-
-    void onRecentItemClicked(String encounterId);
-  }
-
-  private OnRecentListener mCallback;
-
-  public static RecentFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    RecentFragment fragment = new RecentFragment();
-    Bundle arguments = new Bundle();
-    fragment.setArguments(arguments);
-    return fragment;
-  }
-
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    try {
-      mCallback = (OnRecentListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(
-        String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
-  }
-
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.content_list, container, false);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.content_fab_add);
-    addEncounterButton.setOnClickListener(v -> mCallback.onRecentAddEncounter());
-    RecyclerView recyclerView = view.findViewById(R.id.content_recycler_view);
+    final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.list_fab_add);
+    addEncounterButton.setOnClickListener(v ->
+      NavHostFragment.findNavController(this).navigate(R.id.action_RecentFragment_to_EncounterFragment));
+    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     EncounterAdapter encounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(encounterAdapter);
@@ -96,7 +68,7 @@ public class RecentFragment extends Fragment {
     if (Utils.getIsContributor(getContext())) {
       addEncounterButton.setVisibility(View.VISIBLE);
     } else {
-      addEncounterButton.setVisibility(View.GONE);
+      addEncounterButton.setVisibility(View.INVISIBLE);
     }
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
@@ -226,7 +198,14 @@ public class RecentFragment extends Fragment {
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        mCallback.onRecentItemClicked(mEncounterDetails.EncounterId);
+        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
+          .get(FragmentDataViewModel.class);
+        viewModel.setEncounterDetails(mEncounterDetails);
+        if (Utils.getIsContributor(getContext())) {
+          Navigation.findNavController(view).navigate(R.id.action_RecentFragment_to_EncounterFragment);
+        } else {
+          Navigation.findNavController(view).navigate(R.id.action_RecentFragment_to_EncounterDetailsFragment);
+        }
       }
     }
   }

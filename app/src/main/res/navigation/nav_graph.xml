@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/nav_graph"
+  app:startDestination="@id/RecentFragment">
+
+  <action
+    android:id="@+id/action_DataFragment"
+    app:destination="@+id/DataFragment"/>
+  <action
+    android:id="@+id/action_Menu_to_RecentFragment"
+    app:destination="@+id/RecentFragment"/>
+  <action
+    android:id="@+id/action_Menu_to_StatisticsFragment"
+    app:destination="@+id/StatisticsFragment"/>
+  <action
+    android:id="@+id/action_Menu_to_ByDateFragment"
+    app:destination="@+id/ByDateFragment"/>
+  <action
+    android:id="@+id/action_Menu_to_SettingsFragment"
+    app:destination="@+id/SettingsFragment"/>
+  <action
+    android:id="@+id/action_Menu_to_CleanupFragment"
+    app:destination="@+id/CleanupFragment" />
+  <action
+    android:id="@+id/action_TryAgainFragment"
+    app:destination="@+id/fragment_try_again_later.xml" />
+
+  <fragment
+    android:id="@+id/ByDateFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.DateListFragment"
+    android:label="@string/fragment_label_date"
+    tools:layout="@layout/fragment_list_only">
+    <action
+      android:id="@+id/action_DateList_to_EncounterDetailsList"
+      app:destination="@id/EncounterDetailsListFragment"/>
+  </fragment>
+
+  <fragment
+    android:id="@+id/CleanupFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.CleanUpListFragment"
+    android:label="@string/fragment_label_cleanup"
+    tools:layout="@layout/fragment_list_only">
+    <action
+      android:id="@+id/action_CleanupFragment_to_RecentFragment"
+      app:destination="@+id/RecentFragment"/>
+  </fragment>
+
+  <fragment
+    android:id="@+id/DataFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.DataFragment"
+    android:label="@string/fragment_label_data"
+    tools:layout="@layout/fragment_data">
+    <action
+      android:id="@+id/action_DataFragment_to_RecentFragment"
+      app:destination="@+id/RecentFragment"/>
+  </fragment>
+
+  <fragment
+    android:id="@+id/EncounterDetailsFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment"
+    android:label="@string/fragment_label_encounter_details"
+    tools:layout="@layout/fragment_encounter_details" />
+
+  <fragment
+    android:id="@+id/EncounterDetailsListFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailsListFragment"
+    android:label="@string/fragment_label_encounter_details_list"
+    tools:layout="@layout/fragment_list_only">
+    <action
+      android:id="@+id/action_EncounterDetailsList_to_EncounterDetails"
+      app:destination="@+id/EncounterDetailsFragment" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/EncounterFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment"
+    android:label="@string/fragment_label_encounter"
+    tools:layout="@layout/fragment_encounter">
+    <action
+      android:id="@+id/action_EncounterFragment_to_RecentFragment"
+      app:destination="@+id/RecentFragment"/>
+  </fragment>
+
+  <fragment
+    android:id="@+id/MostEncounteredFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.MostEncounteredFragment"
+    android:label="@string/fragment_label_most_encountered"
+    tools:layout="@layout/fragment_list_only" />
+
+  <fragment
+    android:id="@+id/RecentFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.RecentFragment"
+    android:label="@string/fragment_label_recent"
+    tools:layout="@layout/fragment_list_only">
+    <action
+      android:id="@+id/action_RecentFragment_to_EncounterFragment"
+      app:destination="@+id/EncounterFragment"/>
+    <action
+      android:id="@+id/action_RecentFragment_to_EncounterDetailsFragment"
+      app:destination="@+id/EncounterDetailsFragment"/>
+  </fragment>
+
+  <fragment
+    android:id="@+id/SettingsFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment"
+    android:label="@string/fragment_label_settings" />
+
+  <fragment
+    android:id="@+id/StatisticsFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.StatisticsFragment"
+    android:label="@string/fragment_label_statistics"
+    tools:layout="@layout/fragment_statistics">
+    <action
+      android:id="@+id/action_StatisticsFragment_to_EncounterDetailsListFragment"
+      app:destination="@+id/EncounterDetailsListFragment"/>
+    <action
+      android:id="@+id/action_StatisticsFragment_to_UniqueEncountersFragment"
+      app:destination="@+id/UniqueEncountersFragment"/>
+    <action
+      android:id="@+id/action_StatisticsFragment_to_MostEncounteredFragment"
+      app:destination="@+id/MostEncounteredFragment"/>
+  </fragment>
+
+  <fragment
+    android:id="@+id/UniqueEncountersFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.UniqueEncounterListFragment"
+    android:label="@string/fragment_label_unique_encounters_list"
+    tools:layout="@layout/fragment_list_only" />
+
+</navigation>

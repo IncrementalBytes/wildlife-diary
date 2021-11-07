@@ -15,7 +15,6 @@
  */
 package net.whollynugatory.android.wildlife.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,32 +27,22 @@ import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.navigation.fragment.NavHostFragment;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentStatisticsBinding;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.Locale;
 
 public class StatisticsFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + StatisticsFragment.class.getSimpleName();
-
-  public interface OnStatisticsListListener {
-
-    void onStatisticsMostEncountered();
-
-    void onStatisticsTotalEncounters();
-
-    void onStatisticsUniqueEncounters();
-  }
 
   private FragmentStatisticsBinding mBinding;
 
@@ -61,29 +50,8 @@ public class StatisticsFragment extends Fragment {
   private ImageView mNewTotalEncountersImage;
   private ImageView mNewUniqueEncountersImage;
 
-  private OnStatisticsListListener mCallback;
-
   private String mFollowingUserId;
   private WildlifeViewModel mWildlifeViewModel;
-
-  public static StatisticsFragment newInstance() {
-
-    Log.d(TAG, "++newInstance()");
-    return new StatisticsFragment();
-  }
-
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    try {
-      mCallback = (OnStatisticsListListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(
-        String.format(Locale.US, "Missing interface implementations for %s", context.toString()));
-    }
-  }
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -158,24 +126,33 @@ public class StatisticsFragment extends Fragment {
           getViewLifecycleOwner(),
           encounterDetailsList -> {
 
-            Utils.setEncounterDetailsList(getContext(), encounterDetailsList);
-            mCallback.onStatisticsTotalEncounters();
+            FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
+              .get(FragmentDataViewModel.class);
+            viewModel.setEncounterDetailsList(encounterDetailsList);
+            NavHostFragment.findNavController(requireParentFragment())
+              .navigate(R.id.action_StatisticsFragment_to_EncounterDetailsListFragment);
           });
       } else if (view.getId() == R.id.statistics_card_unique_encounters) {
         mWildlifeViewModel.getUniqueEncountered(mFollowingUserId).observe(
           getViewLifecycleOwner(),
           uniqueEncounters -> {
 
-            Utils.setEncounterDetailsList(getContext(), uniqueEncounters);
-            mCallback.onStatisticsUniqueEncounters();
+            FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
+              .get(FragmentDataViewModel.class);
+            viewModel.setEncounterDetailsList(uniqueEncounters);
+            NavHostFragment.findNavController(requireParentFragment())
+              .navigate(R.id.action_StatisticsFragment_to_UniqueEncountersFragment);
           });
       } else if (view.getId() == R.id.statistics_card_most_encountered) {
         mWildlifeViewModel.getMostEncountered(mFollowingUserId).observe(
           getViewLifecycleOwner(),
           mostEncountered -> {
 
-            Utils.setWildlifeSummaryList(getContext(), mostEncountered);
-            mCallback.onStatisticsMostEncountered();
+            FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
+              .get(FragmentDataViewModel.class);
+            viewModel.setWildlifeSummaryList(mostEncountered);
+            NavHostFragment.findNavController(requireParentFragment())
+              .navigate(R.id.action_StatisticsFragment_to_MostEncounteredFragment);
           });
       }
     }

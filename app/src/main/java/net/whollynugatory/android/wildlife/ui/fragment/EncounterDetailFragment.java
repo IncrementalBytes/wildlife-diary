@@ -38,6 +38,7 @@ import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,36 +59,11 @@ public class EncounterDetailFragment extends Fragment {
 
   private List<EncounterDetails> mEncounterDetailsList;
   private EncounterEntity mEncounterEntity;
-  private String mEncounterId;
   private TaskAdapter mTaskAdapter;
-
-  public static EncounterDetailFragment newInstance(String encounterId) {
-
-    Log.d(TAG, "++newInstance(String)");
-    EncounterDetailFragment fragment = new EncounterDetailFragment();
-    Bundle arguments = new Bundle();
-    arguments.putString(Utils.ARG_ENCOUNTER_ID, encounterId);
-    fragment.setArguments(arguments);
-    return fragment;
-  }
 
   /*
       Fragment Override(s)
     */
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-
-    Log.d(TAG, "++onAttach(Context)");
-    Bundle arguments = getArguments();
-    if (arguments != null && arguments.containsKey(Utils.ARG_ENCOUNTER_ID)) {
-      mEncounterId = arguments.getString(Utils.ARG_ENCOUNTER_ID);
-      Log.d(TAG, "EncounterId: " + mEncounterId);
-    } else {
-      Log.e(TAG, "Arguments were null.");
-    }
-  }
-
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -120,59 +96,63 @@ public class EncounterDetailFragment extends Fragment {
 
     Log.d(TAG, "++getEncounterDetails()");
     String followingUserId = Utils.getFollowingUserId(getContext());
-    WildlifeViewModel viewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    viewModel.getEncounterDetails(followingUserId, mEncounterId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
-
-      mEncounterDetailsList = new ArrayList<>(encounterDetailsList);
-      HashMap<String, TaskEntity> taskMap = new HashMap<>();
-      boolean showSensitive = Utils.getShowSensitive(getContext());
-      for (EncounterDetails encounterDetails : encounterDetailsList) {
-        if (!taskMap.containsKey(encounterDetails.TaskId)) {
-          if (!encounterDetails.TaskIsSensitive || showSensitive) {
-            TaskEntity taskEntity = new TaskEntity();
-            taskEntity.Id = encounterDetails.TaskId;
-            taskEntity.Description = encounterDetails.TaskDescription;
-            taskEntity.IsComplete = true;
-            taskEntity.IsSensitive = encounterDetails.TaskIsSensitive;
-            taskEntity.Name = encounterDetails.TaskName;
-            taskMap.put(taskEntity.Id, taskEntity);
+    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+    String encounterId = viewModel.getEncounterId().getValue();
+    Log.d(TAG, "Getting encounter details for " + encounterId);
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    wildlifeViewModel.getEncounterDetails(followingUserId, encounterId).observe(
+      getViewLifecycleOwner(),
+      encounterDetailsList -> {
+        mEncounterDetailsList = new ArrayList<>(encounterDetailsList);
+        HashMap<String, TaskEntity> taskMap = new HashMap<>();
+        boolean showSensitive = Utils.getShowSensitive(getContext());
+        for (EncounterDetails encounterDetails : encounterDetailsList) {
+          if (!taskMap.containsKey(encounterDetails.TaskId)) {
+            if (!encounterDetails.TaskIsSensitive || showSensitive) {
+              TaskEntity taskEntity = new TaskEntity();
+              taskEntity.Id = encounterDetails.TaskId;
+              taskEntity.Description = encounterDetails.TaskDescription;
+              taskEntity.IsComplete = true;
+              taskEntity.IsSensitive = encounterDetails.TaskIsSensitive;
+              taskEntity.Name = encounterDetails.TaskName;
+              taskMap.put(taskEntity.Id, taskEntity);
+            }
           }
+
+          Log.d(TAG, "Task list is " + taskMap.size());
+          mTaskAdapter.setTaskEntityList(taskMap.values());
         }
 
-        Log.d(TAG, "Task list is " + taskMap.size());
-        mTaskAdapter.setTaskEntityList(taskMap.values());
-      }
+        EncounterDetails encounterDetails = mEncounterDetailsList.get(0);
+        int numberInGroup = mEncounterDetailsList.size() / taskMap.size();
+        mEncounterEntity = new EncounterEntity();
+        mEncounterEntity.WildlifeId = encounterDetails.WildlifeId;
+        mEncounterEntity.Date = encounterDetails.Date;
+        mEncounterEntity.UserId = encounterDetails.UserId;
 
-      EncounterDetails encounterDetails = mEncounterDetailsList.get(0);
-      int numberInGroup = mEncounterDetailsList.size() / taskMap.size();
-      mEncounterEntity = new EncounterEntity();
-      mEncounterEntity.WildlifeId = encounterDetails.WildlifeId;
-      mEncounterEntity.Date = encounterDetails.Date;
-      mEncounterEntity.UserId = encounterDetails.UserId;
+        // update UI components
+        if (!encounterDetails.ImageUrl.equals(Utils.UNKNOWN_STRING)) {
+          Glide.with(this)
+            .load(encounterDetails.ImageUrl)
+            .placeholder(R.drawable.ic_placeholder_dark)
+            .error(R.drawable.ic_error_dark)
+            .into(mWildlifeImage);
+          mImageAttributionText.setText(encounterDetails.ImageAttribution);
+        } else {
+          mWildlifeImage.setVisibility(View.GONE);
+          mImageAttributionText.setVisibility(View.GONE);
+        }
 
-      // update UI components
-      if (!encounterDetails.ImageUrl.equals(Utils.UNKNOWN_STRING)) {
-        Glide.with(this)
-          .load(encounterDetails.ImageUrl)
-          .placeholder(R.drawable.ic_placeholder_dark)
-          .error(R.drawable.ic_error_dark)
-          .into(mWildlifeImage);
-        mImageAttributionText.setText(encounterDetails.ImageAttribution);
-      } else {
-        mWildlifeImage.setVisibility(View.GONE);
-        mImageAttributionText.setVisibility(View.GONE);
-      }
-
-      mWildlifeText.setText(encounterDetails.WildlifeSpecies);
-      mAbbreviationText.setText(encounterDetails.WildlifeAbbreviation);
-      mDateText.setText(Utils.fromTimestamp(encounterDetails.Date));
-      mNumberInGroupText.setText(
-        String.format(
-          Locale.US,
-          getString(R.string.format_number_in_group),
-          encounterDetails.WildlifeAbbreviation,
-          numberInGroup));
-    });
+        mWildlifeText.setText(encounterDetails.WildlifeSpecies);
+        mAbbreviationText.setText(encounterDetails.WildlifeAbbreviation);
+        mDateText.setText(Utils.fromTimestamp(encounterDetails.Date));
+        mNumberInGroupText.setText(
+          String.format(
+            Locale.US,
+            getString(R.string.format_number_in_group),
+            encounterDetails.WildlifeAbbreviation,
+            numberInGroup));
+      });
   }
 
   private static class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
@@ -219,7 +199,7 @@ public class EncounterDetailFragment extends Fragment {
       int currentSize = mTaskEntityList.size();
       mTaskEntityList.clear();
       mTaskEntityList.addAll(taskEntityCollection);
-      mTaskEntityList.sort(new Utils.SortByName());
+      mTaskEntityList.sort(new TaskEntity.SortByName());
       notifyItemRangeRemoved(0, currentSize);
       notifyItemRangeInserted(0, taskEntityCollection.size());
     }

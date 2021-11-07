@@ -25,8 +25,6 @@
   <string name="pref_key_stamp_encounters">stamp_encounters</string>
   <string name="pref_key_stamp_wildlife">stamp_wildlife</string>
   <string name="pref_key_is_contributor">is_contributor</string>
-  <string name="pref_key_encounter_details_list">encounter_details_list</string>
-  <string name="pref_key_wildlife_summary_list">wildlife_summary_list</string>
   <string name="header_total_encounters">Total Encounters</string>
   <string name="header_unique_encounters">Unique Encounters</string>
   <string name="header_handled_exam">Handled (Exam)</string>
@@ -47,8 +45,6 @@
   <string name="tap_for_details">Tap for encounter details</string>
   <string name="header_syringe_fed">Syringe Fed</string>
   <string name="number_in_group">Number in group:</string>
-  <string name="label_try_again">Try Again?</string>
-  <string name="label_sign_out">Sign Out</string>
   <string name="plus_sign">+</string>
   <string name="minus_sign">-</string>
   <string name="label_record_encounters">Record</string>
@@ -68,9 +64,19 @@
   <string name="title_encounters_by_date">Encounters by Date</string>
   <string name="title_encounter_details">Encounter Details</string>
   <string name="title_unique_encounters">Unique Encounters</string>
-  <string name="default_notification_channel_id">wildlife-notification-id</string>
   <string name="menu_crash">Force Crash</string>
   <string name="pref_key_override_contributor_setting">override_contributor</string>
   <string name="pref_override_contributor_setting">Override Contributor value</string>
   <string name="pref_title_override_contributor_setting">Override Contributor Setting</string>
+  <string name="fragment_label_recent">Recent Encounters</string>
+  <string name="fragment_label_encounter">Encounter</string>
+  <string name="fragment_label_data">Data</string>
+  <string name="fragment_label_cleanup">Clean up</string>
+  <string name="fragment_label_statistics">Statistics</string>
+  <string name="fragment_label_encounter_details_list">Encounter Details List</string>
+  <string name="fragment_label_unique_encounters_list">Unique Encounters List</string>
+  <string name="fragment_label_most_encountered">Most Encountered List</string>
+  <string name="fragment_label_encounter_details">Encounter Details</string>
+  <string name="fragment_label_date">By Date</string>
+  <string name="fragment_label_settings">Settings</string>
 </resources>

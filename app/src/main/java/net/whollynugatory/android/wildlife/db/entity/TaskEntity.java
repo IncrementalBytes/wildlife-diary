@@ -26,6 +26,7 @@ import com.google.firebase.database.Exclude;
 import net.whollynugatory.android.wildlife.Utils;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Locale;
 
 @Entity(tableName = "task_table")
@@ -81,5 +82,13 @@ public class TaskEntity implements Serializable {
     }
 
     return !Id.isEmpty() && !Id.equals(Utils.UNKNOWN_ID);
+  }
+
+  public static class SortByName implements Comparator<TaskEntity> {
+
+    public int compare(TaskEntity a, TaskEntity b) {
+
+      return a.Name.compareTo(b.Name);
+    }
   }
 }

@@ -593,7 +593,9 @@
     },
     "63bdca99-2d62-4fb4-a4c6-8571fb610f12": {
       "FriendlyName": "Golden-crowned Sparrow",
-      "Abbreviation": "GCSP"
+      "Abbreviation": "GCSP",
+      "ImageSrc":"https://upload.wikimedia.org/wikipedia/commons/5/5e/Zonotrichia_atricapilla_-British_Columbia%2C_Canada-8.jpg",
+      "ImageAttribution":"Alejandro Erickson, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons"
     },
     "c04f915f-1a13-4a7b-a338-83a22cf0a293": {
       "FriendlyName": "Golden-mantled Ground Squirrel",
@@ -933,7 +935,9 @@
     },
     "5a1e5fc1-c706-4628-9a8a-26e0a7c58555": {
       "FriendlyName": "Northern Saw-whet Owl",
-      "Abbreviation": "NSWO"
+      "Abbreviation": "NSWO",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Male_Northern_Saw-whet_Owl_%287364047820%29.jpg",
+      "ImageAttribution": "Kameron Perensovich, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons"
     },
     "75dfccce-aecc-4489-aa5a-7cd351c63689": {
       "FriendlyName": "Northern Shoveler",
@@ -1449,7 +1453,9 @@
     },
     "34c95069-2168-4d40-b4e9-a4a8e9087e6f": {
       "FriendlyName": "Western Pond Turtle",
-      "Abbreviation": "WPOT"
+      "Abbreviation": "NWPT",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/f/f8/2009-Western-pond-turtle.jpg",
+      "ImageAttribution":"Yathin S Krishnappa, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "07677f13-f62e-466a-a852-34b8c161e396": {
       "FriendlyName": "Western Rattlesnake",
