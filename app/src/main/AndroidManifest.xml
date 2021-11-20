@@ -10,13 +10,12 @@
     android:theme="@style/Theme.Wildlife"
     android:fullBackupContent="@xml/backup_descriptor">
 
-
+    <activity android:name=".ui.MainActivity" android:configChanges="uiMode" />
     <activity android:name=".ui.SignInActivity" android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <activity android:name=".ui.MainActivity" android:configChanges="uiMode" />
   </application>
 </manifest>

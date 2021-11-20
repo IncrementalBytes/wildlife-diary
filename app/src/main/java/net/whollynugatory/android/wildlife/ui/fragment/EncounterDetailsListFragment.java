@@ -31,8 +31,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
@@ -57,9 +55,7 @@ public class EncounterDetailsListFragment extends Fragment {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
-    FloatingActionButton fab = view.findViewById(R.id.list_fab_add);
-    fab.setVisibility(View.INVISIBLE);
-    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
+    RecyclerView recyclerView = view.findViewById(R.id.content_list);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mEncounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(mEncounterAdapter);

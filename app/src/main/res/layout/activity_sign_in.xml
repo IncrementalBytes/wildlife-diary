@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/activity_sign_in"
+  android:id="@+id/layout_sign_in"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:layout_gravity="center_horizontal|center_vertical"
-  tools:context="net.whollynugatory.android.wildlife.ui.SignInActivity">
+  android:orientation="vertical">
 
-  <TextView
+  <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
-    android:fontFamily="@font/chewy"
-    android:text="@string/app_name"
-    android:textAlignment="center"
-    android:textAllCaps="true"
-    android:textSize="36sp"
-    app:layout_constraintBottom_toTopOf="@id/sign_in_image"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
+    android:layout_height="match_parent">
 
-  <ImageView
-    android:id="@+id/sign_in_image"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:contentDescription="@string/app_name"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/default_view_margin"
+      android:fontFamily="@font/chewy"
+      android:text="@string/app_name"
+      android:textAlignment="center"
+      android:textAllCaps="true"
+      android:textSize="36sp"
+      app:layout_constraintBottom_toTopOf="@id/sign_in_image"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
 
-  <com.google.android.gms.common.SignInButton
-    android:id="@+id/sign_in_button_google"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/sign_in_image" />
+    <ImageView
+      android:id="@+id/sign_in_image"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:contentDescription="@string/app_name"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.gms.common.SignInButton
+      android:id="@+id/sign_in_button_google"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/default_view_margin"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/sign_in_image" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
@@ -44,52 +43,53 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-public class UniqueEncounterListFragment extends Fragment {
+public class FirstEncounteredListFragment extends Fragment {
 
-  private static final String TAG = Utils.BASE_TAG + UniqueEncounterListFragment.class.getSimpleName();
+  private static final String TAG = Utils.BASE_TAG + FirstEncounteredListFragment.class.getSimpleName();
 
-  private UniqueEncounterAdapter mUniqueEncounterAdapter;
+  private FirstEncounteredAdapter mFirstEncounteredAdapter;
 
+  /*
+    Fragment Override(s)
+   */
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
-    FloatingActionButton fab = view.findViewById(R.id.list_fab_add);
-    fab.setVisibility(View.INVISIBLE);
-    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
+    RecyclerView recyclerView = view.findViewById(R.id.content_list);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    mUniqueEncounterAdapter = new UniqueEncounterAdapter(getContext());
-    recyclerView.setAdapter(mUniqueEncounterAdapter);
+    mFirstEncounteredAdapter = new FirstEncounteredAdapter(getContext());
+    recyclerView.setAdapter(mFirstEncounteredAdapter);
 
     FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    List<EncounterDetails> uniqueEncountersList = viewModel.getEncounterDetailsList().getValue();
-    if (uniqueEncountersList == null || uniqueEncountersList.size() == 0) {
+    List<EncounterDetails> firstEncounteredList = viewModel.getEncounterDetailsList().getValue();
+    if (firstEncounteredList == null || firstEncounteredList.size() == 0) {
       WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
       String followingUserId = Utils.getFollowingUserId(getContext());
-      wildlifeViewModel.getUniqueEncountered(followingUserId).observe(
+      wildlifeViewModel.getFirstEncountered(followingUserId).observe(
         getViewLifecycleOwner(),
-        uniqueEncounters -> {
+        encounteredList -> {
 
-          Log.d(TAG, "Unique encounter list is " + uniqueEncounters.size());
-          mUniqueEncounterAdapter.setUniqueEncountersList(uniqueEncounters);
+          Log.d(TAG, "First encountered list is " + encounteredList.size());
+          mFirstEncounteredAdapter.setFirstEncounteredList(encounteredList);
         });
     } else {
-      Log.d(TAG, "Unique encounter list is " + uniqueEncountersList.size());
-      mUniqueEncounterAdapter.setUniqueEncountersList(uniqueEncountersList);
+      Log.d(TAG, "First encountered list is " + firstEncounteredList.size());
+      mFirstEncounteredAdapter.setFirstEncounteredList(firstEncounteredList);
     }
 
     return view;
   }
 
-  private class UniqueEncounterAdapter extends RecyclerView.Adapter<UniqueEncounterAdapter.EncounterHolder> {
+  private class FirstEncounteredAdapter extends RecyclerView.Adapter<FirstEncounteredAdapter.EncounterHolder> {
 
-    private final String TAG = Utils.BASE_TAG + UniqueEncounterAdapter.class.getSimpleName();
+    private final String TAG = Utils.BASE_TAG + FirstEncounteredAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
     private final List<EncounterDetails> mEncounterDetails;
 
-    public UniqueEncounterAdapter(Context context) {
+    public FirstEncounteredAdapter(Context context) {
 
       mInflater = LayoutInflater.from(context);
       mEncounterDetails = new ArrayList<>();
@@ -97,14 +97,14 @@ public class UniqueEncounterListFragment extends Fragment {
 
     @NonNull
     @Override
-    public UniqueEncounterAdapter.EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FirstEncounteredAdapter.EncounterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-      View itemView = mInflater.inflate(R.layout.item_unique_encounter, parent, false);
-      return new UniqueEncounterAdapter.EncounterHolder(itemView);
+      View itemView = mInflater.inflate(R.layout.item_first_encountered, parent, false);
+      return new FirstEncounteredAdapter.EncounterHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UniqueEncounterAdapter.EncounterHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FirstEncounteredAdapter.EncounterHolder holder, int position) {
 
       if (mEncounterDetails != null) {
         EncounterDetails encounterDetails = mEncounterDetails.get(position);
@@ -120,13 +120,12 @@ public class UniqueEncounterListFragment extends Fragment {
       return mEncounterDetails != null ? mEncounterDetails.size() : 0;
     }
 
-    public void setUniqueEncountersList(Collection<EncounterDetails> encounterDetailsCollection) {
+    public void setFirstEncounteredList(Collection<EncounterDetails> encounterDetailsCollection) {
 
-      Log.d(TAG, "++setUniqueEncountersList(Collection<EncounterDetails>)");
+      Log.d(TAG, "++setFirstEncounteredList(Collection<EncounterDetails>)");
       int currentSize = mEncounterDetails.size();
       mEncounterDetails.clear();
       mEncounterDetails.addAll(encounterDetailsCollection);
-      mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
       notifyItemRangeRemoved(0, currentSize);
       notifyItemRangeInserted(0, encounterDetailsCollection.size());
     }
@@ -140,9 +139,9 @@ public class UniqueEncounterListFragment extends Fragment {
       EncounterHolder(View itemView) {
         super(itemView);
 
-        mEncounterDateTextView = itemView.findViewById(R.id.unique_encounter_item_text_date);
-        mEncounterImageView = itemView.findViewById(R.id.unique_encounter_item_image_wildlife);
-        mWildlifeTextView = itemView.findViewById(R.id.unique_encounter_item_text_wildlife);
+        mEncounterDateTextView = itemView.findViewById(R.id.first_encountered_item_text_date);
+        mEncounterImageView = itemView.findViewById(R.id.first_encountered_item_image_wildlife);
+        mWildlifeTextView = itemView.findViewById(R.id.first_encountered_item_text_wildlife);
       }
 
       void bind(EncounterDetails encounterDetails) {

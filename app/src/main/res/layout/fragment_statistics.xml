@@ -92,23 +92,23 @@
             android:layout_height="wrap_content">
 
             <TextView
-              android:id="@+id/statistics_text_unique_encounters"
+              android:id="@+id/statistics_text_first_encountered"
               style="@style/SummaryHeader"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@string/header_unique_encounters"
+              android:text="@string/header_first_encountered"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-              android:id="@+id/statistics_image_unique_encounters_new"
+              android:id="@+id/statistics_image_first_encountered_new"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginStart="@dimen/default_view_margin"
-              app:layout_constraintStart_toEndOf="@id/statistics_text_unique_encounters"
-              app:layout_constraintTop_toTopOf="@id/statistics_text_unique_encounters"
-              app:layout_constraintBottom_toBottomOf="@id/statistics_text_unique_encounters"
+              app:layout_constraintStart_toEndOf="@id/statistics_text_first_encountered"
+              app:layout_constraintTop_toTopOf="@id/statistics_text_first_encountered"
+              app:layout_constraintBottom_toBottomOf="@id/statistics_text_first_encountered"
               android:src="@drawable/ic_new_dark"
               android:contentDescription="@string/desc_new_encounters"/>
 
@@ -121,7 +121,7 @@
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/statistics_text_unique_encounters" />
+              app:layout_constraintTop_toBottomOf="@id/statistics_text_first_encountered" />
 
           </androidx.constraintlayout.widget.ConstraintLayout>
 

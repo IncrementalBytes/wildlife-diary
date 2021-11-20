@@ -48,7 +48,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
   AnimationDrawable mPawAnimation;
   ImageView mPawImage;
-  private Snackbar mSnackbar;
 
   private ActivityResultLauncher<Intent> mActivityResultLauncher;
   private FirebaseAuth mAuth;
@@ -93,10 +92,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
               Log.d(TAG, "FirebaseAuthWithGoogle:" + account.getId());
               firebaseAuthenticateWithGoogle(account.getIdToken());
             } else {
-              showErrorInSnackBar("Account returned is invalid.");
+              snackBarMessage("Account returned is invalid.");
             }
           } catch (ApiException e) {
-            showErrorInSnackBar("Google sign in failed", e);
+            snackBarMessage("Google sign in failed", e);
           }
         }
       });
@@ -133,14 +132,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     Log.d(TAG, "++authenticateSuccess()");
     if (mAuth.getCurrentUser() != null) {
+      Utils.setUserId(this, mAuth.getCurrentUser().getUid());
       Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-      intent.putExtra(Utils.ARG_FIREBASE_USER_ID, mAuth.getCurrentUser().getUid());
       startActivity(intent);
       finish();
       mPawAnimation.stop();
     } else {
       String message = "Authentication did not return expected account information; please try again.";
-      showErrorInSnackBar(message);
+      snackBarMessage(message);
     }
   }
 
@@ -150,21 +149,21 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     AuthCredential credential = GoogleAuthProvider.getCredential(tokenId, null);
     mAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
 
-        if (task.isSuccessful()) {
-          Log.d(TAG, "signInWithCredential:success");
-          authenticateSuccess();
-        } else {
-          Log.w(TAG, "signInWithCredential:failure", task.getException());
-          showErrorInSnackBar("Authentication Failed.");
-        }
-     });
+      if (task.isSuccessful()) {
+        Log.d(TAG, "signInWithCredential:success");
+        authenticateSuccess();
+      } else {
+        Log.w(TAG, "signInWithCredential:failure", task.getException());
+        snackBarMessage("Authentication Failed.");
+      }
+    });
   }
 
-  private void showErrorInSnackBar(String message) {
-    showErrorInSnackBar(message, null);
+  private void snackBarMessage(String message) {
+    snackBarMessage(message, null);
   }
 
-  private void showErrorInSnackBar(String message, Exception ex) {
+  private void snackBarMessage(String message, Exception ex) {
 
     if (ex == null) {
       Log.e(TAG, message);
@@ -176,11 +175,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
       mPawAnimation.stop();
     }
 
-    mSnackbar = Snackbar.make(
-      findViewById(R.id.activity_sign_in),
+    Snackbar.make(
+      findViewById(R.id.layout_sign_in),
       message,
-      Snackbar.LENGTH_INDEFINITE);
-    mSnackbar.setAction(R.string.dismiss, v -> mSnackbar.dismiss());
-    mSnackbar.show();
+      Snackbar.LENGTH_INDEFINITE).show();
   }
 }

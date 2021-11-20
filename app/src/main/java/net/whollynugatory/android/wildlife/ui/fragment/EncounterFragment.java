@@ -149,9 +149,6 @@ public class EncounterFragment extends Fragment {
     mFollowingUserId = Utils.getFollowingUserId(getContext());
     mWildlifeMap = new HashMap<>();
     mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    mEncounterId = viewModel.getEncounterId().getValue();
   }
 
   @Override
@@ -159,14 +156,12 @@ public class EncounterFragment extends Fragment {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_encounter, container, false);
-
     mAdditionButton = view.findViewById(R.id.encounter_button_addition);
     mDateEdit = view.findViewById(R.id.encounter_edit_date);
     mGroupCountEdit = view.findViewById(R.id.encounter_edit_number_in_group);
     mMinusButton = view.findViewById(R.id.encounter_button_minus);
     mRecordEncountersButton = view.findViewById(R.id.encounter_button_record);
     mWildlifeText = view.findViewById(R.id.encounter_auto_wildlife);
-
     Button addEncounterButton = view.findViewById(R.id.encounter_button_add);
     Button updateEncounterButton = view.findViewById(R.id.encounter_button_update);
     ImageView deleteImage = view.findViewById(R.id.encounter_button_delete);
@@ -194,10 +189,12 @@ public class EncounterFragment extends Fragment {
     mRecordEncountersButton.setOnClickListener(v -> {
 
       Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-      NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_RecentFragment);
+      NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_DataFragment);
     });
 
-    if (mEncounterId.isEmpty()) { // set for adding
+    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+    mEncounterId = viewModel.getEncounterId().getValue();
+    if (mEncounterId == null || mEncounterId.isEmpty()) { // set for adding
       deleteImage.setVisibility(View.GONE);
       updateEncounterButton.setVisibility(View.GONE);
       addEncounterButton.setOnClickListener(v -> addEncounter());
@@ -208,13 +205,15 @@ public class EncounterFragment extends Fragment {
 
         deleteEncounter();
         Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-        NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_RecentFragment);
+        NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_DataFragment);
       });
 
       updateEncounterButton.setOnClickListener(v -> {
 
         deleteEncounter();
         addEncounter();
+        Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
+        NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_DataFragment);
       });
     }
 
@@ -228,7 +227,7 @@ public class EncounterFragment extends Fragment {
 
       mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
       prepareWildlifeList();
-      if (!mEncounterId.isEmpty()) {
+      if (mEncounterId != null && !mEncounterId.isEmpty()) {
         setupForEditing();
       }
     });
@@ -245,7 +244,7 @@ public class EncounterFragment extends Fragment {
     EncounterEntity encounterEntity = new EncounterEntity();
     encounterEntity.Date = Utils.toTimestamp(mDateEdit.getText().toString());
     encounterEntity.EncounterId = UUID.randomUUID().toString();
-    encounterEntity.UserId = Utils.DEFAULT_FOLLOWING_USER_ID;
+    encounterEntity.UserId = Utils.getUserId(getContext());
 
     String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
     if (mWildlifeMap.containsKey(selectedWildlifeAbbreviation)) {
@@ -288,7 +287,7 @@ public class EncounterFragment extends Fragment {
           if (!task.isSuccessful()) {
             Log.e(TAG, "Error setting data Encounter data.", task.getException());
             // TODO: alert to user (but not using snackbar)
-          } else if (mEncounterId.isEmpty()) { // reset view for additional encounters
+          } else if (mEncounterId == null || mEncounterId.isEmpty()) { // reset view for additional encounters
             mWildlifeText.setText("");
             mGroupCount = 1;
             mGroupCountEdit.setText(String.valueOf(mGroupCount));
@@ -296,9 +295,9 @@ public class EncounterFragment extends Fragment {
             mAdditionButton.setEnabled(true);
             // TODO: alert to user (but not using snackbar)
             mRecordEncountersButton.setEnabled(true);
-          } else { // encounter updated
-            Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-            NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_RecentFragment);
+          } else {
+            // TODO: figure out this use case
+            Log.w(TAG, "Encounter Id was not reset.");
           }
 
           mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
@@ -311,7 +310,7 @@ public class EncounterFragment extends Fragment {
   private void deleteEncounter() {
 
     Log.d(TAG, "++deleteEncounter()");
-    if (!mEncounterId.isEmpty()) {
+    if (mEncounterId != null  && !mEncounterId.isEmpty()) {
       mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(
         getViewLifecycleOwner(),
         encounterDetailsList -> {
@@ -331,6 +330,7 @@ public class EncounterFragment extends Fragment {
             });
         });
     } else {
+      // TODO: figure out this use case
       Log.w(TAG, "EncounterId was empty.");
     }
   }
@@ -368,7 +368,10 @@ public class EncounterFragment extends Fragment {
         }
       }
 
-      mGroupCount = encounterDetailsList.size() / taskIds.size();
+      if (taskIds.size() > 0) {
+        mGroupCount = encounterDetailsList.size() / taskIds.size();
+      }
+
       mDateEdit.setText(Utils.fromTimestamp(encounterDetailsList.get(0).Date));
       mGroupCountEdit.setText(String.valueOf(mGroupCount));
       mWildlifeText.setText(encounterDetailsList.get(0).WildlifeAbbreviation);

@@ -48,11 +48,14 @@ public class StatisticsFragment extends Fragment {
 
   private CardView mEuthanasiaCard;
   private ImageView mNewTotalEncountersImage;
-  private ImageView mNewUniqueEncountersImage;
+  private ImageView mNewFirstEncounteredImage;
 
   private String mFollowingUserId;
   private WildlifeViewModel mWildlifeViewModel;
 
+  /*
+    Fragment Override(s)
+   */
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -63,10 +66,10 @@ public class StatisticsFragment extends Fragment {
     View view = mBinding.getRoot();
     mEuthanasiaCard = view.findViewById(R.id.statistics_card_handled_euthanasia);
     mNewTotalEncountersImage = view.findViewById(R.id.statistics_image_total_encounters_new);
-    mNewUniqueEncountersImage = view.findViewById(R.id.statistics_image_unique_encounters_new);
+    mNewFirstEncounteredImage = view.findViewById(R.id.statistics_image_first_encountered_new);
 
     mNewTotalEncountersImage.setVisibility(View.GONE);
-    mNewUniqueEncountersImage.setVisibility(View.GONE);
+    mNewFirstEncounteredImage.setVisibility(View.GONE);
 
     mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     mFollowingUserId = Utils.getFollowingUserId(getActivity());
@@ -93,9 +96,9 @@ public class StatisticsFragment extends Fragment {
       newUnique -> {
 
         if (newUnique != null && newUnique.size() > 0) {
-          mNewUniqueEncountersImage.setVisibility(View.VISIBLE);
+          mNewFirstEncounteredImage.setVisibility(View.VISIBLE);
         } else {
-          mNewUniqueEncountersImage.setVisibility(View.GONE);
+          mNewFirstEncounteredImage.setVisibility(View.GONE);
         }
       }
     );
@@ -133,15 +136,15 @@ public class StatisticsFragment extends Fragment {
               .navigate(R.id.action_StatisticsFragment_to_EncounterDetailsListFragment);
           });
       } else if (view.getId() == R.id.statistics_card_unique_encounters) {
-        mWildlifeViewModel.getUniqueEncountered(mFollowingUserId).observe(
+        mWildlifeViewModel.getFirstEncountered(mFollowingUserId).observe(
           getViewLifecycleOwner(),
-          uniqueEncounters -> {
+          firstEncounteredList -> {
 
             FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
               .get(FragmentDataViewModel.class);
-            viewModel.setEncounterDetailsList(uniqueEncounters);
+            viewModel.setEncounterDetailsList(firstEncounteredList);
             NavHostFragment.findNavController(requireParentFragment())
-              .navigate(R.id.action_StatisticsFragment_to_UniqueEncountersFragment);
+              .navigate(R.id.action_StatisticsFragment_to_FirstEncounteredFragment);
           });
       } else if (view.getId() == R.id.statistics_card_most_encountered) {
         mWildlifeViewModel.getMostEncountered(mFollowingUserId).observe(

@@ -38,8 +38,6 @@ import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 
-import java.util.Locale;
-
 public class DataFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + DataFragment.class.getSimpleName();
@@ -54,6 +52,7 @@ public class DataFragment extends Fragment {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     View view = inflater.inflate(R.layout.fragment_data, container, false);
+    mStatusText = view.findViewById(R.id.data_text_status);
     ImageView pawImage = view.findViewById(R.id.data_image_paw);
     pawImage.setBackgroundResource(R.drawable.anim_paw_dark);
     AnimationDrawable pawAnimation = (AnimationDrawable) pawImage.getBackground();
@@ -106,6 +105,25 @@ public class DataFragment extends Fragment {
               Log.w(TAG, "Remote dataStamp was unexpected: " + remoteDataStamp);
               onDataMissing();
             } else if (localDataStamp.equals(Utils.UNKNOWN_ID) || !localDataStamp.equalsIgnoreCase(remoteDataStamp)) {
+              switch (dataToSync) {
+                case Utils.ENCOUNTER_ROOT:
+                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                    WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
+                  break;
+                case Utils.TASK_ROOT:
+                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                    WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
+                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                    WildlifeDatabase.getInstance(getContext()).taskDao().deleteAll());
+                  break;
+                case Utils.WILDLIFE_ROOT:
+                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                    WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
+                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                    WildlifeDatabase.getInstance(getContext()).wildlifeDao().deleteAll());
+                  break;
+              }
+
               populateTable(dataToSync, remoteDataStamp);
             } else if (localDataStamp.equals(remoteDataStamp)) {
               Log.d(TAG, "Local data in-sync with " + dataToSync);

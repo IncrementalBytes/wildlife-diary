@@ -285,7 +285,9 @@
     },
     "a4c1041e-2fb2-469d-8599-afb2ece47c12": {
       "FriendlyName": "Cackling Goose",
-      "Abbreviation": "CACG"
+      "Abbreviation": "CACG",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/b/bc/016_-_CACKLING_GOOSE_%2810-31-06%29_sloco%2C_ca_%288708309130%29.jpg",
+      "ImageAttribution": "ALAN SCHMIERER, CC0, via Wikimedia Commons"
     },
     "30a85670-3ff3-499b-a039-7a1b5edd822c": {
       "FriendlyName": "California Gull",
@@ -1141,7 +1143,9 @@
     },
     "0e1e8cf7-b618-4228-aa1a-a3064e5fef87": {
       "FriendlyName": "Ring-billed Gull",
-      "Abbreviation": "RBGU"
+      "Abbreviation": "RBGU",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/e/e6/Ring-billed_gull_in_Red_Hook_%2842799%29.jpg",
+      "ImageAttribution": "Rhododendrites, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons"
     },
     "10194bf9-f9be-4e61-9234-c01d1683df8f": {
       "FriendlyName": "Ring-necked Duck",

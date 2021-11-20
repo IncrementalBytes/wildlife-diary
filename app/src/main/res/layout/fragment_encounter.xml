@@ -75,7 +75,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/default_view_margin"
-    android:text="@string/number_in_group"
+    android:text="@string/label_number_in_group"
     android:textSize="18sp"
     android:textStyle="bold"
     android:textColor="@color/primaryTextColor"

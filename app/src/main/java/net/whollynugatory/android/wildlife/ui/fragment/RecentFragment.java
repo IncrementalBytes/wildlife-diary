@@ -28,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,24 +51,29 @@ public class RecentFragment extends Fragment {
 
   private static final String TAG = Utils.BASE_TAG + RecentFragment.class.getSimpleName();
 
+  /*
+    Fragment Override(s)
+   */
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
-    FloatingActionButton addEncounterButton = view.findViewById(R.id.list_fab_add);
-    addEncounterButton.setOnClickListener(v ->
-      NavHostFragment.findNavController(this).navigate(R.id.action_RecentFragment_to_EncounterFragment));
-    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    EncounterAdapter encounterAdapter = new EncounterAdapter(getContext());
-    recyclerView.setAdapter(encounterAdapter);
-
+    final View view = inflater.inflate(R.layout.fragment_recent, container, false);
+    FloatingActionButton addEncounterButton = view.findViewById(R.id.recent_fab_add);
     if (Utils.getIsContributor(getContext())) {
       addEncounterButton.setVisibility(View.VISIBLE);
+      FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
+      viewModel.setEncounterId("");
+      addEncounterButton.setOnClickListener(addEncounterButtonView ->
+        Navigation.findNavController(addEncounterButtonView).navigate(R.id.action_RecentFragment_to_EncounterFragment));
     } else {
       addEncounterButton.setVisibility(View.INVISIBLE);
     }
+
+    RecyclerView recyclerView = view.findViewById(R.id.content_list);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    EncounterAdapter encounterAdapter = new EncounterAdapter(getContext());
+    recyclerView.setAdapter(encounterAdapter);
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     String followingUserId = Utils.getFollowingUserId(getActivity());
@@ -81,35 +85,39 @@ public class RecentFragment extends Fragment {
       getViewLifecycleOwner(),
       encounterDetailsList -> {
 
-        String targetDate = Utils.fromTimestamp(encounterDetailsList.get(0).Date);
-        List<String> encounterIds = new ArrayList<>();
-        List<EncounterDetails> recentEncounterDetailsList = new ArrayList<>();
-        for (EncounterDetails encounterDetails : encounterDetailsList) {
-          String currentDate = Utils.fromTimestamp(encounterDetails.Date);
-          if (currentDate.equals(targetDate)) {
-            if (!encounterIds.contains(encounterDetails.EncounterId)) {
-              recentEncounterDetailsList.add(encounterDetails);
-              encounterIds.add(encounterDetails.EncounterId);
+        if (encounterDetailsList.isEmpty()) {
+          encounterAdapter.setEncounterDetailsList(encounterDetailsList);
+        } else {
+          String targetDate = Utils.fromTimestamp(encounterDetailsList.get(0).Date);
+          List<String> encounterIds = new ArrayList<>();
+          List<EncounterDetails> recentEncounterDetailsList = new ArrayList<>();
+          for (EncounterDetails encounterDetails : encounterDetailsList) {
+            String currentDate = Utils.fromTimestamp(encounterDetails.Date);
+            if (currentDate.equals(targetDate)) {
+              if (!encounterIds.contains(encounterDetails.EncounterId)) {
+                recentEncounterDetailsList.add(encounterDetails);
+                encounterIds.add(encounterDetails.EncounterId);
+              }
+            } else {
+              break;
             }
-          } else {
-            break;
           }
-        }
 
-        wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
-          getViewLifecycleOwner(),
-          uniqueList -> {
+          wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+            getViewLifecycleOwner(),
+            uniqueList -> {
 
-            for (String uniqueId : uniqueList) {
-              for (EncounterDetails encounterDetails : recentEncounterDetailsList) {
-                if (encounterDetails.WildlifeId.equals(uniqueId)) {
-                  encounterDetails.IsNew = true;
+              for (String uniqueId : uniqueList) {
+                for (EncounterDetails encounterDetails : recentEncounterDetailsList) {
+                  if (encounterDetails.WildlifeId.equals(uniqueId)) {
+                    encounterDetails.IsNew = true;
+                  }
                 }
               }
-            }
 
-            encounterAdapter.setEncounterDetailsList(recentEncounterDetailsList);
-          });
+              encounterAdapter.setEncounterDetailsList(recentEncounterDetailsList);
+            });
+        }
       });
 
     return view;
@@ -200,10 +208,11 @@ public class RecentFragment extends Fragment {
         Log.d(TAG, "++EncounterHolder::onClick(View)");
         FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
           .get(FragmentDataViewModel.class);
-        viewModel.setEncounterDetails(mEncounterDetails);
         if (Utils.getIsContributor(getContext())) {
+          viewModel.setEncounterId(mEncounterDetails.EncounterId);
           Navigation.findNavController(view).navigate(R.id.action_RecentFragment_to_EncounterFragment);
         } else {
+          viewModel.setEncounterDetails(mEncounterDetails);
           Navigation.findNavController(view).navigate(R.id.action_RecentFragment_to_EncounterDetailsFragment);
         }
       }

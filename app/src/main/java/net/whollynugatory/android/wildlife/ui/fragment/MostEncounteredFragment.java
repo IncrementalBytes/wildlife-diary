@@ -31,7 +31,6 @@ package net.whollynugatory.android.wildlife.ui.fragment;
   import androidx.recyclerview.widget.RecyclerView;
 
   import com.bumptech.glide.Glide;
-  import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
   import net.whollynugatory.android.wildlife.R;
   import net.whollynugatory.android.wildlife.Utils;
@@ -50,14 +49,15 @@ public class MostEncounteredFragment extends Fragment {
 
   private MostEncounteredAdapter mMostEncounteredAdapter;
 
+  /*
+    Fragment Override(s)
+   */
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
-    FloatingActionButton fab = view.findViewById(R.id.list_fab_add);
-    fab.setVisibility(View.INVISIBLE);
-    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
+    RecyclerView recyclerView = view.findViewById(R.id.content_list);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mMostEncounteredAdapter = new MostEncounteredAdapter(getContext());
     recyclerView.setAdapter(mMostEncounteredAdapter);

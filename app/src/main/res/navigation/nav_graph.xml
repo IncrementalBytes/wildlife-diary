@@ -3,29 +3,29 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/nav_graph"
-  app:startDestination="@id/RecentFragment">
+  app:startDestination="@id/DataFragment">
 
   <action
-    android:id="@+id/action_DataFragment"
-    app:destination="@+id/DataFragment"/>
-  <action
     android:id="@+id/action_Menu_to_RecentFragment"
-    app:destination="@+id/RecentFragment"/>
+    app:destination="@id/RecentFragment"/>
   <action
     android:id="@+id/action_Menu_to_StatisticsFragment"
-    app:destination="@+id/StatisticsFragment"/>
+    app:destination="@id/StatisticsFragment"/>
   <action
     android:id="@+id/action_Menu_to_ByDateFragment"
-    app:destination="@+id/ByDateFragment"/>
+    app:destination="@id/ByDateFragment"/>
   <action
     android:id="@+id/action_Menu_to_SettingsFragment"
-    app:destination="@+id/SettingsFragment"/>
+    app:destination="@id/SettingsFragment"/>
   <action
     android:id="@+id/action_Menu_to_CleanupFragment"
-    app:destination="@+id/CleanupFragment" />
+    app:destination="@id/CleanupFragment" />
   <action
-    android:id="@+id/action_TryAgainFragment"
-    app:destination="@+id/fragment_try_again_later.xml" />
+    android:id="@+id/action_Menu_to_DataFragment"
+    app:destination="@id/DataFragment" />
+  <action
+    android:id="@+id/action_to_TryAgainLaterFragment"
+    app:destination="@id/TryAgainFragment" />
 
   <fragment
     android:id="@+id/ByDateFragment"
@@ -34,7 +34,7 @@
     tools:layout="@layout/fragment_list_only">
     <action
       android:id="@+id/action_DateList_to_EncounterDetailsList"
-      app:destination="@id/EncounterDetailsListFragment"/>
+      app:destination="@+id/EncounterDetailsListFragment"/>
   </fragment>
 
   <fragment
@@ -64,6 +64,16 @@
     tools:layout="@layout/fragment_encounter_details" />
 
   <fragment
+    android:id="@+id/EncounterFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment"
+    android:label="@string/fragment_label_encounter"
+    tools:layout="@layout/fragment_encounter">
+    <action
+      android:id="@+id/action_EncounterFragment_to_DataFragment"
+      app:destination="@+id/DataFragment"/>
+  </fragment>
+
+  <fragment
     android:id="@+id/EncounterDetailsListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailsListFragment"
     android:label="@string/fragment_label_encounter_details_list"
@@ -74,14 +84,10 @@
   </fragment>
 
   <fragment
-    android:id="@+id/EncounterFragment"
-    android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment"
-    android:label="@string/fragment_label_encounter"
-    tools:layout="@layout/fragment_encounter">
-    <action
-      android:id="@+id/action_EncounterFragment_to_RecentFragment"
-      app:destination="@+id/RecentFragment"/>
-  </fragment>
+    android:id="@+id/FirstEncounteredFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.FirstEncounteredListFragment"
+    android:label="@string/fragment_label_first_encountered_list"
+    tools:layout="@layout/fragment_list_only" />
 
   <fragment
     android:id="@+id/MostEncounteredFragment"
@@ -93,13 +99,13 @@
     android:id="@+id/RecentFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.RecentFragment"
     android:label="@string/fragment_label_recent"
-    tools:layout="@layout/fragment_list_only">
-    <action
-      android:id="@+id/action_RecentFragment_to_EncounterFragment"
-      app:destination="@+id/EncounterFragment"/>
+    tools:layout="@layout/fragment_recent">
     <action
       android:id="@+id/action_RecentFragment_to_EncounterDetailsFragment"
       app:destination="@+id/EncounterDetailsFragment"/>
+    <action
+      android:id="@+id/action_RecentFragment_to_EncounterFragment"
+      app:destination="@+id/EncounterFragment"/>
   </fragment>
 
   <fragment
@@ -116,17 +122,17 @@
       android:id="@+id/action_StatisticsFragment_to_EncounterDetailsListFragment"
       app:destination="@+id/EncounterDetailsListFragment"/>
     <action
-      android:id="@+id/action_StatisticsFragment_to_UniqueEncountersFragment"
-      app:destination="@+id/UniqueEncountersFragment"/>
+      android:id="@+id/action_StatisticsFragment_to_FirstEncounteredFragment"
+      app:destination="@+id/FirstEncounteredFragment"/>
     <action
       android:id="@+id/action_StatisticsFragment_to_MostEncounteredFragment"
       app:destination="@+id/MostEncounteredFragment"/>
   </fragment>
 
   <fragment
-    android:id="@+id/UniqueEncountersFragment"
-    android:name="net.whollynugatory.android.wildlife.ui.fragment.UniqueEncounterListFragment"
-    android:label="@string/fragment_label_unique_encounters_list"
-    tools:layout="@layout/fragment_list_only" />
+    android:id="@+id/TryAgainFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment"
+    android:label="@string/label_try_again_later"
+    tools:layout="@layout/fragment_try_again_later" />
 
 </navigation>

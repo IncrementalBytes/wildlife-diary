@@ -17,7 +17,7 @@
         android:layout_height="match_parent">
 
       <ImageView
-        android:id="@+id/unique_encounter_item_image_wildlife"
+        android:id="@+id/first_encountered_item_image_wildlife"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_margin="@dimen/default_card_margin"
@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
       <TextView
-        android:id="@+id/unique_encounter_item_text_wildlife"
+        android:id="@+id/first_encountered_item_text_wildlife"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_view_margin"
@@ -38,11 +38,11 @@
         android:textColor="@color/secondaryTextColor"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/unique_encounter_item_image_wildlife"
+        app:layout_constraintStart_toEndOf="@id/first_encountered_item_image_wildlife"
         app:layout_constraintTop_toTopOf="parent" />
 
       <TextView
-        android:id="@+id/unique_encounter_item_text_date"
+        android:id="@+id/first_encountered_item_text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_view_margin"
@@ -50,7 +50,7 @@
         android:layout_marginBottom="@dimen/default_view_margin"
         android:text="@string/placeholder"
         android:textColor="@color/primaryTextColor"
-        app:layout_constraintStart_toEndOf="@id/unique_encounter_item_image_wildlife"
+        app:layout_constraintStart_toEndOf="@id/first_encountered_item_image_wildlife"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,9 +30,6 @@ public class EncounterDetails implements Serializable {
 
   public long Date;
 
-  @Ignore
-  public long EncounterCount;
-
   public String EncounterId;
 
   public String Id;
@@ -64,7 +61,6 @@ public class EncounterDetails implements Serializable {
   public EncounterDetails() {
 
     Date = 0;
-    EncounterCount = 0;
     EncounterId = Utils.UNKNOWN_ID;
     ImageAttribution = Utils.DEFAULT_ATTRIBUTION;
     ImageUrl = Utils.UNKNOWN_STRING;

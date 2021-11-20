@@ -32,7 +32,7 @@ public class UserEntity implements Serializable {
 
   public UserEntity() {
 
-    FollowingId = Utils.DEFAULT_FOLLOWING_USER_ID;
+    FollowingId = Utils.UNKNOWN_USER_ID;
     Id = Utils.UNKNOWN_USER_ID;
     IsContributor = false;
   }

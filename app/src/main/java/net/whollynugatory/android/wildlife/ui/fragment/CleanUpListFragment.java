@@ -30,7 +30,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.R;
@@ -55,9 +54,7 @@ public class CleanUpListFragment extends Fragment {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
-    FloatingActionButton fab = view.findViewById(R.id.list_fab_add);
-    fab.setVisibility(View.INVISIBLE);
-    RecyclerView recyclerView = view.findViewById(R.id.list_recycler_view);
+    RecyclerView recyclerView = view.findViewById(R.id.content_list);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
