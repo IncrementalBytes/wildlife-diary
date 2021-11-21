@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -272,7 +273,7 @@ public class EncounterFragment extends Fragment {
             Log.d(TAG, "Adding " + newEntity.toString());
             encounterEntities.put(newEntity.Id, newEntity);
           } else {
-            // TODO: alert to user (but not using snackbar)
+            Toast.makeText(getContext(), "Missing encounter data.", Toast.LENGTH_SHORT).show();
           }
         }
 
@@ -286,18 +287,15 @@ public class EncounterFragment extends Fragment {
 
           if (!task.isSuccessful()) {
             Log.e(TAG, "Error setting data Encounter data.", task.getException());
-            // TODO: alert to user (but not using snackbar)
+            Toast.makeText(getContext(), "Update failed.", Toast.LENGTH_SHORT).show();
           } else if (mEncounterId == null || mEncounterId.isEmpty()) { // reset view for additional encounters
             mWildlifeText.setText("");
             mGroupCount = 1;
             mGroupCountEdit.setText(String.valueOf(mGroupCount));
             mMinusButton.setEnabled(false);
             mAdditionButton.setEnabled(true);
-            // TODO: alert to user (but not using snackbar)
+            Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
             mRecordEncountersButton.setEnabled(true);
-          } else {
-            // TODO: figure out this use case
-            Log.w(TAG, "Encounter Id was not reset.");
           }
 
           mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
@@ -318,7 +316,7 @@ public class EncounterFragment extends Fragment {
           HashMap<String, Object> encounterEntities = new HashMap<>();
           for (EncounterDetails encounterDetails : encounterDetailsList) {
             Log.d(TAG, "Deleting " + encounterDetails.toString());
-            encounterEntities.put(encounterDetails.Id, null);
+            encounterEntities.put(encounterDetails.Id, null); // TODO: Id or EncounterId?
           }
 
           FirebaseDatabase.getInstance().getReference(Utils.ENCOUNTER_ROOT).updateChildren(encounterEntities)
@@ -330,8 +328,8 @@ public class EncounterFragment extends Fragment {
             });
         });
     } else {
-      // TODO: figure out this use case
-      Log.w(TAG, "EncounterId was empty.");
+      Toast.makeText(getContext(), "Encounter data invalid.", Toast.LENGTH_SHORT).show();
+      Log.w(TAG, "Encounter Id was empty.");
     }
   }
 
@@ -355,7 +353,9 @@ public class EncounterFragment extends Fragment {
   private void setupForEditing() {
 
     Log.d(TAG, "++setupForEditing()");
-    mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(getViewLifecycleOwner(), encounterDetailsList -> {
+    mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(
+      getViewLifecycleOwner(),
+      encounterDetailsList -> {
 
       List<String> taskIds = new ArrayList<>();
       for (EncounterDetails encounterDetails : encounterDetailsList) {
@@ -368,13 +368,15 @@ public class EncounterFragment extends Fragment {
         }
       }
 
-      if (taskIds.size() > 0) {
+      if (taskIds.size() > 0 && encounterDetailsList.size() > 0) {
         mGroupCount = encounterDetailsList.size() / taskIds.size();
+        mDateEdit.setText(Utils.fromTimestamp(encounterDetailsList.get(0).Date));
+        mWildlifeText.setText(encounterDetailsList.get(0).WildlifeAbbreviation);
+      } else {
+        mGroupCount = 1;
       }
 
-      mDateEdit.setText(Utils.fromTimestamp(encounterDetailsList.get(0).Date));
       mGroupCountEdit.setText(String.valueOf(mGroupCount));
-      mWildlifeText.setText(encounterDetailsList.get(0).WildlifeAbbreviation);
       mWildlifeText.setEnabled(false);
       mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
       updateUI();

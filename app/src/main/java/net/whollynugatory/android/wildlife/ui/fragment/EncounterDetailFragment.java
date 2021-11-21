@@ -103,6 +103,8 @@ public class EncounterDetailFragment extends Fragment {
     wildlifeViewModel.getEncounterDetails(followingUserId, encounterId).observe(
       getViewLifecycleOwner(),
       encounterDetailsList -> {
+
+        // BUG: need to group encounters
         mEncounterDetailsList = new ArrayList<>(encounterDetailsList);
         HashMap<String, TaskEntity> taskMap = new HashMap<>();
         boolean showSensitive = Utils.getShowSensitive(getContext());

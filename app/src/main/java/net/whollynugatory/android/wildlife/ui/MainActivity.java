@@ -21,11 +21,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -36,6 +41,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
@@ -45,15 +52,17 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+  NavigationBarView.OnItemSelectedListener,
+  NavigationView.OnNavigationItemSelectedListener {
 
   private static final String TAG = Utils.BASE_TAG + MainActivity.class.getSimpleName();
 
   private AppBarConfiguration mAppBarConfiguration;
-  private BottomNavigationView mBottomNavigationView;
   private NavController mNavController;
+  private NavigationView mNavigationView;
+  private DrawerLayout mDrawerLayout;
 
-  private boolean mDisableGroupMenu;
   private UserEntity mUserEntity;
 
   /*
@@ -66,10 +75,21 @@ public class MainActivity extends AppCompatActivity {
     Log.d(TAG, "++onCreate(Bundle)");
     setContentView(R.layout.activity_main);
 
-    mDisableGroupMenu = false;
-    mBottomNavigationView = findViewById(R.id.main_bottom_navigation);
-    Toolbar mainToolbar = findViewById(R.id.main_toolbar);
-    setSupportActionBar(mainToolbar);
+    mDrawerLayout = findViewById(R.id.main_drawer_layout);
+    BottomNavigationView bottomNavigationView = findViewById(R.id.main_bottom_navigation);
+    mNavigationView = findViewById(R.id.main_navigation_view);
+    Toolbar toolbar = findViewById(R.id.main_toolbar);
+
+    setSupportActionBar(toolbar);
+    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+      this,
+      mDrawerLayout,
+      toolbar,
+      R.string.navigation_drawer_open,
+      R.string.navigation_drawer_close);
+    mDrawerLayout.addDrawerListener(toggle);
+    toggle.syncState();
+    mNavigationView.setNavigationItemSelectedListener(this);
 
     NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
       .findFragmentById(R.id.main_fragment_container);
@@ -78,60 +98,27 @@ public class MainActivity extends AppCompatActivity {
       mAppBarConfiguration = new AppBarConfiguration.Builder(mNavController.getGraph()).build();
     } else {
       Log.e(TAG, "NavController was not initialized properly.");
-      mDisableGroupMenu = true;
     }
 
-    mBottomNavigationView.setOnItemSelectedListener(item -> {
-
-      if (item.getItemId() == R.id.navigation_statistics) {
-        mNavController.navigate(R.id.action_Menu_to_StatisticsFragment);
-      } else if (item.getItemId() == R.id.navigation_date) {
-        mNavController.navigate(R.id.action_Menu_to_ByDateFragment);
-      } else if (item.getItemId() == R.id.navigation_recent) {
-        mNavController.navigate(R.id.action_Menu_to_RecentFragment);
-      }
-
-      return true;
-    });
-
+    bottomNavigationView.setOnItemSelectedListener(this);
     getUserInfo();
+
+    View navigationHeaderView = mNavigationView.inflateHeaderView(R.layout.header_main);
+    TextView navigationFullName = navigationHeaderView.findViewById(R.id.header_text_full_name);
+    navigationFullName.setText(getIntent().getStringExtra("DisplayName"));
+    TextView navigationEmail = navigationHeaderView.findViewById(R.id.header_text_email);
+    navigationEmail.setText(getIntent().getStringExtra("Email"));
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
+  public void onBackPressed() {
 
-    Log.d(TAG, "++onCreateOptionsMenu(Menu)");
-    getMenuInflater().inflate(R.menu.menu_main, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-
-    Log.d(TAG, "++onOptionsItemSelected(MenuItem)");
-    if (item.getItemId() == R.id.menu_home) {
-      mNavController.navigate(R.id.action_Menu_to_RecentFragment);
-    } else if (item.getItemId() == R.id.menu_settings) {
-      mNavController.navigate(R.id.action_Menu_to_SettingsFragment);
-    } else if (item.getItemId() == R.id.menu_cleanup) {
-      mNavController.navigate(R.id.action_Menu_to_CleanupFragment);
-    } else if (item.getItemId() == R.id.menu_crash) {
-      throw new RuntimeException("Test Crash"); // Force a crash
-    } else if (item.getItemId() == R.id.menu_sync) {
-      Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
-      Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
-      Utils.setLocalTimeStamp(this, R.string.pref_key_stamp_tasks, Utils.UNKNOWN_ID);
-      mNavController.navigate(R.id.action_Menu_to_DataFragment);
-    } else if (item.getItemId() == R.id.menu_logout) {
-      AlertDialog alertDialog = new AlertDialog.Builder(this)
-        .setMessage(R.string.logout_message)
-        .setPositiveButton(android.R.string.yes, (dialog, which) -> signOut())
-        .setNegativeButton(android.R.string.no, null)
-        .create();
-      alertDialog.show();
+    Log.d(TAG, "++onBackPressed()");
+    if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+      mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    return super.onOptionsItemSelected(item);
+    // TODO: need to navigate back too
   }
 
   @Override
@@ -146,21 +133,10 @@ public class MainActivity extends AppCompatActivity {
 
     Log.d(TAG, "++onPrepareOptionsMenu(Menu)");
     if (mUserEntity != null) {
-      MenuItem menuItem = menu.findItem(R.id.menu_cleanup);
-      if (menuItem != null) {
-        menuItem.setVisible(mUserEntity.IsContributor);
-      }
-
-      menuItem = menu.findItem(R.id.menu_crash);
-      if (menuItem != null) {
-        menuItem.setVisible(mUserEntity.IsContributor);
-      }
+      Menu navigationMenu = mNavigationView.getMenu();
+      navigationMenu.setGroupVisible(R.id.group_contributor, mUserEntity.IsContributor);
     }
 
-    menu.setGroupEnabled(R.id.menu_grouping, !mDisableGroupMenu);
-
-    // disable bottom navigation
-    mBottomNavigationView.setEnabled(false);
     return super.onPrepareOptionsMenu(menu);
   }
 
@@ -189,6 +165,47 @@ public class MainActivity extends AppCompatActivity {
   public boolean onSupportNavigateUp() {
 
     return NavigationUI.navigateUp(mNavController, mAppBarConfiguration) || super.onSupportNavigateUp();
+  }
+
+  /*
+    Override(s)
+   */
+  @Override
+  public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+    if (item.getItemId() == R.id.menu_home) {
+      mNavController.navigate(R.id.action_Menu_to_RecentFragment);
+    } else if (item.getItemId() == R.id.menu_settings) {
+      mNavController.navigate(R.id.action_Menu_to_SettingsFragment);
+    } else if (item.getItemId() == R.id.menu_cleanup) {
+      mNavController.navigate(R.id.action_Menu_to_CleanupFragment);
+    } else if (item.getItemId() == R.id.menu_crash) {
+      throw new RuntimeException("Test Crash"); // Force a crash
+    } else if (item.getItemId() == R.id.menu_sync) {
+      Utils.setLocalTimeStamp(getApplicationContext(), R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
+      Utils.setLocalTimeStamp(getApplicationContext(), R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
+      Utils.setLocalTimeStamp(getApplicationContext(), R.string.pref_key_stamp_tasks, Utils.UNKNOWN_ID);
+      mNavController.navigate(R.id.action_Menu_to_DataFragment);
+    } else if (item.getItemId() == R.id.navigation_statistics) {
+      mNavController.navigate(R.id.action_Menu_to_StatisticsFragment);
+    } else if (item.getItemId() == R.id.navigation_date) {
+      mNavController.navigate(R.id.action_Menu_to_ByDateFragment);
+    } else if (item.getItemId() == R.id.navigation_recent) {
+      mNavController.navigate(R.id.action_Menu_to_RecentFragment);
+    } else if (item.getItemId() == R.id.menu_logout) {
+      AlertDialog alertDialog = new AlertDialog.Builder(getApplicationContext())
+        .setMessage(R.string.logout_message)
+        .setPositiveButton(android.R.string.yes, (dialog, which) -> signOut())
+        .setNegativeButton(android.R.string.no, null)
+        .create();
+      alertDialog.show();
+    }
+
+    if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+      mDrawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    return false;
   }
 
   /*
@@ -225,11 +242,12 @@ public class MainActivity extends AppCompatActivity {
               Utils.setFollowingUserId(this, mUserEntity.FollowingId);
               Utils.setUserId(this, userId);
               Utils.setIsContributor(this, mUserEntity.IsContributor);
-              invalidateOptionsMenu();
             } else {
               tryAgain("UserData returned from server was unexpected. Try again later.");
             }
           }
+
+          invalidateOptionsMenu();
         });
     }
   }
@@ -239,11 +257,6 @@ public class MainActivity extends AppCompatActivity {
     Log.d(TAG, "++tryAgain(String)");
     FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
     viewModel.setMessage(message);
-
-    // disable action bar
-    mDisableGroupMenu = true;
-    invalidateOptionsMenu();
-
     mNavController.navigate(R.id.action_to_TryAgainLaterFragment);
   }
 

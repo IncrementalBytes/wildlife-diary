@@ -52,6 +52,7 @@
   <string name="label_number_in_group">Number in group:</string>
   <string name="label_record_encounters">Record</string>
   <string name="label_delete">Delete</string>
+  <string name="label_try_again_later">Try Again Later</string>
 
   <string name="desc_add_encounter">Add new encounter</string>
   <string name="desc_task_completed">Shows whether or not task was completed during this encounter</string>
@@ -84,6 +85,8 @@
   <string name="fragment_label_first_encountered_list">First Encountered</string>
   <string name="fragment_label_encounter">Encounter</string>
   <string name="fragment_label_data">Data</string>
-  <string name="label_try_again_later">Try Again Later</string>
+
+  <string name="navigation_drawer_open">Open</string>
+  <string name="navigation_drawer_close">Close</string>
 
 </resources>

@@ -71,6 +71,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     signInWithGoogleButton.setSize(SignInButton.SIZE_STANDARD);
     signInWithGoogleButton.setOnClickListener(this);
 
+//    Crashlytics crashlyticsKit = new Crashlytics.Builder()
+//      .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+//      .build();
+//    Fabric.with(this, crashlyticsKit);
+
     mAuth = FirebaseAuth.getInstance();
     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
       .requestIdToken(getString(R.string.default_web_client_id))
@@ -134,6 +139,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     if (mAuth.getCurrentUser() != null) {
       Utils.setUserId(this, mAuth.getCurrentUser().getUid());
       Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+      intent.putExtra("DisplayName", mAuth.getCurrentUser().getDisplayName());
+      intent.putExtra("Email", mAuth.getCurrentUser().getEmail());
       startActivity(intent);
       finish();
       mPawAnimation.stop();

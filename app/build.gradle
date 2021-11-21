@@ -66,13 +66,9 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            manifestPlaceholders.firebasecrashlyticsCollectionEnabled = true
         }
         debug {
-            firebaseCrashlytics {
-                mappingFileUploadEnabled false
-            }
-            manifestPlaceholders.firebasecrashlyticsCollectionEnabled = false
+            ext.enableCrashlytics = false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -126,6 +122,8 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:17.2.2'
 
     // Room
     implementation "androidx.room:room-runtime:2.3.0"

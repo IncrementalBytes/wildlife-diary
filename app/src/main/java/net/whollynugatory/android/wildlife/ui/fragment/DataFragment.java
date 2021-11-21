@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -70,7 +71,7 @@ public class DataFragment extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.d(TAG, "Retrieving data stamps was unsuccessful.", task.getException());
-          // TODO: alert to user, but not using snackbar
+          Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
         } else {
           updateUI("Grabbing remote data stamps...");
           String remoteDataStamp = Utils.UNKNOWN_ID;
@@ -141,7 +142,7 @@ public class DataFragment extends Fragment {
               }
             } else {
               Log.w(TAG, "Unexpected results between local and remote data stamps.");
-              // TODO: alert to user, but not using snackbar
+              Toast.makeText(getContext(), "Timestamp check failed.", Toast.LENGTH_SHORT).show();
             }
           }
         }
@@ -151,7 +152,7 @@ public class DataFragment extends Fragment {
   private void onDataMissing() {
 
     Log.d(TAG, "++onDataMissing()");
-    // TODO: alert to user, but not using snackbar
+    Toast.makeText(getContext(), "No data found.", Toast.LENGTH_SHORT).show();
     NavHostFragment.findNavController(this).navigate(R.id.action_DataFragment_to_RecentFragment);
   }
 
@@ -163,7 +164,7 @@ public class DataFragment extends Fragment {
 
         if (!task.isSuccessful()) {
           Log.e(TAG, "Error getting data", task.getException());
-          // TODO: alert to user, but not using snackbar
+          Toast.makeText(getContext(), "Getting remote data failed.", Toast.LENGTH_SHORT).show();
         } else {
           DataSnapshot resultSnapshot = task.getResult();
           if (resultSnapshot != null) {
@@ -230,13 +231,13 @@ public class DataFragment extends Fragment {
                     break;
                 }
               } else {
-                // TODO: alert to user, but not using snackbar
+                Toast.makeText(getContext(), "Activity is invalid.", Toast.LENGTH_SHORT).show();
               }
             } else {
               onDataMissing();
             }
           } else {
-            // TODO: alert to user, but not using snackbar
+            Toast.makeText(getContext(), "Task results unknown.", Toast.LENGTH_SHORT).show();
           }
         }
       });

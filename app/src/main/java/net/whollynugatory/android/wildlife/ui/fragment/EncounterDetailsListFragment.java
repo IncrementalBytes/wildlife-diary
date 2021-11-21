@@ -65,22 +65,10 @@ public class EncounterDetailsListFragment extends Fragment {
     if (encounterDetailsList == null || encounterDetailsList.size() == 0) {
       WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
       String followingUserId = Utils.getFollowingUserId(getContext());
-      wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(getViewLifecycleOwner(), totalEncounters -> {
-
-        List<String> encounterIds = new ArrayList<>();
-        List<EncounterDetails> condensedEncounters = new ArrayList<>();
-        for (EncounterDetails encounterDetails : totalEncounters) {
-          if (!encounterIds.contains(encounterDetails.EncounterId)) {
-            condensedEncounters.add(encounterDetails);
-            encounterIds.add(encounterDetails.EncounterId);
-          }
-        }
-
-        Log.d(TAG, "Encounter list is " + condensedEncounters.size());
-        mEncounterAdapter.setEncounterDetailsList(condensedEncounters);
-      });
+      wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(
+        getViewLifecycleOwner(),
+        totalEncounters -> mEncounterAdapter.setEncounterDetailsList(totalEncounters));
     } else {
-      Log.d(TAG, "Encounter list is " + encounterDetailsList.size());
       mEncounterAdapter.setEncounterDetailsList(encounterDetailsList);
     }
 
@@ -128,12 +116,22 @@ public class EncounterDetailsListFragment extends Fragment {
     public void setEncounterDetailsList(Collection<EncounterDetails> encounterDetailsCollection) {
 
       Log.d(TAG, "++setEncounterSummaryList(Collection<EncounterDetails>)");
+      Log.d(TAG, "Encounter list is " + encounterDetailsCollection.size());
+      List<String> encounterIds = new ArrayList<>();
+      List<EncounterDetails> condensedEncounters = new ArrayList<>();
+      for (EncounterDetails encounterDetails : encounterDetailsCollection) {
+        if (!encounterIds.contains(encounterDetails.EncounterId)) {
+          condensedEncounters.add(encounterDetails);
+          encounterIds.add(encounterDetails.EncounterId);
+        }
+      }
+
       int currentSize = mEncounterDetails.size();
       mEncounterDetails.clear();
-      mEncounterDetails.addAll(encounterDetailsCollection);
+      mEncounterDetails.addAll(condensedEncounters);
       mEncounterDetails.sort((a, b) -> Long.compare(b.Date, a.Date));
       notifyItemRangeRemoved(0, currentSize);
-      notifyItemRangeInserted(0, encounterDetailsCollection.size());
+      notifyItemRangeInserted(0, condensedEncounters.size());
     }
 
     class EncounterHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -173,7 +171,7 @@ public class EncounterDetailsListFragment extends Fragment {
         Log.d(TAG, "++EncounterHolder::onClick(View)");
         FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
           .get(FragmentDataViewModel.class);
-        viewModel.setEncounterId(mEncounterDetails.Id);
+        viewModel.setEncounterId(mEncounterDetails.EncounterId);
         Navigation.findNavController(view).navigate(R.id.action_EncounterDetailsList_to_EncounterDetails);
       }
     }

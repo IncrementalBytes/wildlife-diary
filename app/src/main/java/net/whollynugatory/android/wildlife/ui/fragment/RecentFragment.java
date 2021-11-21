@@ -212,7 +212,7 @@ public class RecentFragment extends Fragment {
           viewModel.setEncounterId(mEncounterDetails.EncounterId);
           Navigation.findNavController(view).navigate(R.id.action_RecentFragment_to_EncounterFragment);
         } else {
-          viewModel.setEncounterDetails(mEncounterDetails);
+          viewModel.setEncounterId(mEncounterDetails.EncounterId);
           Navigation.findNavController(view).navigate(R.id.action_RecentFragment_to_EncounterDetailsFragment);
         }
       }

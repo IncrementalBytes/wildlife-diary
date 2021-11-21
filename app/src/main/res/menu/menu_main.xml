@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <group
+    android:id="@+id/group_home">
+    <item
+      android:id="@+id/menu_home"
+      android:icon="@drawable/ic_home_dark"
+      android:title="@string/menu_home"
+      app:showAsAction="ifRoom" />
+  </group>
+
   <item
-    android:id="@+id/menu_home"
-    android:icon="@drawable/ic_home_dark"
-    android:title="@string/menu_home"
+    android:id="@+id/menu_sync"
+    android:icon="@drawable/ic_sync_dark"
+    android:title="@string/menu_sync"
     app:showAsAction="ifRoom" />
 
-  <group android:id="@+id/menu_grouping">
-    <item
-      android:id="@+id/menu_settings"
-      android:icon="@drawable/ic_setting_dark"
-      android:title="@string/menu_settings"
-      app:showAsAction="ifRoom" />
-    <item
-      android:id="@+id/menu_sync"
-      android:icon="@drawable/ic_sync_dark"
-      android:title="@string/menu_sync"
-      app:showAsAction="ifRoom" />
+  <group android:id="@+id/group_contributor" android:visible="false">
     <item
       android:id="@+id/menu_cleanup"
       android:icon="@drawable/ic_cleanup_dark"
@@ -30,6 +30,16 @@
       app:showAsAction="ifRoom" />
   </group>
 
-  <item android:id="@+id/menu_logout" android:title="@string/menu_logout"/>
+  <group
+    android:id="@+id/group_system">
+    <item
+      android:id="@+id/menu_settings"
+      android:icon="@drawable/ic_setting_dark"
+      android:title="@string/menu_settings" />
+    <item
+      android:id="@+id/menu_logout"
+      android:icon="@drawable/ic_logout_dark"
+      android:title="@string/menu_logout" />
+  </group>
 
 </menu>
