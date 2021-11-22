@@ -133,8 +133,7 @@ public class MainActivity extends AppCompatActivity implements
 
     Log.d(TAG, "++onPrepareOptionsMenu(Menu)");
     if (mUserEntity != null) {
-      Menu navigationMenu = mNavigationView.getMenu();
-      navigationMenu.setGroupVisible(R.id.group_contributor, mUserEntity.IsContributor);
+      mNavigationView.getMenu().setGroupVisible(R.id.group_contributor, mUserEntity.IsContributor);
     }
 
     return super.onPrepareOptionsMenu(menu);
@@ -205,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements
       mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    return false;
+    return true;
   }
 
   /*

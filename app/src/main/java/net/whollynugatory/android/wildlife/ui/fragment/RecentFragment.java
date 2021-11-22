@@ -62,10 +62,11 @@ public class RecentFragment extends Fragment {
     FloatingActionButton addEncounterButton = view.findViewById(R.id.recent_fab_add);
     if (Utils.getIsContributor(getContext())) {
       addEncounterButton.setVisibility(View.VISIBLE);
-      FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
-      viewModel.setEncounterId("");
-      addEncounterButton.setOnClickListener(addEncounterButtonView ->
-        Navigation.findNavController(addEncounterButtonView).navigate(R.id.action_RecentFragment_to_EncounterFragment));
+      addEncounterButton.setOnClickListener(addEncounterButtonView -> {
+        FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
+        viewModel.setEncounterId("");
+        Navigation.findNavController(addEncounterButtonView).navigate(R.id.action_RecentFragment_to_EncounterFragment);
+      });
     } else {
       addEncounterButton.setVisibility(View.INVISIBLE);
     }

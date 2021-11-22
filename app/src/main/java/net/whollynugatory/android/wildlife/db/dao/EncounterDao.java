@@ -103,17 +103,17 @@ public interface EncounterDao {
     "ORDER BY Date DESC, EncounterId")
   LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId);
 
-  @Query("SELECT Wildlife.friendly_name AS WildlifeSpecies, " +
-    "Wildlife.id AS WildlifeId, " +
+  @Query("SELECT wildlife_id AS WildlifeId," +
+    "COUNT(encounter_id) AS EncounterCount, " +
+    "Wildlife.friendly_name AS WildlifeSpecies, " +
     "Wildlife.image_attribution AS ImageAttribution, " +
-    "Wildlife.image_src AS ImageUrl, " +
-    "COUNT(encounter_id) AS EncounterCount " +
-    "FROM encounter_table " +
-    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
-    "WHERE user_id == :userId " +
-    "GROUP BY WildlifeSpecies " +
-    "HAVING EncounterCount > 1 " +
-    "ORDER BY EncounterCount DESC, WildlifeSpecies ASC")
+    "Wildlife.image_src AS ImageUrl " +
+    "FROM (" +
+    "  SELECT DISTINCT wildlife_id, encounter_id FROM encounter_table WHERE user_id == :userId GROUP BY wildlife_id, encounter_id" +
+    ")" +
+    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == wildlife_id " +
+    "GROUP BY wildlife_id " +
+    "ORDER BY EncounterCount DESC")
   LiveData<List<WildlifeSummary>> getMostEncountered(String userId);
 
   @Query("SELECT * FROM encounter_table WHERE user_id == :userId AND date > :timeStamp")

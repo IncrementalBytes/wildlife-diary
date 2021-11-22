@@ -61,7 +61,7 @@
     android:id="@+id/EncounterDetailsFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment"
     android:label="@string/fragment_label_encounter_details"
-    tools:layout="@layout/fragment_encounter_details" />
+    tools:layout="@layout/fragment_encounter_details"/>
 
   <fragment
     android:id="@+id/EncounterFragment"
@@ -80,20 +80,23 @@
     tools:layout="@layout/fragment_list_only">
     <action
       android:id="@+id/action_EncounterDetailsList_to_EncounterDetails"
-      app:destination="@+id/EncounterDetailsFragment" />
+      app:destination="@+id/EncounterDetailsFragment"/>
+    <action
+      android:id="@+id/action_EncounterDetailsList_to_Encounter"
+      app:destination="@id/EncounterFragment"/>
   </fragment>
 
   <fragment
     android:id="@+id/FirstEncounteredFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.FirstEncounteredListFragment"
     android:label="@string/fragment_label_first_encountered_list"
-    tools:layout="@layout/fragment_list_only" />
+    tools:layout="@layout/fragment_list_only"/>
 
   <fragment
     android:id="@+id/MostEncounteredFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.MostEncounteredFragment"
     android:label="@string/fragment_label_most_encountered"
-    tools:layout="@layout/fragment_list_only" />
+    tools:layout="@layout/fragment_list_only"/>
 
   <fragment
     android:id="@+id/RecentFragment"
@@ -111,7 +114,7 @@
   <fragment
     android:id="@+id/SettingsFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment"
-    android:label="@string/fragment_label_settings" />
+    android:label="@string/fragment_label_settings"/>
 
   <fragment
     android:id="@+id/StatisticsFragment"
@@ -133,6 +136,6 @@
     android:id="@+id/TryAgainFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment"
     android:label="@string/label_try_again_later"
-    tools:layout="@layout/fragment_try_again_later" />
+    tools:layout="@layout/fragment_try_again_later"/>
 
 </navigation>

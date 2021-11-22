@@ -172,7 +172,11 @@ public class EncounterDetailsListFragment extends Fragment {
         FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
           .get(FragmentDataViewModel.class);
         viewModel.setEncounterId(mEncounterDetails.EncounterId);
-        Navigation.findNavController(view).navigate(R.id.action_EncounterDetailsList_to_EncounterDetails);
+        if (Utils.getIsContributor(getContext())) {
+          Navigation.findNavController(view).navigate(R.id.action_EncounterDetailsList_to_Encounter);
+        } else {
+          Navigation.findNavController(view).navigate(R.id.action_EncounterDetailsList_to_EncounterDetails);
+        }
       }
     }
   }
