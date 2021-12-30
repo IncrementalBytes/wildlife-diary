@@ -92,13 +92,13 @@ public class DataFragment extends Fragment {
             String localDataStamp = Utils.UNKNOWN_ID;
             switch (dataToSync) {
               case Utils.ENCOUNTER_ROOT:
-                localDataStamp = Utils.getLocalTimeStamp(getActivity(), R.string.pref_key_stamp_encounters);
+                localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_encounters);
                 break;
               case Utils.TASK_ROOT:
-                localDataStamp = Utils.getLocalTimeStamp(getActivity(), R.string.pref_key_stamp_tasks);
+                localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_tasks);
                 break;
               case Utils.WILDLIFE_ROOT:
-                localDataStamp = Utils.getLocalTimeStamp(getActivity(), R.string.pref_key_stamp_wildlife);
+                localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_wildlife);
                 break;
             }
 
@@ -218,15 +218,15 @@ public class DataFragment extends Fragment {
 
                 switch (dataRoot) {
                   case Utils.ENCOUNTER_ROOT:
-                    Utils.setLocalTimeStamp(getActivity(), R.string.pref_key_stamp_encounters, remoteDataStamp);
+                    Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_encounters, remoteDataStamp);
                     NavHostFragment.findNavController(this).navigate(R.id.action_DataFragment_to_RecentFragment);
                     break;
                   case Utils.TASK_ROOT:
-                    Utils.setLocalTimeStamp(getActivity(), R.string.pref_key_stamp_tasks, remoteDataStamp);
+                    Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_tasks, remoteDataStamp);
                     executeDataProcessing(Utils.WILDLIFE_ROOT);
                     break;
                   case Utils.WILDLIFE_ROOT:
-                    Utils.setLocalTimeStamp(getActivity(), R.string.pref_key_stamp_wildlife, remoteDataStamp);
+                    Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_wildlife, remoteDataStamp);
                     executeDataProcessing(Utils.ENCOUNTER_ROOT);
                     break;
                 }

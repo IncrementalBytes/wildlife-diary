@@ -56,7 +56,7 @@ public class EncounterDetailsListFragment extends Fragment {
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
     RecyclerView recyclerView = view.findViewById(R.id.content_list);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     mEncounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(mEncounterAdapter);
 
@@ -65,7 +65,8 @@ public class EncounterDetailsListFragment extends Fragment {
     if (encounterDetailsList == null || encounterDetailsList.size() == 0) {
       WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
       String followingUserId = Utils.getFollowingUserId(getContext());
-      wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(
+      boolean showSensitive = Utils.getShowSensitive(getContext());
+      wildlifeViewModel.getAllEncounterDetails(followingUserId, showSensitive).observe(
         getViewLifecycleOwner(),
         totalEncounters -> mEncounterAdapter.setEncounterDetailsList(totalEncounters));
     } else {

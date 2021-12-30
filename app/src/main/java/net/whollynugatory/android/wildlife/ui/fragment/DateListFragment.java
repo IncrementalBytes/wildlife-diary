@@ -55,13 +55,14 @@ public class DateListFragment extends Fragment {
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
     RecyclerView recyclerView = view.findViewById(R.id.content_list);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     DateAdapter dateAdapter = new DateAdapter(getContext());
     recyclerView.setAdapter(dateAdapter);
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    String followingUserId = Utils.getFollowingUserId(getActivity());
-    wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(
+    String followingUserId = Utils.getFollowingUserId(getContext());
+    boolean showSensitive = Utils.getShowSensitive(getContext());
+    wildlifeViewModel.getAllEncounterDetails(followingUserId, showSensitive).observe(
       getViewLifecycleOwner(),
       totalEncounterList -> {
 

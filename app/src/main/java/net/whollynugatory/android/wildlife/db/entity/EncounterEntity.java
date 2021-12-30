@@ -75,6 +75,8 @@ public class EncounterEntity implements Serializable {
   @ColumnInfo(name = "wildlife_id")
   public String WildlifeId;
 
+  // TODO: need to update for injury during encounter (change schema too!)
+
   public EncounterEntity() {
 
     Id = Utils.UNKNOWN_ID;

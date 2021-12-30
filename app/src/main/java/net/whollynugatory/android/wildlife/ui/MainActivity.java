@@ -232,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements
                 mUserEntity = new UserEntity(); // sets following user id
                 mUserEntity.Id = userId; // assign firebase user id
                 String path = Utils.combine(Utils.USERS_ROOT, userId);
+                mUserEntity.FollowingId = Utils.DEFAULT_FOLLOWING_USER_ID;
                 FirebaseDatabase.getInstance().getReference().child(path).setValue(mUserEntity)
                   .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
               } else {

@@ -72,17 +72,18 @@ public class RecentFragment extends Fragment {
     }
 
     RecyclerView recyclerView = view.findViewById(R.id.content_list);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     EncounterAdapter encounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(encounterAdapter);
 
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    String followingUserId = Utils.getFollowingUserId(getActivity());
+    String followingUserId = Utils.getFollowingUserId(getContext());
     Date in = new Date();
     LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(6);
     ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
     Log.d(TAG, "Local dateTime (epoch): " + zonedDateTime.toInstant().toEpochMilli());
-    wildlifeViewModel.getAllEncounterDetails(followingUserId).observe(
+    boolean showSensitive = Utils.getShowSensitive(getContext());
+    wildlifeViewModel.getAllEncounterDetails(followingUserId, showSensitive).observe(
       getViewLifecycleOwner(),
       encounterDetailsList -> {
 

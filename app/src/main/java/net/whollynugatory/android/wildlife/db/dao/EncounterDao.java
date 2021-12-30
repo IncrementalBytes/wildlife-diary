@@ -59,9 +59,9 @@ public interface EncounterDao {
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
-    "WHERE user_id == :userId " +
+    "WHERE user_id == :userId AND (TaskIsSensitive == 0 OR TaskIsSensitive == :showSensitive) " +
     "ORDER BY Date DESC, EncounterId")
-  LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId);
+  LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId, boolean showSensitive);
 
   @Query("SELECT Encounter.date AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +
@@ -99,9 +99,9 @@ public interface EncounterDao {
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
-    "WHERE user_id == :userId AND encounter_id = :encounterId " +
+    "WHERE user_id == :userId AND encounter_id = :encounterId AND (TaskIsSensitive == 0 OR TaskIsSensitive == :showSensitive) " +
     "ORDER BY Date DESC, EncounterId")
-  LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId);
+  LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId, boolean showSensitive);
 
   @Query("SELECT wildlife_id AS WildlifeId," +
     "COUNT(encounter_id) AS EncounterCount, " +

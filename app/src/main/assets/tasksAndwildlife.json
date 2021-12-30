@@ -14,28 +14,28 @@
     },
     "25f14681-7b98-4a35-8759-ba668c353eb1": {
       "Name": "Handled - Euthanize",
-      "Description": "Safely and securely held patient for euthanasia.",
+      "Description": "Held patient for euthanasia.",
       "IsSensitive": "true"
     },
     "1219a543-cafd-4513-8e1e-e41c3be64862": {
       "Name": "Handled - Exam",
-      "Description": "Safely and securely held patient for examination."
+      "Description": "Held patient for examination."
     },
     "d27b32b3-8403-4552-8d2b-7723d6777fac": {
       "Name": "Handled - Force Fed",
-      "Description": "Safely and securely held patient for force feed."
+      "Description": "Held patient for force feed."
     },
     "c1ebbb56-4c65-42fb-beb8-c628393ffc3a": {
       "Name": "Handled - Gavage",
-      "Description": "Safely and securely held patient for gavage."
+      "Description": "Held patient for gavage."
     },
     "175720d7-79d3-4c7c-be33-2dd33db277fb": {
       "Name": "Handled - Medicate",
-      "Description": "Safely and securely held patient for medication."
+      "Description": "Held patient for medication."
     },
     "0525c4b8-37e4-4b95-bdc6-d1df62f7d670": {
       "Name": "Handled - Subcutaneous",
-      "Description": "Safely and securely held patient for subcutaneous fluids."
+      "Description": "Held patient for subcutaneous fluids."
     },
     "fc0e2bdf-00c0-4da4-855b-857c233effa6": {
       "Name": "Medicate - Ocular",
@@ -79,7 +79,9 @@
     },
     "05d4e27d-43c8-4e9e-8d63-e4fbf91e7c25": {
       "FriendlyName": "American Goldfinch",
-      "Abbreviation": "AMGO"
+      "Abbreviation": "AMGO",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/b/b1/Female_american_goldfinch.jpg",
+      "ImageAttribution":"https://www.flickr.com/people/sherseydc/, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons"
     },
     "3fbdd163-69d2-457e-9162-eed9e54e0f05": {
       "FriendlyName": "American Mole Shrew",
@@ -101,7 +103,9 @@
     },
     "50d82284-5c09-43ca-a986-4f96be502789": {
       "FriendlyName": "American Wigeon",
-      "Abbreviation": "AMWI"
+      "Abbreviation": "AMWI",
+      "ImageSrc" : "https://upload.wikimedia.org/wikipedia/commons/c/c3/Anas_americana_-New_Jersey_-USA-9Jan2010.jpg",
+      "ImageAttribution":"Peter Massas, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons"
     },
     "46ae8509-6197-465e-bd73-b5c0543e6889": {
       "FriendlyName": "Ancient Murrelet",

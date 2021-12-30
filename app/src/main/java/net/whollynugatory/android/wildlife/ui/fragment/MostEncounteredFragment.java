@@ -58,7 +58,7 @@ public class MostEncounteredFragment extends Fragment {
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
     RecyclerView recyclerView = view.findViewById(R.id.content_list);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     mMostEncounteredAdapter = new MostEncounteredAdapter(getContext());
     recyclerView.setAdapter(mMostEncounteredAdapter);
 

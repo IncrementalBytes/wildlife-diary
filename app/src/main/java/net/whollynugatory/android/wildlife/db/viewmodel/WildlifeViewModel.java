@@ -46,9 +46,9 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getCleanUpItems();
   }
 
-  public LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId) {
+  public LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId, boolean showSensitive) {
 
-    return mWildlifeRepository.getEncounterDetails(userId, encounterId);
+    return mWildlifeRepository.getEncounterDetails(userId, encounterId, showSensitive);
   }
 
   public LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName) {
@@ -81,9 +81,9 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getTasks();
   }
 
-  public LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId) {
+  public LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId, boolean showSensitive) {
 
-    return mWildlifeRepository.getAllEncounterDetails(userId);
+    return mWildlifeRepository.getAllEncounterDetails(userId, showSensitive);
   }
 
   public LiveData<List<EncounterDetails>> getFirstEncountered(String userId) {

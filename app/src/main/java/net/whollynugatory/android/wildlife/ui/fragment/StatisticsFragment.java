@@ -72,7 +72,7 @@ public class StatisticsFragment extends Fragment {
     mNewFirstEncounteredImage.setVisibility(View.GONE);
 
     mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    mFollowingUserId = Utils.getFollowingUserId(getActivity());
+    mFollowingUserId = Utils.getFollowingUserId(getContext());
     mWildlifeViewModel.getStatistics(mFollowingUserId).observe(
       getViewLifecycleOwner(),
       statisticsDetails -> mBinding.setStatistics(statisticsDetails));
@@ -125,7 +125,8 @@ public class StatisticsFragment extends Fragment {
 
     if (view != null) {
       if (view.getId() == R.id.statistics_card_total_encounters) {
-        mWildlifeViewModel.getAllEncounterDetails(mFollowingUserId).observe(
+        boolean showSensitive = Utils.getShowSensitive(getContext());
+        mWildlifeViewModel.getAllEncounterDetails(mFollowingUserId, showSensitive).observe(
           getViewLifecycleOwner(),
           encounterDetailsList -> {
 
@@ -163,6 +164,6 @@ public class StatisticsFragment extends Fragment {
 
   private void updateUI() {
 
-    mEuthanasiaCard.setVisibility(Utils.getShowSensitive(getActivity()) ? View.VISIBLE : View.GONE);
+    mEuthanasiaCard.setVisibility(Utils.getShowSensitive(getContext()) ? View.VISIBLE : View.GONE);
   }
 }

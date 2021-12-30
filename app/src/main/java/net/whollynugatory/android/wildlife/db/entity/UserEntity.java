@@ -26,7 +26,7 @@ public class UserEntity implements Serializable {
   @Exclude
   public String Id;
 
-  public final String FollowingId;
+  public String FollowingId;
 
   public final boolean IsContributor;
 

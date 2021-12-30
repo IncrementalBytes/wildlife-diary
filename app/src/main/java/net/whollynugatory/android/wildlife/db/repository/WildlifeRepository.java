@@ -57,9 +57,9 @@ public class WildlifeRepository {
     return mEncounterDao.cleanUp();
   }
 
-  public LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId) {
+  public LiveData<List<EncounterDetails>> getEncounterDetails(String userId, String encounterId, boolean showSensitive) {
 
-    return mEncounterDao.getEncounterDetails(userId, encounterId);
+    return mEncounterDao.getEncounterDetails(userId, encounterId, showSensitive);
   }
 
   public LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName) {
@@ -92,9 +92,9 @@ public class WildlifeRepository {
     return mTaskDao.getAll();
   }
 
-  public LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId) {
+  public LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId, boolean showSensitive) {
 
-    return mEncounterDao.getAllEncounterDetails(userId);
+    return mEncounterDao.getAllEncounterDetails(userId, showSensitive);
   }
 
   public LiveData<List<EncounterDetails>> getFirstEncountered(String userId) {

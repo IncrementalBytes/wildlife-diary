@@ -76,6 +76,7 @@ public class EncounterFragment extends Fragment {
   private String mEncounterId;
   private String mFollowingUserId;
   private int mGroupCount = 1;
+  private boolean mShowSensitive;
   private HashMap<String, TaskEntity> mTaskEntityMap;
   private HashMap<String, String> mWildlifeMap;
   private WildlifeViewModel mWildlifeViewModel;
@@ -148,6 +149,7 @@ public class EncounterFragment extends Fragment {
 
     Log.d(TAG, "++onCreate(Bundle)");
     mFollowingUserId = Utils.getFollowingUserId(getContext());
+    mShowSensitive = Utils.getShowSensitive(getContext());
     mWildlifeMap = new HashMap<>();
     mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
   }
@@ -167,7 +169,7 @@ public class EncounterFragment extends Fragment {
     Button updateEncounterButton = view.findViewById(R.id.encounter_button_update);
     ImageView deleteImage = view.findViewById(R.id.encounter_button_delete);
     RecyclerView recyclerView = view.findViewById(R.id.encounter_recycler_view);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     mTaskAdapter = new EncounterFragment.TaskAdapter(getContext());
     recyclerView.setAdapter(mTaskAdapter);
 
@@ -247,6 +249,8 @@ public class EncounterFragment extends Fragment {
     encounterEntity.EncounterId = UUID.randomUUID().toString();
     encounterEntity.UserId = Utils.getUserId(getContext());
 
+    // TODO: add injury call-out
+
     String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
     if (mWildlifeMap.containsKey(selectedWildlifeAbbreviation)) {
       String wildlifeId = mWildlifeMap.get(selectedWildlifeAbbreviation);
@@ -309,7 +313,7 @@ public class EncounterFragment extends Fragment {
 
     Log.d(TAG, "++deleteEncounter()");
     if (mEncounterId != null  && !mEncounterId.isEmpty()) {
-      mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(
+      mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId, mShowSensitive).observe(
         getViewLifecycleOwner(),
         encounterDetailsList -> {
 
@@ -342,7 +346,7 @@ public class EncounterFragment extends Fragment {
       }
 
       AutoCompleteAdapter adapter = new AutoCompleteAdapter(
-        getActivity(),
+        getContext(),
         android.R.layout.simple_dropdown_item_1line,
         android.R.id.text1,
         new ArrayList<>(mWildlifeMap.keySet()));
@@ -353,7 +357,7 @@ public class EncounterFragment extends Fragment {
   private void setupForEditing() {
 
     Log.d(TAG, "++setupForEditing()");
-    mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId).observe(
+    mWildlifeViewModel.getEncounterDetails(mFollowingUserId, mEncounterId, mShowSensitive).observe(
       getViewLifecycleOwner(),
       encounterDetailsList -> {
 

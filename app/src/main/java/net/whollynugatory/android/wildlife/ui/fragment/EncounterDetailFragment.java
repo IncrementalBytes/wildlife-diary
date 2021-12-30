@@ -84,7 +84,7 @@ public class EncounterDetailFragment extends Fragment {
     mWildlifeText = view.findViewById(R.id.encounter_details_text_wildlife);
 
     RecyclerView recyclerView = view.findViewById(R.id.encounter_details_recycler_tasks);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
     mTaskAdapter = new TaskAdapter(getContext());
     recyclerView.setAdapter(mTaskAdapter);
@@ -100,25 +100,23 @@ public class EncounterDetailFragment extends Fragment {
     String encounterId = viewModel.getEncounterId().getValue();
     Log.d(TAG, "Getting encounter details for " + encounterId);
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    wildlifeViewModel.getEncounterDetails(followingUserId, encounterId).observe(
+    boolean showSensitive = Utils.getShowSensitive(getContext());
+    wildlifeViewModel.getEncounterDetails(followingUserId, encounterId, showSensitive).observe(
       getViewLifecycleOwner(),
       encounterDetailsList -> {
 
         // BUG: need to group encounters
         mEncounterDetailsList = new ArrayList<>(encounterDetailsList);
         HashMap<String, TaskEntity> taskMap = new HashMap<>();
-        boolean showSensitive = Utils.getShowSensitive(getContext());
         for (EncounterDetails encounterDetails : encounterDetailsList) {
           if (!taskMap.containsKey(encounterDetails.TaskId)) {
-            if (!encounterDetails.TaskIsSensitive || showSensitive) {
-              TaskEntity taskEntity = new TaskEntity();
-              taskEntity.Id = encounterDetails.TaskId;
-              taskEntity.Description = encounterDetails.TaskDescription;
-              taskEntity.IsComplete = true;
-              taskEntity.IsSensitive = encounterDetails.TaskIsSensitive;
-              taskEntity.Name = encounterDetails.TaskName;
-              taskMap.put(taskEntity.Id, taskEntity);
-            }
+            TaskEntity taskEntity = new TaskEntity();
+            taskEntity.Id = encounterDetails.TaskId;
+            taskEntity.Description = encounterDetails.TaskDescription;
+            taskEntity.IsComplete = true;
+            taskEntity.IsSensitive = encounterDetails.TaskIsSensitive;
+            taskEntity.Name = encounterDetails.TaskName;
+            taskMap.put(taskEntity.Id, taskEntity);
           }
 
           Log.d(TAG, "Task list is " + taskMap.size());

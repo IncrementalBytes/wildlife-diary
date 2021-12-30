@@ -61,14 +61,12 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
     Log.d(TAG, "++setupShowSensitivePreference()");
     SwitchPreference switchPreference = findPreference(getString(R.string.pref_key_enable_sensitive));
     if (switchPreference != null) {
-      switchPreference.setChecked(Utils.getShowSensitive(getActivity()));
+      switchPreference.setChecked(Utils.getShowSensitive(getContext()));
       switchPreference.setOnPreferenceChangeListener(
         (preference, newValue) -> {
 
           Log.d(TAG, "++setupShowSensitivePreference::onPreferenceChange()");
-          Utils.setShowSensitive(
-            getActivity(),
-            (boolean) newValue);
+          Utils.setShowSensitive(getContext(), (boolean) newValue);
           return true;
         });
     } else {
