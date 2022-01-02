@@ -140,14 +140,17 @@ public interface EncounterDao {
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '25a40f6a-fa23-4331-9fd8-ed8d0bfbb780' AND user_id == :userId) AS TotalOralMedicated, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '98bf72f8-f388-4a6a-962e-b3f4cc94f174' AND user_id == :userId) AS TotalSubcutaneous, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '88c20461-e306-447c-92bd-196bfbfa9458' AND user_id == :userId) AS TotalSyringeFed, " +
-    "(SELECT FriendlyName FROM " +
-    "    (SELECT wt.friendly_name AS FriendlyName, wildlife_id, COUNT(encounter_id) AS Count " +
-    "        FROM encounter_table " +
-    "        INNER JOIN wildlife_table AS wt ON wt.id == encounter_table.wildlife_id " +
-    "        WHERE user_id == :userId " +
-    "        GROUP BY wildlife_id " +
-    "        ORDER BY Count DESC) " +
-    "        LIMIT 1) AS MostEncountered " +
+    "(SELECT WildlifeSpecies FROM (" +
+    "  SELECT wildlife_id AS WildlifeId, " +
+    "    COUNT(encounter_id) AS EncounterCount, " +
+    "    Wildlife.friendly_name AS WildlifeSpecies " +
+    "  FROM (" +
+    "      SELECT DISTINCT wildlife_id, encounter_id FROM encounter_table WHERE user_id == :userId GROUP BY wildlife_id, encounter_id" +
+    "  )" +
+    "  INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == wildlife_id " +
+    "  GROUP BY wildlife_id " +
+    "  ORDER BY EncounterCount DESC" +
+    "  LIMIT 1)) AS MostEncountered " +
     "FROM encounter_table " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "WHERE user_id == :userId")

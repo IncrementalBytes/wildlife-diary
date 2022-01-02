@@ -56,7 +56,7 @@ public class StatisticsDetails {
 
   public StatisticsDetails() {
 
-    MostEncountered = Utils.UNKNOWN_ID;
+    MostEncountered = Utils.UNKNOWN_STRING;
     TotalBanded = 0;
     TotalEncounters = 0;
     TotalForceFed = 0;

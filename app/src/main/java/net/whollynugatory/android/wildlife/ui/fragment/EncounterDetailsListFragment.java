@@ -31,6 +31,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
@@ -142,6 +144,7 @@ public class EncounterDetailsListFragment extends Fragment {
       private final TextView mAbbreviationTextView;
       private final TextView mEncounterDateTextView;
       private final ImageView mNewEncounterImageView;
+      private final ImageView mWildlifeImageView;
       private final TextView mWildlifeTextView;
 
       private EncounterDetails mEncounterDetails;
@@ -152,6 +155,7 @@ public class EncounterDetailsListFragment extends Fragment {
         mAbbreviationTextView = itemView.findViewById(R.id.encounter_item_abbreviation);
         mEncounterDateTextView = itemView.findViewById(R.id.encounter_item_date);
         mNewEncounterImageView = itemView.findViewById(R.id.encounter_item_image_new);
+        mWildlifeImageView = itemView.findViewById(R.id.encounter_item_image);
         mWildlifeTextView = itemView.findViewById(R.id.encounter_item_wildlife);
         itemView.setOnClickListener(this);
       }
@@ -163,6 +167,11 @@ public class EncounterDetailsListFragment extends Fragment {
         mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
         mEncounterDateTextView.setText(Utils.fromTimestamp(mEncounterDetails.Date));
         mNewEncounterImageView.setVisibility(mEncounterDetails.IsNew ? View.VISIBLE : View.GONE);
+        Glide.with(getContext())
+          .load(encounterDetails.ImageUrl)
+          .placeholder(R.drawable.ic_placeholder_dark)
+          .error(R.drawable.ic_error_dark)
+          .into(mWildlifeImageView);
         mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
       }
 
@@ -174,9 +183,9 @@ public class EncounterDetailsListFragment extends Fragment {
           .get(FragmentDataViewModel.class);
         viewModel.setEncounterId(mEncounterDetails.EncounterId);
         if (Utils.getIsContributor(getContext())) {
-          Navigation.findNavController(view).navigate(R.id.action_EncounterDetailsList_to_Encounter);
+          Navigation.findNavController(view).navigate(R.id.action_encounterDetailsListFragment_to_encounterFragment);
         } else {
-          Navigation.findNavController(view).navigate(R.id.action_EncounterDetailsList_to_EncounterDetails);
+          Navigation.findNavController(view).navigate(R.id.action_encounterDetailsListFragment_to_encounterDetailFragment);
         }
       }
     }

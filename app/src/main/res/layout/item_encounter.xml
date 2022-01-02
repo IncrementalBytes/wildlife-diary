@@ -16,6 +16,17 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
+      <ImageView
+        android:id="@+id/encounter_item_image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_margin="@dimen/default_card_margin"
+        android:contentDescription="@string/desc_sample_image_of_wildlife"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
       <TextView
         android:id="@+id/encounter_item_wildlife"
         android:layout_width="0dp"
@@ -29,7 +40,7 @@
         android:textStyle="bold"
         android:textColor="@color/secondaryTextColor"
         app:layout_constraintEnd_toStartOf="@id/encounter_item_image_new"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/encounter_item_image"
         app:layout_constraintTop_toTopOf="parent" />
 
       <ImageView
@@ -52,7 +63,7 @@
         android:maxLines="1"
         android:text="@string/placeholder"
         android:textColor="@color/primaryTextColor"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/encounter_item_image"
         app:layout_constraintTop_toBottomOf="@id/encounter_item_wildlife"/>
 
       <TextView

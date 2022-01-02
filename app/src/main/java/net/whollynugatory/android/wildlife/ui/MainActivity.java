@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements
     if (navHostFragment != null) {
       mNavController = navHostFragment.getNavController();
       mAppBarConfiguration = new AppBarConfiguration.Builder(mNavController.getGraph()).build();
+
     } else {
       Log.e(TAG, "NavController was not initialized properly.");
     }
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements
       mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    // TODO: need to navigate back too
+    mNavController.popBackStack();
   }
 
   @Override
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements
   @Override
   public boolean onSupportNavigateUp() {
 
+    Log.d(TAG, "++onSupportNavigateUp()");
     return NavigationUI.navigateUp(mNavController, mAppBarConfiguration) || super.onSupportNavigateUp();
   }
 
@@ -173,24 +175,24 @@ public class MainActivity extends AppCompatActivity implements
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
     if (item.getItemId() == R.id.menu_home) {
-      mNavController.navigate(R.id.action_Menu_to_RecentFragment);
+      mNavController.navigate(R.id.recentFragment);
     } else if (item.getItemId() == R.id.menu_settings) {
-      mNavController.navigate(R.id.action_Menu_to_SettingsFragment);
+      mNavController.navigate(R.id.userSettingsFragment);
     } else if (item.getItemId() == R.id.menu_cleanup) {
-      mNavController.navigate(R.id.action_Menu_to_CleanupFragment);
+      mNavController.navigate(R.id.cleanUpListFragment);
     } else if (item.getItemId() == R.id.menu_crash) {
       throw new RuntimeException("Test Crash"); // Force a crash
     } else if (item.getItemId() == R.id.menu_sync) {
       Utils.setLocalTimeStamp(getApplicationContext(), R.string.pref_key_stamp_encounters, Utils.UNKNOWN_ID);
       Utils.setLocalTimeStamp(getApplicationContext(), R.string.pref_key_stamp_wildlife, Utils.UNKNOWN_ID);
       Utils.setLocalTimeStamp(getApplicationContext(), R.string.pref_key_stamp_tasks, Utils.UNKNOWN_ID);
-      mNavController.navigate(R.id.action_Menu_to_DataFragment);
+      mNavController.navigate(R.id.dataFragment);
     } else if (item.getItemId() == R.id.navigation_statistics) {
-      mNavController.navigate(R.id.action_Menu_to_StatisticsFragment);
+      mNavController.navigate(R.id.statisticsFragment);
     } else if (item.getItemId() == R.id.navigation_date) {
-      mNavController.navigate(R.id.action_Menu_to_ByDateFragment);
+      mNavController.navigate(R.id.dateListFragment);
     } else if (item.getItemId() == R.id.navigation_recent) {
-      mNavController.navigate(R.id.action_Menu_to_RecentFragment);
+      mNavController.navigate(R.id.recentFragment);
     } else if (item.getItemId() == R.id.menu_logout) {
       AlertDialog alertDialog = new AlertDialog.Builder(getApplicationContext())
         .setMessage(R.string.logout_message)
@@ -257,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements
     Log.d(TAG, "++tryAgain(String)");
     FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
     viewModel.setMessage(message);
-    mNavController.navigate(R.id.action_to_TryAgainLaterFragment);
+    mNavController.navigate(R.id.tryAgainLaterFragment);
   }
 
   private void signOut() {

@@ -134,7 +134,7 @@ public class StatisticsFragment extends Fragment {
               .get(FragmentDataViewModel.class);
             viewModel.setEncounterDetailsList(encounterDetailsList);
             NavHostFragment.findNavController(requireParentFragment())
-              .navigate(R.id.action_StatisticsFragment_to_EncounterDetailsListFragment);
+              .navigate(R.id.action_statisticsFragment_to_encounterDetailsListFragment);
           });
       } else if (view.getId() == R.id.statistics_card_unique_encounters) {
         mWildlifeViewModel.getFirstEncountered(mFollowingUserId).observe(
@@ -145,7 +145,7 @@ public class StatisticsFragment extends Fragment {
               .get(FragmentDataViewModel.class);
             viewModel.setEncounterDetailsList(firstEncounteredList);
             NavHostFragment.findNavController(requireParentFragment())
-              .navigate(R.id.action_StatisticsFragment_to_FirstEncounteredFragment);
+              .navigate(R.id.action_statisticsFragment_to_firstEncounteredListFragment);
           });
       } else if (view.getId() == R.id.statistics_card_most_encountered) {
         mWildlifeViewModel.getMostEncountered(mFollowingUserId).observe(
@@ -156,7 +156,7 @@ public class StatisticsFragment extends Fragment {
               .get(FragmentDataViewModel.class);
             viewModel.setWildlifeSummaryList(mostEncountered);
             NavHostFragment.findNavController(requireParentFragment())
-              .navigate(R.id.action_StatisticsFragment_to_MostEncounteredFragment);
+              .navigate(R.id.action_statisticsFragment_to_mostEncounteredListFragment);
           });
       }
     }

@@ -178,7 +178,7 @@ public class DateListFragment extends Fragment {
         FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
           .get(FragmentDataViewModel.class);
         viewModel.setEncounterDetailsList(mDateItem.EncounterDetailsList);
-        Navigation.findNavController(view).navigate(R.id.action_DateList_to_EncounterDetailsList);
+        Navigation.findNavController(view).navigate(R.id.action_dateListFragment_to_encounterDetailsListFragment);
       }
     }
   }

@@ -131,7 +131,7 @@ public class DataFragment extends Fragment {
               updateUI("Local data matches " + dataToSync);
               switch (dataToSync) {
                 case Utils.ENCOUNTER_ROOT:
-                  NavHostFragment.findNavController(this).navigate(R.id.action_DataFragment_to_RecentFragment);
+                  NavHostFragment.findNavController(this).navigate(R.id.recentFragment);
                   break;
                 case Utils.TASK_ROOT:
                   executeDataProcessing(Utils.WILDLIFE_ROOT);
@@ -153,7 +153,7 @@ public class DataFragment extends Fragment {
 
     Log.d(TAG, "++onDataMissing()");
     Toast.makeText(getContext(), "No data found.", Toast.LENGTH_SHORT).show();
-    NavHostFragment.findNavController(this).navigate(R.id.action_DataFragment_to_RecentFragment);
+    NavHostFragment.findNavController(this).navigate(R.id.recentFragment);
   }
 
   private void populateTable(String dataRoot, String remoteDataStamp) {
@@ -219,7 +219,7 @@ public class DataFragment extends Fragment {
                 switch (dataRoot) {
                   case Utils.ENCOUNTER_ROOT:
                     Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_encounters, remoteDataStamp);
-                    NavHostFragment.findNavController(this).navigate(R.id.action_DataFragment_to_RecentFragment);
+                    NavHostFragment.findNavController(this).navigate(R.id.recentFragment);
                     break;
                   case Utils.TASK_ROOT:
                     Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_tasks, remoteDataStamp);

@@ -43,9 +43,9 @@ package net.whollynugatory.android.wildlife.ui.fragment;
   import java.util.List;
   import java.util.Locale;
 
-public class MostEncounteredFragment extends Fragment {
+public class MostEncounteredListFragment extends Fragment {
 
-  private static final String TAG = Utils.BASE_TAG + MostEncounteredFragment.class.getSimpleName();
+  private static final String TAG = Utils.BASE_TAG + MostEncounteredListFragment.class.getSimpleName();
 
   private MostEncounteredAdapter mMostEncounteredAdapter;
 

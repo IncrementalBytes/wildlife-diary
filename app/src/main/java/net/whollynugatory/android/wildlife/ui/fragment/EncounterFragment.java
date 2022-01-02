@@ -192,7 +192,7 @@ public class EncounterFragment extends Fragment {
     mRecordEncountersButton.setOnClickListener(v -> {
 
       Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-      NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_DataFragment);
+      NavHostFragment.findNavController(this).navigate(R.id.action_encounterFragment_to_dataFragment);
     });
 
     FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
@@ -208,7 +208,7 @@ public class EncounterFragment extends Fragment {
 
         deleteEncounter();
         Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-        NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_DataFragment);
+        NavHostFragment.findNavController(this).navigate(R.id.action_encounterFragment_to_dataFragment);
       });
 
       updateEncounterButton.setOnClickListener(v -> {
@@ -216,7 +216,7 @@ public class EncounterFragment extends Fragment {
         deleteEncounter();
         addEncounter();
         Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
-        NavHostFragment.findNavController(this).navigate(R.id.action_EncounterFragment_to_DataFragment);
+        NavHostFragment.findNavController(this).navigate(R.id.action_encounterFragment_to_dataFragment);
       });
     }
 
@@ -250,6 +250,7 @@ public class EncounterFragment extends Fragment {
     encounterEntity.UserId = Utils.getUserId(getContext());
 
     // TODO: add injury call-out
+    // TODO: validate
 
     String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
     if (mWildlifeMap.containsKey(selectedWildlifeAbbreviation)) {

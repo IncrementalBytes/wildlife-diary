@@ -31,6 +31,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.whollynugatory.android.wildlife.R;
@@ -65,7 +66,7 @@ public class RecentFragment extends Fragment {
       addEncounterButton.setOnClickListener(addEncounterButtonView -> {
         FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
         viewModel.setEncounterId("");
-        Navigation.findNavController(addEncounterButtonView).navigate(R.id.action_RecentFragment_to_EncounterFragment);
+        Navigation.findNavController(addEncounterButtonView).navigate(R.id.encounterFragment);
       });
     } else {
       addEncounterButton.setVisibility(View.INVISIBLE);
@@ -179,8 +180,9 @@ public class RecentFragment extends Fragment {
 
       private final TextView mAbbreviationTextView;
       private final TextView mEncounterDateTextView;
-      private final TextView mWildlifeTextView;
       private final ImageView mNewEncounterImageView;
+      private final ImageView mWildlifeImageView;
+      private final TextView mWildlifeTextView;
 
       private EncounterDetails mEncounterDetails;
 
@@ -189,8 +191,9 @@ public class RecentFragment extends Fragment {
 
         mAbbreviationTextView = itemView.findViewById(R.id.encounter_item_abbreviation);
         mEncounterDateTextView = itemView.findViewById(R.id.encounter_item_date);
-        mWildlifeTextView = itemView.findViewById(R.id.encounter_item_wildlife);
         mNewEncounterImageView = itemView.findViewById(R.id.encounter_item_image_new);
+        mWildlifeImageView = itemView.findViewById(R.id.encounter_item_image);
+        mWildlifeTextView = itemView.findViewById(R.id.encounter_item_wildlife);
         itemView.setOnClickListener(this);
       }
 
@@ -200,8 +203,13 @@ public class RecentFragment extends Fragment {
 
         mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
         mEncounterDateTextView.setText(Utils.fromTimestamp(mEncounterDetails.Date));
-        mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
         mNewEncounterImageView.setVisibility(mEncounterDetails.IsNew ? View.VISIBLE : View.GONE);
+        Glide.with(getContext())
+          .load(encounterDetails.ImageUrl)
+          .placeholder(R.drawable.ic_placeholder_dark)
+          .error(R.drawable.ic_error_dark)
+          .into(mWildlifeImageView);
+        mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
       }
 
       @Override
@@ -212,10 +220,10 @@ public class RecentFragment extends Fragment {
           .get(FragmentDataViewModel.class);
         if (Utils.getIsContributor(getContext())) {
           viewModel.setEncounterId(mEncounterDetails.EncounterId);
-          Navigation.findNavController(view).navigate(R.id.action_RecentFragment_to_EncounterFragment);
+          Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterFragment);
         } else {
           viewModel.setEncounterId(mEncounterDetails.EncounterId);
-          Navigation.findNavController(view).navigate(R.id.action_RecentFragment_to_EncounterDetailsFragment);
+          Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterDetailFragment);
         }
       }
     }
