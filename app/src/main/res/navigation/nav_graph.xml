@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/nav_graph"
   app:startDestination="@id/dataFragment">
 
   <action
@@ -71,18 +70,11 @@
   <fragment
     android:id="@+id/encounterDetailFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment"
-    android:label="EncounterDetailFragment" >
-    <action
-      android:id="@+id/action_encounterDetailFragment_to_recentFragment"
-      app:destination="@id/recentFragment" />
-  </fragment>
+    android:label="EncounterDetailFragment" />
   <fragment
     android:id="@+id/encounterFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment"
     android:label="EncounterFragment" >
-    <action
-      android:id="@+id/action_encounterFragment_to_recentFragment"
-      app:destination="@id/recentFragment" />
     <action
       android:id="@+id/action_encounterFragment_to_dataFragment"
       app:destination="@id/dataFragment" />
@@ -91,12 +83,6 @@
     android:id="@+id/encounterDetailsListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailsListFragment"
     android:label="EncounterDetailsListFragment" >
-    <action
-      android:id="@+id/action_encounterDetailsListFragment_to_statisticsFragment"
-      app:destination="@id/statisticsFragment" />
-    <action
-      android:id="@+id/action_encounterDetailsListFragment_to_dateListFragment"
-      app:destination="@id/dateListFragment" />
     <action
       android:id="@+id/action_encounterDetailsListFragment_to_encounterDetailFragment"
       app:destination="@id/encounterDetailFragment" />
@@ -107,19 +93,11 @@
   <fragment
     android:id="@+id/firstEncounteredListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.FirstEncounteredListFragment"
-    android:label="FirstEncounteredListFragment" >
-    <action
-      android:id="@+id/action_firstEncounteredListFragment_to_statisticsFragment"
-      app:destination="@id/statisticsFragment" />
-  </fragment>
+    android:label="FirstEncounteredListFragment" />
   <fragment
     android:id="@+id/mostEncounteredListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.MostEncounteredListFragment"
-    android:label="MostEncounteredListFragment" >
-    <action
-      android:id="@+id/action_mostEncounteredFragment_to_statisticsFragment"
-      app:destination="@id/statisticsFragment" />
-  </fragment>
+    android:label="MostEncounteredListFragment" />
   <fragment
     android:id="@+id/tryAgainLaterFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment"
