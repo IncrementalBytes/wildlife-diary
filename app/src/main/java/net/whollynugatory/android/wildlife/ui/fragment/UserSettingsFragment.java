@@ -19,12 +19,20 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 
 import net.whollynugatory.android.wildlife.BuildConfig;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.db.entity.UserEntity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserSettingsFragment extends PreferenceFragmentCompat {
 
@@ -39,6 +47,7 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
     Log.d(TAG, "++onCreatePreferences(Bundle, String)");
     addPreferencesFromResource(R.xml.app_preferences);
     setupAppVersionPreference();
+    setupAvailableUsersPreference();
     setupShowSensitivePreference();
   }
 
@@ -54,6 +63,44 @@ public class UserSettingsFragment extends PreferenceFragmentCompat {
     } else {
       Log.w(TAG, "AppVersion preference was not found.");
     }
+  }
+
+  private void setupAvailableUsersPreference() {
+
+    Log.d(TAG, "++setupAvailableUsersPreference()");
+    ListPreference usersPreference = findPreference(getString(R.string.pref_key_following_user_id));
+    if (usersPreference == null) {
+      Log.e(TAG, "Could not find the user list preference object.");
+      return;
+    }
+
+    String followingId = Utils.getFollowingUserId(getContext());
+    FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).get().addOnCompleteListener(task -> {
+
+      Map<String, String> userEntries = new HashMap<>();
+      DataSnapshot dataSnapshot = task.getResult();
+      for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+        UserEntity userEntity = childSnapshot.getValue(UserEntity.class);
+        if (userEntity != null && userEntity.IsContributor && !userEntity.Name.isEmpty()) {
+          userEntity.Id = childSnapshot.getKey();
+          userEntries.put(userEntity.Id, userEntity.Name);
+        }
+      }
+
+      if (userEntries.containsKey(followingId)) {
+        usersPreference.setSummary(userEntries.get(followingId));
+      }
+
+      usersPreference.setEntries(userEntries.values().toArray(new String[0]));
+      usersPreference.setEntryValues(userEntries.keySet().toArray(new String[0]));
+      usersPreference.setOnPreferenceChangeListener(
+        (preference, newValue) -> {
+          String newUserValue = (String) newValue;
+          usersPreference.setSummary(userEntries.get(newUserValue));
+          Utils.setFollowingUserId(getContext(), newUserValue);
+          return true;
+        });
+    });
   }
 
   private void setupShowSensitivePreference() {

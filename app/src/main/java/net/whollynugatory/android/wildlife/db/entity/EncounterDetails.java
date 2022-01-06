@@ -57,7 +57,6 @@ public class EncounterDetails implements Serializable {
 
   public String WildlifeSpecies;
 
-
   public EncounterDetails() {
 
     Date = 0;

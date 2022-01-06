@@ -10,8 +10,11 @@
       android:title="@string/pref_title_enable_sensitive"/>
   </androidx.preference.PreferenceCategory>
 
-  <!-- TODO: add contributor switch -->
   <!-- TODO: add following list -->
+  <androidx.preference.ListPreference
+    android:key="@string/pref_key_following_user_id"
+    android:title="@string/pref_title_following"
+    android:summary="@string/pref_summary_following"/>
 
   <androidx.preference.PreferenceCategory android:title="@string/pref_category_about">
     <androidx.preference.EditTextPreference

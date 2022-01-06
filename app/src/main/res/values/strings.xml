@@ -19,7 +19,8 @@
   <string name="pref_key_following_user_id">following_user_id</string>
   <string name="pref_key_stamp_encounters">stamp_encounters</string>
   <string name="pref_key_stamp_wildlife">stamp_wildlife</string>
-  <string name="pref_key_is_contributor">is_contributor</string>
+  <string name="pref_title_following">Select user to follow</string>
+  <string name="pref_summary_following">No user being followed!</string>
 
   <string name="header_total_encounters">Total Encounters</string>
   <string name="header_handled_exam">Handled (Exam)</string>
@@ -74,5 +75,6 @@
 
   <string name="navigation_drawer_open">Open</string>
   <string name="navigation_drawer_close">Close</string>
+  <string name="header_total_tasks">Total Tasks Performed</string>
 
 </resources>

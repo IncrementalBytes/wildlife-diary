@@ -29,8 +29,10 @@ public class FragmentDataViewModel extends ViewModel {
   private final MutableLiveData<EncounterDetails> mEncounterDetails = new MutableLiveData<>();
   private final MutableLiveData<List<EncounterDetails>> mEncounterDetailsList = new MutableLiveData<>();
   private final MutableLiveData<String> mEncounterId = new MutableLiveData<>();
+  private final MutableLiveData<Boolean> mIsContributor = new MutableLiveData<>();
   private final MutableLiveData<String> mMessage = new MutableLiveData<>();
-  private final MutableLiveData<WildlifeSummary> mWildlifeSummary = new MutableLiveData<>();
+  private final MutableLiveData<String> mUserId = new MutableLiveData<>();
+  private final MutableLiveData<String> mUserName = new MutableLiveData<>();
   private final MutableLiveData<List<WildlifeSummary>> mWildlifeSummaryList = new MutableLiveData<>();
 
   public LiveData<EncounterDetails> getEncounterDetails() {
@@ -48,14 +50,24 @@ public class FragmentDataViewModel extends ViewModel {
     return mEncounterId;
   }
 
+  public LiveData<Boolean> getIsContributor() {
+
+    return mIsContributor;
+  }
+
   public LiveData<String> getMessage() {
 
     return mMessage;
   }
 
-  public LiveData<WildlifeSummary> getWildlifeSummary() {
+  public LiveData<String> getUserId() {
 
-    return mWildlifeSummary;
+    return mUserId;
+  }
+
+  public LiveData<String> getUserName() {
+
+    return mUserName;
   }
 
   public LiveData<List<WildlifeSummary>> getWildlifeSummaryList() {
@@ -78,14 +90,24 @@ public class FragmentDataViewModel extends ViewModel {
     mEncounterId.setValue(encounterId);
   }
 
+  public void setIsContributor(boolean isContributor) {
+
+    mIsContributor.setValue(isContributor);
+  }
+
   public void setMessage(String message) {
 
     mMessage.setValue(message);
   }
 
-  public void setWildlifeSummary(WildlifeSummary encounterDetails) {
+  public void setUserId(String userId) {
 
-    mWildlifeSummary.setValue(encounterDetails);
+    mUserId.setValue(userId);
+  }
+
+  public void setUserName(String fullName) {
+
+    mUserName.setValue(fullName);
   }
 
   public void setWildlifeSummaryList(List<WildlifeSummary> encounterDetailsList) {

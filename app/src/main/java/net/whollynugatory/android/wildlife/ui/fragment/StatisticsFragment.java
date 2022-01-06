@@ -51,6 +51,7 @@ public class StatisticsFragment extends Fragment {
   private ImageView mNewFirstEncounteredImage;
 
   private String mFollowingUserId;
+  private boolean mShowSensitive;
   private WildlifeViewModel mWildlifeViewModel;
 
   /*
@@ -73,13 +74,15 @@ public class StatisticsFragment extends Fragment {
 
     mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     mFollowingUserId = Utils.getFollowingUserId(getContext());
-    mWildlifeViewModel.getStatistics(mFollowingUserId).observe(
+    mShowSensitive = Utils.getShowSensitive(getContext());
+    boolean showSensitive = Utils.getShowSensitive(getContext());
+    mWildlifeViewModel.getStatistics(mFollowingUserId, showSensitive).observe(
       getViewLifecycleOwner(),
       statisticsDetails -> mBinding.setStatistics(statisticsDetails));
     Date in = new Date();
     LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(6);
     ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-    mWildlifeViewModel.getNewEncounters(mFollowingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+    mWildlifeViewModel.getNewEncounters(mFollowingUserId, zonedDateTime.toInstant().toEpochMilli(), mShowSensitive).observe(
       getViewLifecycleOwner(),
       newEncounters -> {
 
@@ -91,7 +94,7 @@ public class StatisticsFragment extends Fragment {
       }
     );
 
-    mWildlifeViewModel.getNewUnique(mFollowingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+    mWildlifeViewModel.getNewUnique(mFollowingUserId, zonedDateTime.toInstant().toEpochMilli(), mShowSensitive).observe(
       getViewLifecycleOwner(),
       newUnique -> {
 
@@ -125,8 +128,7 @@ public class StatisticsFragment extends Fragment {
 
     if (view != null) {
       if (view.getId() == R.id.statistics_card_total_encounters) {
-        boolean showSensitive = Utils.getShowSensitive(getContext());
-        mWildlifeViewModel.getAllEncounterDetails(mFollowingUserId, showSensitive).observe(
+        mWildlifeViewModel.getAllEncounterDetails(mFollowingUserId, mShowSensitive).observe(
           getViewLifecycleOwner(),
           encounterDetailsList -> {
 
@@ -137,7 +139,7 @@ public class StatisticsFragment extends Fragment {
               .navigate(R.id.action_statisticsFragment_to_encounterDetailsListFragment);
           });
       } else if (view.getId() == R.id.statistics_card_unique_encounters) {
-        mWildlifeViewModel.getFirstEncountered(mFollowingUserId).observe(
+        mWildlifeViewModel.getFirstEncountered(mFollowingUserId, mShowSensitive).observe(
           getViewLifecycleOwner(),
           firstEncounteredList -> {
 
@@ -148,7 +150,7 @@ public class StatisticsFragment extends Fragment {
               .navigate(R.id.action_statisticsFragment_to_firstEncounteredListFragment);
           });
       } else if (view.getId() == R.id.statistics_card_most_encountered) {
-        mWildlifeViewModel.getMostEncountered(mFollowingUserId).observe(
+        mWildlifeViewModel.getMostEncountered(mFollowingUserId, mShowSensitive).observe(
           getViewLifecycleOwner(),
           mostEncountered -> {
 

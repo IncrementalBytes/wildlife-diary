@@ -51,29 +51,24 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getEncounterDetails(userId, encounterId, showSensitive);
   }
 
-  public LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName) {
+  public LiveData<List<WildlifeSummary>> getMostEncountered(String userId, boolean showSensitive) {
 
-    return mWildlifeRepository.getEncountersByTaskName(userId, taskName);
+    return mWildlifeRepository.getMostEncountered(userId, showSensitive);
   }
 
-  public LiveData<List<WildlifeSummary>> getMostEncountered(String userId) {
+  public LiveData<List<EncounterEntity>> getNewEncounters(String userId, long timeStamp, boolean showSensitive) {
 
-    return mWildlifeRepository.getMostEncountered(userId);
+    return mWildlifeRepository.getNewEncounters(userId, timeStamp, showSensitive);
   }
 
-  public LiveData<List<EncounterEntity>> getNewEncounters(String userId, long timeStamp) {
+  public LiveData<List<String>> getNewUnique(String userId, long timeStamp, boolean showSensitive) {
 
-    return mWildlifeRepository.getNewEncounters(userId, timeStamp);
+    return mWildlifeRepository.getNewUnique(userId, timeStamp, showSensitive);
   }
 
-  public LiveData<List<String>> getNewUnique(String userId, long timeStamp) {
+  public LiveData<StatisticsDetails> getStatistics(String userId, boolean showSensitive) {
 
-    return mWildlifeRepository.getNewUnique(userId, timeStamp);
-  }
-
-  public LiveData<StatisticsDetails> getStatistics(String userId) {
-
-    return mWildlifeRepository.getStatistics(userId);
+    return mWildlifeRepository.getStatistics(userId, showSensitive);
   }
 
   public LiveData<List<TaskEntity>> getTasks() {
@@ -86,9 +81,9 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getAllEncounterDetails(userId, showSensitive);
   }
 
-  public LiveData<List<EncounterDetails>> getFirstEncountered(String userId) {
+  public LiveData<List<EncounterDetails>> getFirstEncountered(String userId, boolean showSensitive) {
 
-    return mWildlifeRepository.getFirstEncountered(userId);
+    return mWildlifeRepository.getFirstEncountered(userId, showSensitive);
   }
 
   public LiveData<List<WildlifeEntity>> getWildlife() {

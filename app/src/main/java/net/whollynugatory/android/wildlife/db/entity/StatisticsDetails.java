@@ -54,6 +54,8 @@ public class StatisticsDetails {
 
   public int TotalSyringeFed;
 
+  public int TotalTasks;
+
   public StatisticsDetails() {
 
     MostEncountered = Utils.UNKNOWN_STRING;
@@ -72,5 +74,6 @@ public class StatisticsDetails {
     TotalSpeciesEncountered = 0;
     TotalSubcutaneous = 0;
     TotalSyringeFed = 0;
+    TotalTasks = 0;
   }
 }

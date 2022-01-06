@@ -79,9 +79,9 @@ public interface EncounterDao {
     "FROM encounter_table AS Encounter " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
     "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
-    "WHERE user_id == :userId AND Tasks.name = :taskName " +
+    "WHERE user_id == :userId AND Tasks.name = :taskName AND (TaskIsSensitive == 0 OR TaskIsSensitive == :showSensitive) " +
     "ORDER BY Date DESC")
-  LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName);
+  LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName, boolean showSensitive);
 
   @Query("SELECT Encounter.date AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +
@@ -109,21 +109,33 @@ public interface EncounterDao {
     "Wildlife.image_attribution AS ImageAttribution, " +
     "Wildlife.image_src AS ImageUrl " +
     "FROM (" +
-    "  SELECT DISTINCT wildlife_id, encounter_id FROM encounter_table WHERE user_id == :userId GROUP BY wildlife_id, encounter_id" +
+    "  SELECT DISTINCT wildlife_id, encounter_id, task_id " +
+    "  FROM encounter_table " +
+    "  INNER JOIN task_table AS Tasks ON Tasks.id = task_id " +
+    "  WHERE user_id == :userId AND (is_sensitive == 0 OR is_sensitive == :showSensitive) " +
+    "  GROUP BY wildlife_id, encounter_id" +
     ")" +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == wildlife_id " +
     "GROUP BY wildlife_id " +
     "ORDER BY EncounterCount DESC")
-  LiveData<List<WildlifeSummary>> getMostEncountered(String userId);
+  LiveData<List<WildlifeSummary>> getMostEncountered(String userId, boolean showSensitive);
 
-  @Query("SELECT * FROM encounter_table WHERE user_id == :userId AND date > :timeStamp")
-  LiveData<List<EncounterEntity>> getNewEncounters(String userId, long timeStamp);
+  @Query("SELECT * FROM encounter_table " +
+    "INNER JOIN task_table AS Tasks ON Tasks.id = task_id " +
+    "WHERE user_id == :userId AND date > :timeStamp AND (is_sensitive == 0 OR is_sensitive == :showSensitive)")
+  LiveData<List<EncounterEntity>> getNewEncounters(String userId, long timeStamp, boolean showSensitive);
 
   @Query("SELECT * FROM (" +
-    "SELECT wildlife_id FROM encounter_table WHERE user_id == :userId AND date > :timeStamp " +
+    "SELECT wildlife_id " +
+    "FROM encounter_table " +
+    "INNER JOIN task_table AS Tasks ON Tasks.id = task_id " +
+    "WHERE user_id == :userId AND date > :timeStamp AND (is_sensitive == 0 OR is_sensitive == :showSensitive) " +
     "EXCEPT " +
-    "SELECT wildlife_id AS Count FROM encounter_table WHERE user_id == :userId AND date <= :timeStamp)")
-  LiveData<List<String>> getNewUnique(String userId, long timeStamp);
+    "SELECT wildlife_id AS Count " +
+    "FROM encounter_table " +
+    "INNER JOIN task_table AS Tasks ON Tasks.id = task_id " +
+    "WHERE user_id == :userId AND date > :timeStamp AND (is_sensitive == 0 OR is_sensitive == :showSensitive))")
+  LiveData<List<String>> getNewUnique(String userId, long timeStamp, boolean showSensitive);
 
   @Query("SELECT COUNT(DISTINCT encounter_id) AS TotalEncounters, " +
     "COUNT(DISTINCT wildlife_id) AS TotalSpeciesEncountered, " +
@@ -140,21 +152,28 @@ public interface EncounterDao {
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '25a40f6a-fa23-4331-9fd8-ed8d0bfbb780' AND user_id == :userId) AS TotalOralMedicated, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '98bf72f8-f388-4a6a-962e-b3f4cc94f174' AND user_id == :userId) AS TotalSubcutaneous, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '88c20461-e306-447c-92bd-196bfbfa9458' AND user_id == :userId) AS TotalSyringeFed, " +
-    "(SELECT WildlifeSpecies FROM (" +
-    "  SELECT wildlife_id AS WildlifeId, " +
-    "    COUNT(encounter_id) AS EncounterCount, " +
-    "    Wildlife.friendly_name AS WildlifeSpecies " +
-    "  FROM (" +
-    "      SELECT DISTINCT wildlife_id, encounter_id FROM encounter_table WHERE user_id == :userId GROUP BY wildlife_id, encounter_id" +
-    "  )" +
-    "  INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == wildlife_id " +
-    "  GROUP BY wildlife_id " +
-    "  ORDER BY EncounterCount DESC" +
-    "  LIMIT 1)) AS MostEncountered " +
+    "(SELECT COUNT(*) FROM encounter_table INNER JOIN task_table AS tasks ON tasks.id == task_id WHERE user_id == :userId AND (tasks.is_sensitive == 0 OR tasks.is_sensitive == :showSensitive)) AS TotalTasks, " +
+    "(SELECT WildlifeSpecies " +
+    " FROM (" +
+    "   SELECT wildlife_id AS WildlifeId, " +
+    "     COUNT(encounter_id) AS EncounterCount, " +
+    "     Wildlife.friendly_name AS WildlifeSpecies " +
+    "   FROM (" +
+    "     SELECT DISTINCT wildlife_id, encounter_id " +
+    "     FROM encounter_table " +
+    "     WHERE user_id == :userId " +
+    "     GROUP BY wildlife_id, encounter_id" +
+    "   )" +
+    " INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == wildlife_id " +
+    " GROUP BY wildlife_id " +
+    " ORDER BY EncounterCount DESC" +
+    " LIMIT 1)" +
+    ") AS MostEncountered " +
     "FROM encounter_table " +
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
-    "WHERE user_id == :userId")
-  LiveData<StatisticsDetails> getStatistics(String userId);
+    "INNER JOIN task_table AS tasks ON tasks.id == task_id " +
+    "WHERE user_id == :userId AND (tasks.is_sensitive == 0 OR tasks.is_sensitive == :showSensitive)")
+  LiveData<StatisticsDetails> getStatistics(String userId, boolean showSensitive);
 
   @Query("SELECT MIN(Encounter.date) AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +
@@ -171,10 +190,11 @@ public interface EncounterDao {
     "'' AS TaskDescription " +
     "FROM encounter_table AS Encounter " +
     "JOIN wildlife_table AS Wildlife ON Wildlife.id == Encounter.wildlife_id " +
-    "WHERE user_id == :userId " +
+    "INNER JOIN task_table AS tasks ON tasks.id == task_id " +
+    "WHERE user_id == :userId AND (tasks.is_sensitive == 0 OR tasks.is_sensitive == :showSensitive) " +
     "GROUP BY WildlifeId " +
     "ORDER BY Encounter.date DESC")
-  LiveData<List<EncounterDetails>> getFirstEncountered(String userId);
+  LiveData<List<EncounterDetails>> getFirstEncountered(String userId, boolean showSensitive);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(EncounterEntity encounterEntity);

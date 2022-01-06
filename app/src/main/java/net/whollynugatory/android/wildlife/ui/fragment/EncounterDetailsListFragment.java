@@ -167,11 +167,14 @@ public class EncounterDetailsListFragment extends Fragment {
         mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
         mEncounterDateTextView.setText(Utils.fromTimestamp(mEncounterDetails.Date));
         mNewEncounterImageView.setVisibility(mEncounterDetails.IsNew ? View.VISIBLE : View.GONE);
-        Glide.with(getContext())
-          .load(encounterDetails.ImageUrl)
-          .placeholder(R.drawable.ic_placeholder_dark)
-          .error(R.drawable.ic_error_dark)
-          .into(mWildlifeImageView);
+        if (getContext() != null) {
+          Glide.with(getContext())
+            .load(encounterDetails.ImageUrl)
+            .placeholder(R.drawable.ic_placeholder_dark)
+            .error(R.drawable.ic_error_dark)
+            .into(mWildlifeImageView);
+        }
+
         mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
       }
 
@@ -182,7 +185,8 @@ public class EncounterDetailsListFragment extends Fragment {
         FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
           .get(FragmentDataViewModel.class);
         viewModel.setEncounterId(mEncounterDetails.EncounterId);
-        if (Utils.getIsContributor(getContext())) {
+        Boolean isContributor = viewModel.getIsContributor().getValue();
+        if (isContributor != null && isContributor) {
           Navigation.findNavController(view).navigate(R.id.action_encounterDetailsListFragment_to_encounterFragment);
         } else {
           Navigation.findNavController(view).navigate(R.id.action_encounterDetailsListFragment_to_encounterDetailFragment);

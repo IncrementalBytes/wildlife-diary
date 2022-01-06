@@ -132,10 +132,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     Log.d(TAG, "++authenticateSuccess()");
     if (mAuth.getCurrentUser() != null) {
-      Utils.setUserId(this, mAuth.getCurrentUser().getUid());
       Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-      intent.putExtra("DisplayName", mAuth.getCurrentUser().getDisplayName());
-      intent.putExtra("Email", mAuth.getCurrentUser().getEmail());
+      intent.putExtra(Utils.ARG_DISPLAY_NAME, mAuth.getCurrentUser().getDisplayName());
+      intent.putExtra(Utils.ARG_EMAIL, mAuth.getCurrentUser().getEmail());
+      intent.putExtra(Utils.ARG_USER_ID, mAuth.getCurrentUser().getUid());
       startActivity(intent);
       finish();
       mPawAnimation.stop();

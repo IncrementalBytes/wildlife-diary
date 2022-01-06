@@ -62,29 +62,24 @@ public class WildlifeRepository {
     return mEncounterDao.getEncounterDetails(userId, encounterId, showSensitive);
   }
 
-  public LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName) {
+  public LiveData<List<WildlifeSummary>> getMostEncountered(String userId, boolean showSensitive) {
 
-    return mEncounterDao.getEncountersByTaskName(userId, taskName);
+    return mEncounterDao.getMostEncountered(userId, showSensitive);
   }
 
-  public LiveData<List<WildlifeSummary>> getMostEncountered(String userId) {
+  public LiveData<List<EncounterEntity>> getNewEncounters(String userId, long timeStamp, boolean showSensitive) {
 
-    return mEncounterDao.getMostEncountered(userId);
+    return mEncounterDao.getNewEncounters(userId, timeStamp, showSensitive);
   }
 
-  public LiveData<List<EncounterEntity>> getNewEncounters(String userId, long timeStamp) {
+  public LiveData<List<String>> getNewUnique(String userId, long timeStamp, boolean showSensitive) {
 
-    return mEncounterDao.getNewEncounters(userId, timeStamp);
+    return mEncounterDao.getNewUnique(userId, timeStamp, showSensitive);
   }
 
-  public LiveData<List<String>> getNewUnique(String userId, long timeStamp) {
+  public LiveData<StatisticsDetails> getStatistics(String userId, boolean showSensitive) {
 
-    return mEncounterDao.getNewUnique(userId, timeStamp);
-  }
-
-  public LiveData<StatisticsDetails> getStatistics(String userId) {
-
-    return mEncounterDao.getStatistics(userId);
+    return mEncounterDao.getStatistics(userId, showSensitive);
   }
 
   public LiveData<List<TaskEntity>> getTasks() {
@@ -97,9 +92,9 @@ public class WildlifeRepository {
     return mEncounterDao.getAllEncounterDetails(userId, showSensitive);
   }
 
-  public LiveData<List<EncounterDetails>> getFirstEncountered(String userId) {
+  public LiveData<List<EncounterDetails>> getFirstEncountered(String userId, boolean showSensitive) {
 
-    return mEncounterDao.getFirstEncountered(userId);
+    return mEncounterDao.getFirstEncountered(userId, showSensitive);
   }
 
   public LiveData<List<WildlifeEntity>> getAllWildlife() {

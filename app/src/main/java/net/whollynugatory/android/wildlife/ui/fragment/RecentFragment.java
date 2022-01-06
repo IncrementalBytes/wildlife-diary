@@ -61,10 +61,13 @@ public class RecentFragment extends Fragment {
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
     final View view = inflater.inflate(R.layout.fragment_recent, container, false);
     FloatingActionButton addEncounterButton = view.findViewById(R.id.recent_fab_add);
-    if (Utils.getIsContributor(getContext())) {
+
+    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+    Boolean isContributor = viewModel.getIsContributor().getValue();
+    if (isContributor != null && isContributor) {
       addEncounterButton.setVisibility(View.VISIBLE);
       addEncounterButton.setOnClickListener(addEncounterButtonView -> {
-        FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
+
         viewModel.setEncounterId("");
         Navigation.findNavController(addEncounterButtonView).navigate(R.id.encounterFragment);
       });
@@ -106,7 +109,7 @@ public class RecentFragment extends Fragment {
             }
           }
 
-          wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli()).observe(
+          wildlifeViewModel.getNewUnique(followingUserId, zonedDateTime.toInstant().toEpochMilli(), showSensitive).observe(
             getViewLifecycleOwner(),
             uniqueList -> {
 
@@ -204,11 +207,14 @@ public class RecentFragment extends Fragment {
         mAbbreviationTextView.setText(mEncounterDetails.WildlifeAbbreviation);
         mEncounterDateTextView.setText(Utils.fromTimestamp(mEncounterDetails.Date));
         mNewEncounterImageView.setVisibility(mEncounterDetails.IsNew ? View.VISIBLE : View.GONE);
-        Glide.with(getContext())
-          .load(encounterDetails.ImageUrl)
-          .placeholder(R.drawable.ic_placeholder_dark)
-          .error(R.drawable.ic_error_dark)
-          .into(mWildlifeImageView);
+        if (getContext() != null) {
+          Glide.with(getContext())
+            .load(encounterDetails.ImageUrl)
+            .placeholder(R.drawable.ic_placeholder_dark)
+            .error(R.drawable.ic_error_dark)
+            .into(mWildlifeImageView);
+        }
+
         mWildlifeTextView.setText(mEncounterDetails.WildlifeSpecies);
       }
 
@@ -218,11 +224,11 @@ public class RecentFragment extends Fragment {
         Log.d(TAG, "++EncounterHolder::onClick(View)");
         FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
           .get(FragmentDataViewModel.class);
-        if (Utils.getIsContributor(getContext())) {
-          viewModel.setEncounterId(mEncounterDetails.EncounterId);
+        Boolean isContributor = viewModel.getIsContributor().getValue();
+        viewModel.setEncounterId(mEncounterDetails.EncounterId);
+        if (isContributor != null && isContributor) {
           Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterFragment);
         } else {
-          viewModel.setEncounterId(mEncounterDetails.EncounterId);
           Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterDetailFragment);
         }
       }

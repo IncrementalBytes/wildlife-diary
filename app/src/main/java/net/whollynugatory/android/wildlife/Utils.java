@@ -37,6 +37,9 @@ public class Utils {
 
   private static final String TAG = Utils.BASE_TAG + Utils.class.getSimpleName();
 
+  public static final String ARG_DISPLAY_NAME = "arg_display_name";
+  public static final String ARG_EMAIL = "arg_email";
+  public static final String ARG_USER_ID = "arg_user_id";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
   public static final String DATA_STAMPS_ROOT = "DataStamps";
@@ -78,11 +81,6 @@ public class Utils {
     return getStringPref(context, R.string.pref_key_following_user_id, Utils.UNKNOWN_USER_ID);
   }
 
-  public static boolean getIsContributor(Context context) {
-
-    return getBooleanPref(context, R.string.pref_key_is_contributor, false);
-  }
-
   public static String getLocalTimeStamp(Context context, int resourceKeyId) {
 
     return getStringPref(context, resourceKeyId, Utils.UNKNOWN_ID);
@@ -90,17 +88,7 @@ public class Utils {
 
   public static boolean getShowSensitive(Context context) {
 
-    return getBooleanPref(context, R.string.pref_key_enable_sensitive, false);
-  }
-
-  public static String getUserId(Context context) {
-
-    return getStringPref(context, R.string.pref_key_user_id, Utils.UNKNOWN_USER_ID);
-  }
-
-  public static void setIsContributor(Context context, boolean canAdd) {
-
-    setBooleanPref(context, R.string.pref_key_is_contributor, canAdd);
+    return getBooleanPref(context, R.string.pref_key_enable_sensitive);
   }
 
   public static void setFollowingUserId(Context context, String newFollowingUserId) {
@@ -117,11 +105,6 @@ public class Utils {
   public static void setShowSensitive(Context context, boolean showSensitive) {
 
     setBooleanPref(context, R.string.pref_key_enable_sensitive, showSensitive);
-  }
-
-  public static void setUserId(Context context, String userId) {
-
-    setStringPref(context, R.string.pref_key_user_id, userId);
   }
 
   @TypeConverter
@@ -169,12 +152,11 @@ public class Utils {
   /*
     Private Method(s)
    */
-  private static boolean getBooleanPref(
+  private static boolean getBooleanPref(Context context, @StringRes int prefKeyId) {
 
-    Context context, @StringRes int prefKeyId, boolean defaultValue) {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String prefKey = context.getString(prefKeyId);
-    return sharedPreferences.getBoolean(prefKey, defaultValue);
+    return sharedPreferences.getBoolean(prefKey, false);
   }
 
   public static String getStringPref(Context context, @StringRes int preferenceKeyId, String defaultValue) {

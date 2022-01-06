@@ -67,7 +67,8 @@ public class MostEncounteredListFragment extends Fragment {
     if (mostEncounteredList == null || mostEncounteredList.size() == 0) {
       WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
       String followingUserId = Utils.getFollowingUserId(getContext());
-      wildlifeViewModel.getMostEncountered(followingUserId).observe(
+      boolean showSensitive = Utils.getShowSensitive(getContext());
+      wildlifeViewModel.getMostEncountered(followingUserId, showSensitive).observe(
         getViewLifecycleOwner(),
         mostEncountered -> {
 

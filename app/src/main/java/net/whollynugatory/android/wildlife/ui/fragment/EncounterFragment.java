@@ -247,7 +247,11 @@ public class EncounterFragment extends Fragment {
     EncounterEntity encounterEntity = new EncounterEntity();
     encounterEntity.Date = Utils.toTimestamp(mDateEdit.getText().toString());
     encounterEntity.EncounterId = UUID.randomUUID().toString();
-    encounterEntity.UserId = Utils.getUserId(getContext());
+    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+    String userId = viewModel.getUserId().getValue();
+    if (userId != null) {
+      encounterEntity.UserId = userId;
+    }
 
     // TODO: add injury call-out
     // TODO: validate
