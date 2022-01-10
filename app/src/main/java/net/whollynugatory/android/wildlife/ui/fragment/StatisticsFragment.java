@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,11 +32,9 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentStatisticsBinding;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class StatisticsFragment extends Fragment {
@@ -46,13 +43,8 @@ public class StatisticsFragment extends Fragment {
 
   private FragmentStatisticsBinding mBinding;
 
-  private CardView mEuthanasiaCard;
   private ImageView mNewTotalEncountersImage;
   private ImageView mNewFirstEncounteredImage;
-
-  private String mFollowingUserId;
-  private boolean mShowSensitive;
-  private WildlifeViewModel mWildlifeViewModel;
 
   /*
     Fragment Override(s)
@@ -65,24 +57,24 @@ public class StatisticsFragment extends Fragment {
     mBinding.setFragment(this);
 
     View view = mBinding.getRoot();
-    mEuthanasiaCard = view.findViewById(R.id.statistics_card_handled_euthanasia);
     mNewTotalEncountersImage = view.findViewById(R.id.statistics_image_total_encounters_new);
     mNewFirstEncounteredImage = view.findViewById(R.id.statistics_image_first_encountered_new);
 
     mNewTotalEncountersImage.setVisibility(View.GONE);
     mNewFirstEncounteredImage.setVisibility(View.GONE);
 
-    mWildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    mFollowingUserId = Utils.getFollowingUserId(getContext());
-    mShowSensitive = Utils.getShowSensitive(getContext());
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    String followingUserId = Utils.getFollowingUserId(getContext());
     boolean showSensitive = Utils.getShowSensitive(getContext());
-    mWildlifeViewModel.getStatistics(mFollowingUserId, showSensitive).observe(
+    wildlifeViewModel.getStatistics(followingUserId, showSensitive).observe(
       getViewLifecycleOwner(),
       statisticsDetails -> mBinding.setStatistics(statisticsDetails));
+
+    // determine if any entries are within a week
     Date in = new Date();
     LocalDateTime localDateTime = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault()).minusDays(6);
-    ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-    mWildlifeViewModel.getNewEncounters(mFollowingUserId, zonedDateTime.toInstant().toEpochMilli(), mShowSensitive).observe(
+    long epochMilli = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    wildlifeViewModel.getNewEncounters(followingUserId, epochMilli, showSensitive).observe(
       getViewLifecycleOwner(),
       newEncounters -> {
 
@@ -94,7 +86,7 @@ public class StatisticsFragment extends Fragment {
       }
     );
 
-    mWildlifeViewModel.getNewUnique(mFollowingUserId, zonedDateTime.toInstant().toEpochMilli(), mShowSensitive).observe(
+    wildlifeViewModel.getNewUnique(followingUserId, epochMilli, showSensitive).observe(
       getViewLifecycleOwner(),
       newUnique -> {
 
@@ -117,55 +109,22 @@ public class StatisticsFragment extends Fragment {
     mBinding = null;
   }
 
-  @Override
-  public void onResume() {
-    super.onResume();
-
-    updateUI();
-  }
-
   public void onCardClick(View view) {
 
     if (view != null) {
       if (view.getId() == R.id.statistics_card_total_encounters) {
-        mWildlifeViewModel.getAllEncounterDetails(mFollowingUserId, mShowSensitive).observe(
-          getViewLifecycleOwner(),
-          encounterDetailsList -> {
-
-            FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
-              .get(FragmentDataViewModel.class);
-            viewModel.setEncounterDetailsList(encounterDetailsList);
-            NavHostFragment.findNavController(requireParentFragment())
-              .navigate(R.id.action_statisticsFragment_to_encounterDetailsListFragment);
-          });
+        NavHostFragment.findNavController(requireParentFragment())
+          .navigate(R.id.action_statisticsFragment_to_encounterDetailsListFragment);
       } else if (view.getId() == R.id.statistics_card_unique_encounters) {
-        mWildlifeViewModel.getFirstEncountered(mFollowingUserId, mShowSensitive).observe(
-          getViewLifecycleOwner(),
-          firstEncounteredList -> {
-
-            FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
-              .get(FragmentDataViewModel.class);
-            viewModel.setEncounterDetailsList(firstEncounteredList);
-            NavHostFragment.findNavController(requireParentFragment())
-              .navigate(R.id.action_statisticsFragment_to_firstEncounteredListFragment);
-          });
+        NavHostFragment.findNavController(requireParentFragment())
+          .navigate(R.id.action_statisticsFragment_to_firstEncounteredListFragment);
       } else if (view.getId() == R.id.statistics_card_most_encountered) {
-        mWildlifeViewModel.getMostEncountered(mFollowingUserId, mShowSensitive).observe(
-          getViewLifecycleOwner(),
-          mostEncountered -> {
-
-            FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
-              .get(FragmentDataViewModel.class);
-            viewModel.setWildlifeSummaryList(mostEncountered);
-            NavHostFragment.findNavController(requireParentFragment())
-              .navigate(R.id.action_statisticsFragment_to_mostEncounteredListFragment);
-          });
+        NavHostFragment.findNavController(requireParentFragment())
+          .navigate(R.id.action_statisticsFragment_to_mostEncounteredListFragment);
+      } else if (view.getId() == R.id.statistics_card_total_tasks) {
+        NavHostFragment.findNavController(requireParentFragment())
+          .navigate(R.id.action_statisticsFragment_to_tasksFragment);
       }
     }
-  }
-
-  private void updateUI() {
-
-    mEuthanasiaCard.setVisibility(Utils.getShowSensitive(getContext()) ? View.VISIBLE : View.GONE);
   }
 }

@@ -10,7 +10,6 @@
       android:title="@string/pref_title_enable_sensitive"/>
   </androidx.preference.PreferenceCategory>
 
-  <!-- TODO: add following list -->
   <androidx.preference.ListPreference
     android:key="@string/pref_key_following_user_id"
     android:title="@string/pref_title_following"

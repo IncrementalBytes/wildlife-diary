@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -62,18 +62,12 @@ public class EncounterDetailsListFragment extends Fragment {
     mEncounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(mEncounterAdapter);
 
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    List<EncounterDetails> encounterDetailsList = viewModel.getEncounterDetailsList().getValue();
-    if (encounterDetailsList == null || encounterDetailsList.size() == 0) {
-      WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-      String followingUserId = Utils.getFollowingUserId(getContext());
-      boolean showSensitive = Utils.getShowSensitive(getContext());
-      wildlifeViewModel.getAllEncounterDetails(followingUserId, showSensitive).observe(
-        getViewLifecycleOwner(),
-        totalEncounters -> mEncounterAdapter.setEncounterDetailsList(totalEncounters));
-    } else {
-      mEncounterAdapter.setEncounterDetailsList(encounterDetailsList);
-    }
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    String followingUserId = Utils.getFollowingUserId(getContext());
+    boolean showSensitive = Utils.getShowSensitive(getContext());
+    wildlifeViewModel.getAllEncounterDetails(followingUserId, showSensitive).observe(
+      getViewLifecycleOwner(),
+      totalEncounters -> mEncounterAdapter.setEncounterDetailsList(totalEncounters));
 
     return view;
   }
@@ -182,14 +176,14 @@ public class EncounterDetailsListFragment extends Fragment {
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
-          .get(FragmentDataViewModel.class);
+        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
         viewModel.setEncounterId(mEncounterDetails.EncounterId);
         Boolean isContributor = viewModel.getIsContributor().getValue();
         if (isContributor != null && isContributor) {
           Navigation.findNavController(view).navigate(R.id.action_encounterDetailsListFragment_to_encounterFragment);
         } else {
-          Navigation.findNavController(view).navigate(R.id.action_encounterDetailsListFragment_to_encounterDetailFragment);
+          Navigation.findNavController(view)
+            .navigate(R.id.action_encounterDetailsListFragment_to_encounterDetailFragment);
         }
       }
     }

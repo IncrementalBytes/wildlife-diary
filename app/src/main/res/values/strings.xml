@@ -14,7 +14,6 @@
   <string name="pref_title_enable_sensitive">Show Sensitive Tasks</string>
   <string name="pref_title_app_version">Application Version</string>
 
-  <string name="pref_key_user_id">user_id</string>
   <string name="pref_key_stamp_tasks">stamp_tasks</string>
   <string name="pref_key_following_user_id">following_user_id</string>
   <string name="pref_key_stamp_encounters">stamp_encounters</string>

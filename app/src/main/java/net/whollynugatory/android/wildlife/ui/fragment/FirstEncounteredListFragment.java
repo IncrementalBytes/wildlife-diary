@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,23 +61,16 @@ public class FirstEncounteredListFragment extends Fragment {
     mFirstEncounteredAdapter = new FirstEncounteredAdapter(getContext());
     recyclerView.setAdapter(mFirstEncounteredAdapter);
 
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    List<EncounterDetails> firstEncounteredList = viewModel.getEncounterDetailsList().getValue();
-    if (firstEncounteredList == null || firstEncounteredList.size() == 0) {
-      WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-      String followingUserId = Utils.getFollowingUserId(getContext());
-      boolean showSensitive = Utils.getShowSensitive(getContext());
-      wildlifeViewModel.getFirstEncountered(followingUserId, showSensitive).observe(
-        getViewLifecycleOwner(),
-        encounteredList -> {
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    String followingUserId = Utils.getFollowingUserId(getContext());
+    boolean showSensitive = Utils.getShowSensitive(getContext());
+    wildlifeViewModel.getFirstEncountered(followingUserId, showSensitive).observe(
+      getViewLifecycleOwner(),
+      encounteredList -> {
 
-          Log.d(TAG, "First encountered list is " + encounteredList.size());
-          mFirstEncounteredAdapter.setFirstEncounteredList(encounteredList);
-        });
-    } else {
-      Log.d(TAG, "First encountered list is " + firstEncounteredList.size());
-      mFirstEncounteredAdapter.setFirstEncounteredList(firstEncounteredList);
-    }
+        Log.d(TAG, "First encountered list is " + encounteredList.size());
+        mFirstEncounteredAdapter.setFirstEncounteredList(encounteredList);
+      });
 
     return view;
   }

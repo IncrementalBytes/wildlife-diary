@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -62,26 +62,6 @@ public interface EncounterDao {
     "WHERE user_id == :userId AND (TaskIsSensitive == 0 OR TaskIsSensitive == :showSensitive) " +
     "ORDER BY Date DESC, EncounterId")
   LiveData<List<EncounterDetails>> getAllEncounterDetails(String userId, boolean showSensitive);
-
-  @Query("SELECT Encounter.date AS Date, " +
-    "Encounter.encounter_id AS EncounterId, " +
-    "Encounter.wildlife_id AS WildlifeId, " +
-    "Encounter.user_id AS UserId, " +
-    "Encounter.id AS Id, " +
-    "Wildlife.friendly_name AS WildlifeSpecies, " +
-    "Wildlife.abbreviation AS WildlifeAbbreviation, " +
-    "Wildlife.image_attribution AS ImageAttribution, " +
-    "Wildlife.image_src AS ImageUrl, " +
-    "Tasks.name AS TaskName, " +
-    "Tasks.id AS TaskId, " +
-    "Tasks.is_sensitive AS TaskIsSensitive, " +
-    "Tasks.description AS TaskDescription " +
-    "FROM encounter_table AS Encounter " +
-    "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id = Encounter.wildlife_id " +
-    "INNER JOIN task_table AS Tasks ON Tasks.id = Encounter.task_id " +
-    "WHERE user_id == :userId AND Tasks.name = :taskName AND (TaskIsSensitive == 0 OR TaskIsSensitive == :showSensitive) " +
-    "ORDER BY Date DESC")
-  LiveData<List<EncounterDetails>> getEncountersByTaskName(String userId, String taskName, boolean showSensitive);
 
   @Query("SELECT Encounter.date AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +

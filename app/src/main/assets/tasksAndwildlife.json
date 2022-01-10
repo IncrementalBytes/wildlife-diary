@@ -539,7 +539,9 @@
     },
     "3dd3db53-7612-4bd9-99a8-a678c7ea4a09": {
       "FriendlyName": "European Starling",
-      "Abbreviation": "EUST"
+      "Abbreviation": "EUST",
+      "ImageSrc": "https://upload.wikimedia.org/wikipedia/commons/1/11/NorCal2018_Common_Starling_at_Ritz-Calton_Half_Moon_Bay_S0116017.jpg",
+      "ImageAttribution": "Fred Hsu on en.wikipedia, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons"
     },
     "483540b4-6c35-4007-a2f6-5c5130b4b38c": {
       "FriendlyName": "Evening Grosbeak",

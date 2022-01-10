@@ -9,14 +9,18 @@
     app:destination="@id/cleanUpListFragment" />
   <action
     android:id="@+id/action_Menu_to_DataFragment"
-    app:destination="@id/dataFragment" />
+    app:destination="@+id/dataFragment" />
   <action
     android:id="@+id/action_Menu_to_RecentFragment"
-    app:destination="@id/recentFragment" />
+    app:destination="@+id/recentFragment" />
   <action
     android:id="@+id/action_Menu_to_UserSettingsFragment"
-    app:destination="@id/userSettingsFragment" />
+    app:destination="@+id/userSettingsFragment" />
 
+  <fragment
+    android:id="@+id/cleanUpListFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.CleanUpListFragment"
+    android:label="CleanUpListFragment" />
   <fragment
     android:id="@+id/dataFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.DataFragment"
@@ -24,23 +28,15 @@
     tools:layout="@layout/fragment_data">
     <action
       android:id="@+id/action_dataFragment_to_recentFragment"
-      app:destination="@id/recentFragment" />
+      app:destination="@+id/recentFragment" />
   </fragment>
-  <fragment
-    android:id="@+id/cleanUpListFragment"
-    android:name="net.whollynugatory.android.wildlife.ui.fragment.CleanUpListFragment"
-    android:label="CleanUpListFragment" />
-  <fragment
-    android:id="@+id/userSettingsFragment"
-    android:name="net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment"
-    android:label="UserSettingsFragment" />
   <fragment
     android:id="@+id/dateListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.DateListFragment"
     android:label="DateListFragment" >
     <action
       android:id="@+id/action_dateListFragment_to_encounterDetailsListFragment"
-      app:destination="@id/encounterDetailsListFragment" />
+      app:destination="@+id/encounterDetailsListFragment" />
   </fragment>
   <fragment
     android:id="@+id/recentFragment"
@@ -48,10 +44,10 @@
     android:label="RecentFragment" >
     <action
       android:id="@+id/action_recentFragment_to_encounterFragment"
-      app:destination="@id/encounterFragment" />
+      app:destination="@+id/encounterFragment" />
     <action
       android:id="@+id/action_recentFragment_to_encounterDetailFragment"
-      app:destination="@id/encounterDetailFragment" />
+      app:destination="@+id/encounterDetailFragment" />
   </fragment>
   <fragment
     android:id="@+id/statisticsFragment"
@@ -59,13 +55,16 @@
     android:label="StatisticsFragment" >
     <action
       android:id="@+id/action_statisticsFragment_to_encounterDetailsListFragment"
-      app:destination="@id/encounterDetailsListFragment" />
+      app:destination="@+id/encounterDetailsListFragment" />
     <action
       android:id="@+id/action_statisticsFragment_to_firstEncounteredListFragment"
-      app:destination="@id/firstEncounteredListFragment" />
+      app:destination="@+id/firstEncounteredListFragment" />
     <action
       android:id="@+id/action_statisticsFragment_to_mostEncounteredListFragment"
-      app:destination="@id/mostEncounteredListFragment" />
+      app:destination="@+id/mostEncounteredListFragment" />
+    <action
+      android:id="@+id/action_statisticsFragment_to_tasksFragment"
+      app:destination="@+id/tasksFragment" />
   </fragment>
   <fragment
     android:id="@+id/encounterDetailFragment"
@@ -99,8 +98,16 @@
     android:name="net.whollynugatory.android.wildlife.ui.fragment.MostEncounteredListFragment"
     android:label="MostEncounteredListFragment" />
   <fragment
+    android:id="@+id/tasksFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.TasksFragment"
+    android:label="TasksFragment" />
+  <fragment
     android:id="@+id/tryAgainLaterFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment"
     android:label="TryAgainLaterFragment" />
+  <fragment
+    android:id="@+id/userSettingsFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment"
+    android:label="UserSettingsFragment" />
 
 </navigation>

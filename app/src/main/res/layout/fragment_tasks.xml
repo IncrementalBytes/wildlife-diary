@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+    <import type="android.view.View"/>
+    <import type="net.whollynugatory.android.wildlife.Utils"/>
+    <variable name="statistics" type="net.whollynugatory.android.wildlife.db.entity.StatisticsDetails"/>
+    <variable name="fragment" type="net.whollynugatory.android.wildlife.ui.fragment.TasksFragment" />
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+          android:id="@+id/tasks_guideline"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:layout_constraintGuide_percent=".5"
+          android:orientation="vertical"/>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_banded"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toStartOf="@id/tasks_guideline"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_banded"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_banded"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_banded_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalBanded)}"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_banded"
+              app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <!-- TODO: add percentage of total tasks -->
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_force_fed"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@id/tasks_guideline"
+          app:layout_constraintTop_toTopOf="parent">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_force_fed"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_force_fed"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_force_fed_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalForceFed)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_force_fed" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_gavage"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toStartOf="@id/tasks_guideline"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_banded">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_gavage"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_gavage"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_gavage_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalGavage)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_gavage" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_medication_ocular"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@id/tasks_guideline"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_force_fed">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_medication_ocular"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_ocular_medication"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_medication_ocular_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalOcularMedicated)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_medication_ocular" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_medication_oral"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toStartOf="@id/tasks_guideline"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_gavage">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_medication_oral"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_oral_medication"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_medication_oral_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalOralMedicated)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_medication_oral" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_subcutaneous"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@id/tasks_guideline"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_medication_ocular">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_subcutaneous"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_subcutaneous"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_subcutaneous_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalSubcutaneous)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_subcutaneous" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_syringe_fed"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toStartOf="@id/tasks_guideline"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_medication_oral">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_syringe_fed"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_syringe_fed"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_syringe_fed_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalSyringeFed)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_syringe_fed" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_handled_exam"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintStart_toEndOf="@id/tasks_guideline"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_subcutaneous">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_handled_exam"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_handled_exam"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_handled_exam_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalHandledExam)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_handled_exam" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_handled_force_fed"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toStartOf="@id/tasks_guideline"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_syringe_fed">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_handled_force_fed"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_handled_force_fed"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_handled_force_fed_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalHandledForceFed)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_handled_force_fed" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_handled_gavage"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@id/tasks_guideline"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_handled_exam">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_handled_gavage"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_handled_gavage"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_handled_gavage_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalHandledGavage)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_handled_gavage" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_handled_medication"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toStartOf="@id/tasks_guideline"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_handled_force_fed">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_handled_medication"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_handled_medication"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_handled_medication_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalHandledMedication)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_handled_medication" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_handled_subcutaneous"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@id/tasks_guideline"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_handled_gavage">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_handled_subcutaneous"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_handled_subcutaneous"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_handled_subcutaneous_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalHandledSubcutaneous)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_handled_subcutaneous" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+          android:id="@+id/tasks_card_handled_euthanasia"
+          style="@style/SummaryCardDisabled"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toStartOf="@id/tasks_guideline"
+          app:layout_constraintTop_toBottomOf="@id/tasks_card_handled_medication">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+              android:id="@+id/tasks_text_handled_euthanasia"
+              style="@style/SummaryHeader"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/header_handled_euthanasia"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+              android:id="@+id/tasks_text_handled_euthanasia_value"
+              style="@style/SummaryValue"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@{String.valueOf(statistics.TotalHandledEuthanasia)}"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/tasks_text_handled_euthanasia" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
