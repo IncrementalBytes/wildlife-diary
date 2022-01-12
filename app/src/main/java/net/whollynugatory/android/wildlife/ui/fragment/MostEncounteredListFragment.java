@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,33 +15,32 @@
  */
 package net.whollynugatory.android.wildlife.ui.fragment;
 
-  import android.content.Context;
-  import android.os.Bundle;
-  import android.util.Log;
-  import android.view.LayoutInflater;
-  import android.view.View;
-  import android.view.ViewGroup;
-  import android.widget.ImageView;
-  import android.widget.TextView;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-  import androidx.annotation.NonNull;
-  import androidx.fragment.app.Fragment;
-  import androidx.lifecycle.ViewModelProvider;
-  import androidx.recyclerview.widget.LinearLayoutManager;
-  import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-  import com.bumptech.glide.Glide;
+import com.bumptech.glide.Glide;
 
-  import net.whollynugatory.android.wildlife.R;
-  import net.whollynugatory.android.wildlife.Utils;
-  import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
-  import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-  import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
+import net.whollynugatory.android.wildlife.R;
+import net.whollynugatory.android.wildlife.Utils;
+import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
+import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 
-  import java.util.ArrayList;
-  import java.util.Collection;
-  import java.util.List;
-  import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
 public class MostEncounteredListFragment extends Fragment {
 
@@ -62,23 +61,16 @@ public class MostEncounteredListFragment extends Fragment {
     mMostEncounteredAdapter = new MostEncounteredAdapter(getContext());
     recyclerView.setAdapter(mMostEncounteredAdapter);
 
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    List<WildlifeSummary> mostEncounteredList = viewModel.getWildlifeSummaryList().getValue();
-    if (mostEncounteredList == null || mostEncounteredList.size() == 0) {
-      WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-      String followingUserId = Utils.getFollowingUserId(getContext());
-      boolean showSensitive = Utils.getShowSensitive(getContext());
-      wildlifeViewModel.getMostEncountered(followingUserId, showSensitive).observe(
-        getViewLifecycleOwner(),
-        mostEncountered -> {
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+    String followingUserId = Utils.getFollowingUserId(getContext());
+    boolean showSensitive = Utils.getShowSensitive(getContext());
+    wildlifeViewModel.getMostEncountered(followingUserId, showSensitive).observe(
+      getViewLifecycleOwner(),
+      mostEncountered -> {
 
-          Log.d(TAG, "Most encountered list is " + mostEncountered.size());
-          mMostEncounteredAdapter.setMostEncounteredList(mostEncountered);
-        });
-    } else {
-      Log.d(TAG, "Most encountered list is " + mostEncounteredList.size());
-      mMostEncounteredAdapter.setMostEncounteredList(mostEncounteredList);
-    }
+        Log.d(TAG, "Most encountered list is " + mostEncountered.size());
+        mMostEncounteredAdapter.setMostEncounteredList(mostEncountered);
+      });
 
     return view;
   }

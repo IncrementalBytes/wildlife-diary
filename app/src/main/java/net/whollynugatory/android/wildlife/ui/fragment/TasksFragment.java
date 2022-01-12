@@ -30,7 +30,9 @@ import androidx.lifecycle.ViewModelProvider;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentTasksBinding;
+import net.whollynugatory.android.wildlife.db.entity.StatisticsDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 public class TasksFragment extends Fragment {
 
@@ -53,12 +55,18 @@ public class TasksFragment extends Fragment {
     View view = mBinding.getRoot();
     mEuthanasiaCard = view.findViewById(R.id.tasks_card_handled_euthanasia);
 
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    String followingUserId = Utils.getFollowingUserId(getContext());
-    boolean showSensitive = Utils.getShowSensitive(getContext());
-    wildlifeViewModel.getStatistics(followingUserId, showSensitive).observe(
-      getViewLifecycleOwner(),
-      statisticsDetails -> mBinding.setStatistics(statisticsDetails));
+    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+    StatisticsDetails statisticsDetails = viewModel.getStatisticsDetails().getValue();
+    if (statisticsDetails == null || statisticsDetails.TotalTasks == 0) {
+      WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+      String followingUserId = Utils.getFollowingUserId(getContext());
+      boolean showSensitive = Utils.getShowSensitive(getContext());
+      wildlifeViewModel.getStatisticsDetails(followingUserId, showSensitive).observe(
+        getViewLifecycleOwner(),
+        statistics -> mBinding.setStatistics(statistics));
+    } else {
+      mBinding.setStatistics(statisticsDetails);
+    }
 
     return view;
   }

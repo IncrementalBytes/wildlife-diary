@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -95,64 +95,72 @@ public class EncounterDetailFragment extends Fragment {
   private void getEncounterDetails() {
 
     Log.d(TAG, "++getEncounterDetails()");
-    String followingUserId = Utils.getFollowingUserId(getContext());
     FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
     String encounterId = viewModel.getEncounterId().getValue();
-    Log.d(TAG, "Getting encounter details for " + encounterId);
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
-    boolean showSensitive = Utils.getShowSensitive(getContext());
-    wildlifeViewModel.getEncounterDetails(followingUserId, encounterId, showSensitive).observe(
-      getViewLifecycleOwner(),
-      encounterDetailsList -> {
+    if (encounterId == null || encounterId.isEmpty()) {
+      Log.e(TAG, "Encounter Id was not set prior to calling fragment.");
+    } else {
+      Log.d(TAG, "Getting encounter details for " + encounterId);
+      String followingUserId = Utils.getFollowingUserId(getContext());
+      boolean showSensitive = Utils.getShowSensitive(getContext());
+      WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
+      wildlifeViewModel.getEncounterDetails(followingUserId, encounterId, showSensitive).observe(
+        getViewLifecycleOwner(),
+        encounterDetailsList -> {
 
-        // BUG: need to group encounters
-        mEncounterDetailsList = new ArrayList<>(encounterDetailsList);
-        HashMap<String, TaskEntity> taskMap = new HashMap<>();
-        for (EncounterDetails encounterDetails : encounterDetailsList) {
-          if (!taskMap.containsKey(encounterDetails.TaskId)) {
-            TaskEntity taskEntity = new TaskEntity();
-            taskEntity.Id = encounterDetails.TaskId;
-            taskEntity.Description = encounterDetails.TaskDescription;
-            taskEntity.IsComplete = true;
-            taskEntity.IsSensitive = encounterDetails.TaskIsSensitive;
-            taskEntity.Name = encounterDetails.TaskName;
-            taskMap.put(taskEntity.Id, taskEntity);
+          // BUG: need to group encounters
+          mEncounterDetailsList = new ArrayList<>(encounterDetailsList);
+          HashMap<String, TaskEntity> taskMap = new HashMap<>();
+          for (EncounterDetails encounterDetails : encounterDetailsList) {
+            if (!taskMap.containsKey(encounterDetails.TaskId)) {
+              TaskEntity taskEntity = new TaskEntity();
+              taskEntity.Id = encounterDetails.TaskId;
+              taskEntity.Description = encounterDetails.TaskDescription;
+              taskEntity.IsComplete = true;
+              taskEntity.IsSensitive = encounterDetails.TaskIsSensitive;
+              taskEntity.Name = encounterDetails.TaskName;
+              taskMap.put(taskEntity.Id, taskEntity);
+            }
+
+            Log.d(TAG, "Task list is " + taskMap.size());
+            mTaskAdapter.setTaskEntityList(taskMap.values());
           }
 
-          Log.d(TAG, "Task list is " + taskMap.size());
-          mTaskAdapter.setTaskEntityList(taskMap.values());
-        }
+          if (mEncounterDetailsList.size() == 0) {
+            Log.e(TAG, "Encounter not found.");
+          } else {
+            EncounterDetails encounterDetails = mEncounterDetailsList.get(0);
+            int numberInGroup = mEncounterDetailsList.size() / taskMap.size();
+            mEncounterEntity = new EncounterEntity();
+            mEncounterEntity.WildlifeId = encounterDetails.WildlifeId;
+            mEncounterEntity.Date = encounterDetails.Date;
+            mEncounterEntity.UserId = encounterDetails.UserId;
 
-        EncounterDetails encounterDetails = mEncounterDetailsList.get(0);
-        int numberInGroup = mEncounterDetailsList.size() / taskMap.size();
-        mEncounterEntity = new EncounterEntity();
-        mEncounterEntity.WildlifeId = encounterDetails.WildlifeId;
-        mEncounterEntity.Date = encounterDetails.Date;
-        mEncounterEntity.UserId = encounterDetails.UserId;
+            // update UI components
+            if (!encounterDetails.ImageUrl.equals(Utils.UNKNOWN_STRING)) {
+              Glide.with(this)
+                .load(encounterDetails.ImageUrl)
+                .placeholder(R.drawable.ic_placeholder_dark)
+                .error(R.drawable.ic_error_dark)
+                .into(mWildlifeImage);
+              mImageAttributionText.setText(encounterDetails.ImageAttribution);
+            } else {
+              mWildlifeImage.setVisibility(View.GONE);
+              mImageAttributionText.setVisibility(View.GONE);
+            }
 
-        // update UI components
-        if (!encounterDetails.ImageUrl.equals(Utils.UNKNOWN_STRING)) {
-          Glide.with(this)
-            .load(encounterDetails.ImageUrl)
-            .placeholder(R.drawable.ic_placeholder_dark)
-            .error(R.drawable.ic_error_dark)
-            .into(mWildlifeImage);
-          mImageAttributionText.setText(encounterDetails.ImageAttribution);
-        } else {
-          mWildlifeImage.setVisibility(View.GONE);
-          mImageAttributionText.setVisibility(View.GONE);
-        }
-
-        mWildlifeText.setText(encounterDetails.WildlifeSpecies);
-        mAbbreviationText.setText(encounterDetails.WildlifeAbbreviation);
-        mDateText.setText(Utils.fromTimestamp(encounterDetails.Date));
-        mNumberInGroupText.setText(
-          String.format(
-            Locale.US,
-            getString(R.string.format_number_in_group),
-            encounterDetails.WildlifeAbbreviation,
-            numberInGroup));
-      });
+            mWildlifeText.setText(encounterDetails.WildlifeSpecies);
+            mAbbreviationText.setText(encounterDetails.WildlifeAbbreviation);
+            mDateText.setText(Utils.fromTimestamp(encounterDetails.Date));
+            mNumberInGroupText.setText(
+              String.format(
+                Locale.US,
+                getString(R.string.format_number_in_group),
+                encounterDetails.WildlifeAbbreviation,
+                numberInGroup));
+          }
+        });
+    }
   }
 
   private static class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {

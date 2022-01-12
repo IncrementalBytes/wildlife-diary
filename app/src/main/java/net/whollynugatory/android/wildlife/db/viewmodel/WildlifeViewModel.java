@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -66,9 +66,9 @@ public class WildlifeViewModel extends AndroidViewModel {
     return mWildlifeRepository.getNewUnique(userId, timeStamp, showSensitive);
   }
 
-  public LiveData<StatisticsDetails> getStatistics(String userId, boolean showSensitive) {
+  public LiveData<StatisticsDetails> getStatisticsDetails(String userId, boolean showSensitive) {
 
-    return mWildlifeRepository.getStatistics(userId, showSensitive);
+    return mWildlifeRepository.getStatisticsDetails(userId, showSensitive);
   }
 
   public LiveData<List<TaskEntity>> getTasks() {

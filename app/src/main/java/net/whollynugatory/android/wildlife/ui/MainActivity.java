@@ -238,13 +238,13 @@ public class MainActivity extends AppCompatActivity implements
               if (userEntity == null) {
                 userEntity = new UserEntity(); // sets following user id
                 userEntity.Id = userId; // assign firebase user id
-                userEntity.Name = mFragmentDataViewModel.getUserName().getValue();
+                userEntity.DisplayName = mFragmentDataViewModel.getUserName().getValue();
                 FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
                   .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
                 Utils.setFollowingUserId(this, Utils.DEFAULT_FOLLOWING_USER_ID);
-              } else if (userEntity.Name.isEmpty()){
+              } else if (userEntity.DisplayName.isEmpty()){
                 userEntity.Id = userId;
-                userEntity.Name = mFragmentDataViewModel.getUserName().getValue();
+                userEntity.DisplayName = mFragmentDataViewModel.getUserName().getValue();
                 FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
                   .addOnFailureListener(e -> Log.w(TAG, "Could not update user entry in firebase.", e));
               }

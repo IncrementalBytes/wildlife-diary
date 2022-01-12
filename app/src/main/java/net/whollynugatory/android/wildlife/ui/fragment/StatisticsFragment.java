@@ -32,6 +32,7 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentStatisticsBinding;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
+import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -66,9 +67,14 @@ public class StatisticsFragment extends Fragment {
     WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     String followingUserId = Utils.getFollowingUserId(getContext());
     boolean showSensitive = Utils.getShowSensitive(getContext());
-    wildlifeViewModel.getStatistics(followingUserId, showSensitive).observe(
+    wildlifeViewModel.getStatisticsDetails(followingUserId, showSensitive).observe(
       getViewLifecycleOwner(),
-      statisticsDetails -> mBinding.setStatistics(statisticsDetails));
+      statisticsDetails -> {
+
+        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
+        viewModel.setStatisticsDetails(statisticsDetails);
+        mBinding.setStatistics(statisticsDetails);
+      });
 
     // determine if any entries are within a week
     Date in = new Date();

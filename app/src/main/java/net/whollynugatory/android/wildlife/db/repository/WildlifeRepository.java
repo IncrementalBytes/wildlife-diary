@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -77,9 +77,9 @@ public class WildlifeRepository {
     return mEncounterDao.getNewUnique(userId, timeStamp, showSensitive);
   }
 
-  public LiveData<StatisticsDetails> getStatistics(String userId, boolean showSensitive) {
+  public LiveData<StatisticsDetails> getStatisticsDetails(String userId, boolean showSensitive) {
 
-    return mEncounterDao.getStatistics(userId, showSensitive);
+    return mEncounterDao.getStatisticsDetails(userId, showSensitive);
   }
 
   public LiveData<List<TaskEntity>> getTasks() {

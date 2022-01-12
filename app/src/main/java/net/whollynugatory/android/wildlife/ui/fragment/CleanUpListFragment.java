@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -56,10 +56,10 @@ public class CleanUpListFragment extends Fragment {
     final View view = inflater.inflate(R.layout.fragment_list_only, container, false);
     RecyclerView recyclerView = view.findViewById(R.id.content_list);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     CleanUpAdapter cleanUpAdapter = new CleanUpAdapter(getContext());
     recyclerView.setAdapter(cleanUpAdapter);
+
+    WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
     wildlifeViewModel.getCleanUpItems().observe(getViewLifecycleOwner(), cleanUpDetailsList -> {
 
       Log.d(TAG, "CleanUp list is " + cleanUpDetailsList.size());

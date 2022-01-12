@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,25 +20,19 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
-import net.whollynugatory.android.wildlife.db.entity.WildlifeSummary;
+import net.whollynugatory.android.wildlife.db.entity.StatisticsDetails;
 
 import java.util.List;
 
 public class FragmentDataViewModel extends ViewModel {
 
-  private final MutableLiveData<EncounterDetails> mEncounterDetails = new MutableLiveData<>();
   private final MutableLiveData<List<EncounterDetails>> mEncounterDetailsList = new MutableLiveData<>();
   private final MutableLiveData<String> mEncounterId = new MutableLiveData<>();
   private final MutableLiveData<Boolean> mIsContributor = new MutableLiveData<>();
   private final MutableLiveData<String> mMessage = new MutableLiveData<>();
+  private final MutableLiveData<StatisticsDetails> mStatisticsDetails = new MutableLiveData<>();
   private final MutableLiveData<String> mUserId = new MutableLiveData<>();
   private final MutableLiveData<String> mUserName = new MutableLiveData<>();
-  private final MutableLiveData<List<WildlifeSummary>> mWildlifeSummaryList = new MutableLiveData<>();
-
-  public LiveData<EncounterDetails> getEncounterDetails() {
-
-    return mEncounterDetails;
-  }
 
   public LiveData<List<EncounterDetails>> getEncounterDetailsList() {
 
@@ -60,6 +54,11 @@ public class FragmentDataViewModel extends ViewModel {
     return mMessage;
   }
 
+  public LiveData<StatisticsDetails> getStatisticsDetails() {
+
+    return mStatisticsDetails;
+  }
+
   public LiveData<String> getUserId() {
 
     return mUserId;
@@ -68,16 +67,6 @@ public class FragmentDataViewModel extends ViewModel {
   public LiveData<String> getUserName() {
 
     return mUserName;
-  }
-
-  public LiveData<List<WildlifeSummary>> getWildlifeSummaryList() {
-
-    return mWildlifeSummaryList;
-  }
-
-  public void setEncounterDetails(EncounterDetails encounterDetails) {
-
-    mEncounterDetails.setValue(encounterDetails);
   }
 
   public void setEncounterDetailsList(List<EncounterDetails> encounterDetailsList) {
@@ -100,6 +89,11 @@ public class FragmentDataViewModel extends ViewModel {
     mMessage.setValue(message);
   }
 
+  public void setStatisticsDetails(StatisticsDetails statisticsDetails) {
+
+    mStatisticsDetails.setValue(statisticsDetails);
+  }
+
   public void setUserId(String userId) {
 
     mUserId.setValue(userId);
@@ -108,10 +102,5 @@ public class FragmentDataViewModel extends ViewModel {
   public void setUserName(String fullName) {
 
     mUserName.setValue(fullName);
-  }
-
-  public void setWildlifeSummaryList(List<WildlifeSummary> encounterDetailsList) {
-
-    mWildlifeSummaryList.setValue(encounterDetailsList);
   }
 }

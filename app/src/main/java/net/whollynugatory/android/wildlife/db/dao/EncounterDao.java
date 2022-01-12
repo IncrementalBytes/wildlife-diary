@@ -153,7 +153,7 @@ public interface EncounterDao {
     "INNER JOIN wildlife_table AS Wildlife ON Wildlife.id == encounter_table.wildlife_id " +
     "INNER JOIN task_table AS tasks ON tasks.id == task_id " +
     "WHERE user_id == :userId AND (tasks.is_sensitive == 0 OR tasks.is_sensitive == :showSensitive)")
-  LiveData<StatisticsDetails> getStatistics(String userId, boolean showSensitive);
+  LiveData<StatisticsDetails> getStatisticsDetails(String userId, boolean showSensitive);
 
   @Query("SELECT MIN(Encounter.date) AS Date, " +
     "Encounter.encounter_id AS EncounterId, " +
