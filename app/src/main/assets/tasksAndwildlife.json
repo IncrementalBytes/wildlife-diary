@@ -37,6 +37,10 @@
       "Name": "Handled - Subcutaneous",
       "Description": "Held patient for subcutaneous fluids."
     },
+    "ff8cb03d-47cb-4e68-ba90-874226bcdea8": {
+      "Name": "Lab - Blood work",
+      "Description": "Processed patient sample and reported results to staff."
+    },
     "fc0e2bdf-00c0-4da4-855b-857c233effa6": {
       "Name": "Medicate - Ocular",
       "Description": "Applied medication to patients eye(s)."

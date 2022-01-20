@@ -31,7 +31,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -44,15 +43,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
 
-import net.whollynugatory.android.wildlife.db.entity.UserEntity;
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements
   NavigationBarView.OnItemSelectedListener,
@@ -65,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements
   private NavigationView mNavigationView;
   private DrawerLayout mDrawerLayout;
 
-  private FragmentDataViewModel mFragmentDataViewModel;
-
   /*
     Activity Override(s)
   */
@@ -75,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements
     super.onCreate(savedInstanceState);
 
     Log.d(TAG, "++onCreate(Bundle)");
+    String displayName = getIntent().getStringExtra(Utils.ARG_DISPLAY_NAME);
+    String userId = getIntent().getStringExtra(Utils.ARG_USER_ID);
+
     setContentView(R.layout.activity_main);
 
     mDrawerLayout = findViewById(R.id.main_drawer_layout);
@@ -93,27 +87,23 @@ public class MainActivity extends AppCompatActivity implements
     toggle.syncState();
     mNavigationView.setNavigationItemSelectedListener(this);
 
+    bottomNavigationView.setOnItemSelectedListener(this);
+    View navigationHeaderView = mNavigationView.inflateHeaderView(R.layout.header_main);
+    TextView navigationFullName = navigationHeaderView.findViewById(R.id.header_text_full_name);
+    navigationFullName.setText(displayName);
+
+    Bundle arguments = new Bundle();
+    arguments.putString(Utils.ARG_USER_ID, userId);
+    arguments.putString(Utils.ARG_DISPLAY_NAME, displayName);
     NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
       .findFragmentById(R.id.main_fragment_container);
     if (navHostFragment != null) {
       mNavController = navHostFragment.getNavController();
+      mNavController.setGraph(R.navigation.nav_graph, arguments);
       mAppBarConfiguration = new AppBarConfiguration.Builder(mNavController.getGraph()).build();
-
     } else {
       Log.e(TAG, "NavController was not initialized properly.");
     }
-
-    bottomNavigationView.setOnItemSelectedListener(this);
-    View navigationHeaderView = mNavigationView.inflateHeaderView(R.layout.header_main);
-    TextView navigationFullName = navigationHeaderView.findViewById(R.id.header_text_full_name);
-
-    mFragmentDataViewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
-    String displayName = getIntent().getStringExtra(Utils.ARG_DISPLAY_NAME);
-    navigationFullName.setText(displayName);
-    String userId = getIntent().getStringExtra(Utils.ARG_USER_ID);
-    mFragmentDataViewModel.setUserName(displayName);
-    mFragmentDataViewModel.setUserId(userId);
-    getUserInfo();
   }
 
   @Override
@@ -138,8 +128,7 @@ public class MainActivity extends AppCompatActivity implements
   public boolean onPrepareOptionsMenu(Menu menu) {
 
     Log.d(TAG, "++onPrepareOptionsMenu(Menu)");
-    Boolean isContributor = mFragmentDataViewModel.getIsContributor().getValue();
-    mNavigationView.getMenu().setGroupVisible(R.id.group_contributor, isContributor != null ? isContributor : false);
+    mNavigationView.getMenu().setGroupVisible(R.id.group_contributor, Utils.getIsContributor(this));
 
     return super.onPrepareOptionsMenu(menu);
   }
@@ -182,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements
       mNavController.navigate(R.id.recentFragment);
     } else if (item.getItemId() == R.id.menu_settings) {
       mNavController.navigate(R.id.userSettingsFragment);
+    } else if (item.getItemId() == R.id.menu_administrative) {
+      mNavController.navigate(R.id.administrativeFragment);
     } else if (item.getItemId() == R.id.menu_cleanup) {
       mNavController.navigate(R.id.cleanUpListFragment);
     } else if (item.getItemId() == R.id.menu_crash) {
@@ -216,57 +207,6 @@ public class MainActivity extends AppCompatActivity implements
   /*
     Private Method(s)
    */
-  private void getUserInfo() {
-
-    Log.d(TAG, "getUserInfo()");
-    String userId = mFragmentDataViewModel.getUserId().getValue();
-    if (userId == null || userId.isEmpty() || Objects.equals(userId, Utils.UNKNOWN_USER_ID)) {
-      tryAgain("Unable to determine user data. Please sign out of app and try again.");
-    } else {
-      Log.d(TAG, "UserId: " + userId);
-      FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
-        .addOnCompleteListener(task -> {
-
-          if (!task.isSuccessful()) {
-            Log.e(TAG, "Error getting data", task.getException());
-            tryAgain("There was a problem accessing data. Try again later.");
-          } else {
-            DataSnapshot result = task.getResult();
-            if (result != null) {
-              UserEntity userEntity = result.getValue(UserEntity.class);
-              String path = Utils.combine(Utils.USERS_ROOT, userId);
-              if (userEntity == null) {
-                userEntity = new UserEntity(); // sets following user id
-                userEntity.Id = userId; // assign firebase user id
-                userEntity.DisplayName = mFragmentDataViewModel.getUserName().getValue();
-                FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
-                  .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
-                Utils.setFollowingUserId(this, Utils.DEFAULT_FOLLOWING_USER_ID);
-              } else if (userEntity.DisplayName.isEmpty()){
-                userEntity.Id = userId;
-                userEntity.DisplayName = mFragmentDataViewModel.getUserName().getValue();
-                FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
-                  .addOnFailureListener(e -> Log.w(TAG, "Could not update user entry in firebase.", e));
-              }
-
-              mFragmentDataViewModel.setIsContributor(userEntity.IsContributor);
-            } else {
-              tryAgain("UserData returned from server was unexpected. Try again later.");
-            }
-          }
-
-          invalidateOptionsMenu();
-        });
-    }
-  }
-
-  private void tryAgain(String message) {
-
-    Log.d(TAG, "++tryAgain(String)");
-    mFragmentDataViewModel.setMessage(message);
-    mNavController.navigate(R.id.tryAgainLaterFragment);
-  }
-
   private void signOut() {
 
     Log.d(TAG, "++signOut()");

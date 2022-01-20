@@ -32,10 +32,10 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.databinding.FragmentStatisticsBinding;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class StatisticsFragment extends Fragment {
@@ -69,12 +69,7 @@ public class StatisticsFragment extends Fragment {
     boolean showSensitive = Utils.getShowSensitive(getContext());
     wildlifeViewModel.getStatisticsDetails(followingUserId, showSensitive).observe(
       getViewLifecycleOwner(),
-      statisticsDetails -> {
-
-        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-        viewModel.setStatisticsDetails(statisticsDetails);
-        mBinding.setStatistics(statisticsDetails);
-      });
+      statisticsDetails -> mBinding.setStatistics(statisticsDetails));
 
     // determine if any entries are within a week
     Date in = new Date();
@@ -119,6 +114,7 @@ public class StatisticsFragment extends Fragment {
 
     if (view != null) {
       if (view.getId() == R.id.statistics_card_total_encounters) {
+        Utils.setEncounterDetailsList(getContext(), new ArrayList<>());
         NavHostFragment.findNavController(requireParentFragment())
           .navigate(R.id.action_statisticsFragment_to_encounterDetailsListFragment);
       } else if (view.getId() == R.id.statistics_card_unique_encounters) {

@@ -34,7 +34,6 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -175,9 +174,7 @@ public class DateListFragment extends Fragment {
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
-          .get(FragmentDataViewModel.class);
-        viewModel.setEncounterDetailsList(mDateItem.EncounterDetailsList);
+        Utils.setEncounterDetailsList(getContext(), mDateItem.EncounterDetailsList);
         Navigation.findNavController(view).navigate(R.id.action_dateListFragment_to_encounterDetailsListFragment);
       }
     }

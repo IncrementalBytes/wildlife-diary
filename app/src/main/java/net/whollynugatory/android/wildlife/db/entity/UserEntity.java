@@ -28,7 +28,7 @@ public class UserEntity implements Serializable {
 
   public String DisplayName;
 
-  public String FollowingUserId;
+  public String FollowingId;
 
   public final boolean IsContributor;
 
@@ -36,7 +36,13 @@ public class UserEntity implements Serializable {
 
     Id = Utils.UNKNOWN_USER_ID;
     DisplayName = "";
-    FollowingUserId = Utils.DEFAULT_FOLLOWING_USER_ID;
+    FollowingId = Utils.DEFAULT_FOLLOWING_USER_ID;
     IsContributor = false;
+  }
+
+  @Override
+  public String toString() {
+
+    return DisplayName;
   }
 }

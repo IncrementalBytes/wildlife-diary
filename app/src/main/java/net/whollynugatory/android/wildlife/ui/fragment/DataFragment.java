@@ -37,7 +37,10 @@ import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.WildlifeDatabase;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
+import net.whollynugatory.android.wildlife.db.entity.UserEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
+
+import java.util.Objects;
 
 public class DataFragment extends Fragment {
 
@@ -59,7 +62,7 @@ public class DataFragment extends Fragment {
     AnimationDrawable pawAnimation = (AnimationDrawable) pawImage.getBackground();
 
     pawAnimation.start();
-    executeDataProcessing(Utils.TASK_ROOT);
+    getUserInfo();
     return view;
   }
 
@@ -131,6 +134,7 @@ public class DataFragment extends Fragment {
               updateUI("Local data matches " + dataToSync);
               switch (dataToSync) {
                 case Utils.ENCOUNTER_ROOT:
+                  setHasOptionsMenu(true);
                   NavHostFragment.findNavController(this).navigate(R.id.recentFragment);
                   break;
                 case Utils.TASK_ROOT:
@@ -147,6 +151,63 @@ public class DataFragment extends Fragment {
           }
         }
       });
+  }
+
+  private void getUserInfo() {
+
+    Log.d(TAG, "getUserInfo()");
+    Bundle arguments = getArguments();
+    String userId = null;
+    String userName = null;
+    if (arguments != null) {
+      userId = arguments.getString(Utils.ARG_USER_ID, Utils.UNKNOWN_USER_ID);
+      userName = arguments.getString(Utils.ARG_DISPLAY_NAME, Utils.UNKNOWN_STRING);
+    }
+
+    if (userId == null || userId.isEmpty() || Objects.equals(userId, Utils.UNKNOWN_USER_ID)) {
+      tryAgain("Unable to determine user data. Please sign out of app and try again.");
+    } else {
+      Log.d(TAG, "UserId: " + userId);
+      final String finalUserId = userId;
+      final String finalUserName = userName;
+      FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
+        .addOnCompleteListener(task -> {
+
+          if (!task.isSuccessful()) {
+            Log.e(TAG, "Error getting data", task.getException());
+            tryAgain("There was a problem accessing data. Try again later.");
+          } else {
+            DataSnapshot result = task.getResult();
+            if (result != null) {
+              UserEntity userEntity = result.getValue(UserEntity.class);
+              String path = Utils.combine(Utils.USERS_ROOT, finalUserId);
+              if (userEntity == null) {
+                userEntity = new UserEntity(); // sets following user id
+                userEntity.Id = finalUserId; // assign firebase user id
+                userEntity.DisplayName = finalUserName;
+                FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
+                  .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
+                Utils.setFollowingUserId(getContext(), Utils.DEFAULT_FOLLOWING_USER_ID);
+              } else if (userEntity.DisplayName.isEmpty()) {
+                userEntity.Id = finalUserId;
+                userEntity.DisplayName = finalUserName;
+                Utils.setFollowingUserId(getContext(), userEntity.FollowingId);
+                FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
+                  .addOnFailureListener(e -> Log.w(TAG, "Could not update user entry in firebase.", e));
+              } else {
+                Utils.setFollowingUserId(getContext(), userEntity.FollowingId);
+              }
+
+              Utils.setIsContributor(getContext(), userEntity.IsContributor);
+              executeDataProcessing(Utils.TASK_ROOT);
+            } else {
+              tryAgain("UserData returned from server was unexpected. Try again later.");
+            }
+
+            getActivity().invalidateOptionsMenu();
+          }
+        });
+    }
   }
 
   private void onDataMissing() {
@@ -241,6 +302,14 @@ public class DataFragment extends Fragment {
           }
         }
       });
+  }
+
+  private void tryAgain(String message) {
+
+    Log.d(TAG, "++tryAgain(String)");
+    Bundle arguments = new Bundle();
+    arguments.putString(Utils.ARG_MESSAGE, message);
+    NavHostFragment.findNavController(this).navigate(R.id.tryAgainLaterFragment, arguments);
   }
 
   private void updateUI(String message) {

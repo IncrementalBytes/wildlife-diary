@@ -24,11 +24,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 public class TryAgainLaterFragment extends Fragment {
 
@@ -41,12 +39,14 @@ public class TryAgainLaterFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     Log.d(TAG, "++onCreateView(LayoutInflater, ViewGroup, Bundle)");
-    FragmentDataViewModel viewModel = new ViewModelProvider(this).get(FragmentDataViewModel.class);
-
     View view = inflater.inflate(R.layout.fragment_try_again_later, container, false);
     TextView message = view.findViewById(R.id.try_again_text_message);
 
-    message.setText(viewModel.getMessage().getValue());
+    Bundle arguments = getArguments();
+    if (arguments != null) {
+      message.setText(arguments.getString(Utils.ARG_MESSAGE));
+    } // TODO: if message is not set, then what?
+
     return view;
   }
 }

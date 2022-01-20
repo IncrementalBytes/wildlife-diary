@@ -2,8 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/mainGraph"
   app:startDestination="@id/dataFragment">
 
+  <action
+    android:id="@+id/action_Menu_to_AdministrativeFragment"
+    app:destination="@+id/administrativeFragment" />
   <action
     android:id="@+id/action_Menu_to_CleanUpFragment"
     app:destination="@id/cleanUpListFragment" />
@@ -18,9 +22,15 @@
     app:destination="@+id/userSettingsFragment" />
 
   <fragment
+    android:id="@+id/administrativeFragment"
+    android:name="net.whollynugatory.android.wildlife.ui.fragment.AdministrativeFragment"
+    android:label="AdministrativeFragment" />
+
+  <fragment
     android:id="@+id/cleanUpListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.CleanUpListFragment"
     android:label="CleanUpListFragment" />
+
   <fragment
     android:id="@+id/dataFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.DataFragment"
@@ -29,7 +39,14 @@
     <action
       android:id="@+id/action_dataFragment_to_recentFragment"
       app:destination="@+id/recentFragment" />
+    <argument
+      android:name="userId"
+      app:argType="string" />
+    <argument
+      android:name="displayName"
+      app:argType="string" />
   </fragment>
+
   <fragment
     android:id="@+id/dateListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.DateListFragment"
@@ -38,6 +55,7 @@
       android:id="@+id/action_dateListFragment_to_encounterDetailsListFragment"
       app:destination="@+id/encounterDetailsListFragment" />
   </fragment>
+
   <fragment
     android:id="@+id/recentFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.RecentFragment"
@@ -49,6 +67,7 @@
       android:id="@+id/action_recentFragment_to_encounterDetailFragment"
       app:destination="@+id/encounterDetailFragment" />
   </fragment>
+
   <fragment
     android:id="@+id/statisticsFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.StatisticsFragment"
@@ -66,10 +85,16 @@
       android:id="@+id/action_statisticsFragment_to_tasksFragment"
       app:destination="@+id/tasksFragment" />
   </fragment>
+
   <fragment
     android:id="@+id/encounterDetailFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailFragment"
-    android:label="EncounterDetailFragment" />
+    android:label="EncounterDetailFragment">
+    <argument
+      android:name="encounterId"
+      app:argType="string" />
+  </fragment>
+
   <fragment
     android:id="@+id/encounterFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterFragment"
@@ -77,7 +102,14 @@
     <action
       android:id="@+id/action_encounterFragment_to_dataFragment"
       app:destination="@id/dataFragment" />
+    <argument
+      android:name="encounterId"
+      app:argType="string" />
+    <argument
+      android:name="displayName"
+      app:argType="string" />
   </fragment>
+
   <fragment
     android:id="@+id/encounterDetailsListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.EncounterDetailsListFragment"
@@ -89,22 +121,31 @@
       android:id="@+id/action_encounterDetailsListFragment_to_encounterFragment"
       app:destination="@id/encounterFragment" />
   </fragment>
+
   <fragment
     android:id="@+id/firstEncounteredListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.FirstEncounteredListFragment"
     android:label="FirstEncounteredListFragment" />
+
   <fragment
     android:id="@+id/mostEncounteredListFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.MostEncounteredListFragment"
     android:label="MostEncounteredListFragment" />
+
   <fragment
     android:id="@+id/tasksFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.TasksFragment"
     android:label="TasksFragment" />
+
   <fragment
     android:id="@+id/tryAgainLaterFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.TryAgainLaterFragment"
-    android:label="TryAgainLaterFragment" />
+    android:label="TryAgainLaterFragment" >
+    <argument
+      android:name="message"
+      app:argType="string" />
+  </fragment>
+
   <fragment
     android:id="@+id/userSettingsFragment"
     android:name="net.whollynugatory.android.wildlife.ui.fragment.UserSettingsFragment"

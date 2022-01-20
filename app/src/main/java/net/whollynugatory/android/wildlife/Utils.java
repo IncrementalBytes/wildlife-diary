@@ -25,10 +25,17 @@ import androidx.annotation.StringRes;
 import androidx.room.TypeConverter;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
+
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -39,6 +46,8 @@ public class Utils {
 
   public static final String ARG_DISPLAY_NAME = "arg_display_name";
   public static final String ARG_EMAIL = "arg_email";
+  public static final String ARG_ENCOUNTER_ID = "arg_encounter_id";
+  public static final String ARG_MESSAGE = "arg_message";
   public static final String ARG_USER_ID = "arg_user_id";
   public static final String BASE_TAG = "wildlife::";
   public static final String DATABASE_NAME = "wildlife.db";
@@ -81,6 +90,19 @@ public class Utils {
     return getStringPref(context, R.string.pref_key_following_user_id, Utils.UNKNOWN_USER_ID);
   }
 
+  public static boolean getIsContributor(Context context) {
+
+    return getBooleanPref(context, R.string.pref_key_is_contributor);
+  }
+
+  public static List<EncounterDetails> getEncounterDetailsList(Context context) {
+
+    Gson gson = new Gson();
+    String json = getStringPref(context, R.string.pref_key_encounter_details_list, "");
+    Type type = new TypeToken<ArrayList<EncounterDetails>>() { }.getType();
+    return gson.fromJson(json, type);
+  }
+
   public static String getLocalTimeStamp(Context context, int resourceKeyId) {
 
     return getStringPref(context, resourceKeyId, Utils.UNKNOWN_ID);
@@ -89,6 +111,21 @@ public class Utils {
   public static boolean getShowSensitive(Context context) {
 
     return getBooleanPref(context, R.string.pref_key_enable_sensitive);
+  }
+
+  public static void setEncounterDetailsList(Context context, List<EncounterDetails> encounterDetailsArrayList) {
+
+    Gson gson = new Gson();
+    String json = gson.toJson(encounterDetailsArrayList);
+    PreferenceManager.getDefaultSharedPreferences(context)
+      .edit()
+      .putString(context.getString(R.string.pref_key_encounter_details_list), json)
+      .apply();
+  }
+
+  public static void setIsContributor(Context context, boolean canAdd) {
+
+    setBooleanPref(context, R.string.pref_key_is_contributor, canAdd);
   }
 
   public static void setFollowingUserId(Context context, String newFollowingUserId) {

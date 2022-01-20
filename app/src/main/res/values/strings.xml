@@ -16,6 +16,8 @@
 
   <string name="pref_key_stamp_tasks">stamp_tasks</string>
   <string name="pref_key_following_user_id">following_user_id</string>
+  <string name="pref_key_is_contributor">is_contributor</string>
+  <string name="pref_key_encounter_details_list">encounter_details_list</string>
   <string name="pref_key_stamp_encounters">stamp_encounters</string>
   <string name="pref_key_stamp_wildlife">stamp_wildlife</string>
 
@@ -73,5 +75,7 @@
   <string name="navigation_drawer_open">Open</string>
   <string name="navigation_drawer_close">Close</string>
   <string name="header_total_tasks">Total Tasks Performed</string>
+  <string name="select_user_to_follow">Select user to follow:</string>
+  <string name="administrative">Administrative</string>
 
 </resources>

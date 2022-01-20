@@ -38,7 +38,6 @@ import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.entity.EncounterEntity;
 import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -95,8 +94,12 @@ public class EncounterDetailFragment extends Fragment {
   private void getEncounterDetails() {
 
     Log.d(TAG, "++getEncounterDetails()");
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    String encounterId = viewModel.getEncounterId().getValue();
+    Bundle arguments = getArguments();
+    String encounterId = null;
+    if (arguments != null) {
+      encounterId = arguments.getString(Utils.ARG_ENCOUNTER_ID);
+    }
+
     if (encounterId == null || encounterId.isEmpty()) {
       Log.e(TAG, "Encounter Id was not set prior to calling fragment.");
     } else {

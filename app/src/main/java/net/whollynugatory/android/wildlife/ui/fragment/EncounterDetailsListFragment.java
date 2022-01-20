@@ -37,7 +37,6 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,17 +61,16 @@ public class EncounterDetailsListFragment extends Fragment {
     mEncounterAdapter = new EncounterAdapter(getContext());
     recyclerView.setAdapter(mEncounterAdapter);
 
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    List<EncounterDetails> encounterDetailsList = viewModel.getEncounterDetailsList().getValue();
-    if (encounterDetailsList == null || encounterDetailsList.size() == 0) {
+    List<EncounterDetails> encounterDetailsList = Utils.getEncounterDetailsList(getContext());
+    if (encounterDetailsList != null && encounterDetailsList.size() > 0) {
+      mEncounterAdapter.setEncounterDetailsList(encounterDetailsList);
+    } else {
       WildlifeViewModel wildlifeViewModel = new ViewModelProvider(this).get(WildlifeViewModel.class);
       String followingUserId = Utils.getFollowingUserId(getContext());
       boolean showSensitive = Utils.getShowSensitive(getContext());
       wildlifeViewModel.getAllEncounterDetails(followingUserId, showSensitive).observe(
         getViewLifecycleOwner(),
         totalEncounters -> mEncounterAdapter.setEncounterDetailsList(totalEncounters));
-    } else {
-      mEncounterAdapter.setEncounterDetailsList(encounterDetailsList);
     }
 
     return view;
@@ -182,15 +180,16 @@ public class EncounterDetailsListFragment extends Fragment {
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
-          .get(FragmentDataViewModel.class);
-        viewModel.setEncounterId(mEncounterDetails.EncounterId);
-        Boolean isContributor = viewModel.getIsContributor().getValue();
-        if (isContributor != null && isContributor) {
-          Navigation.findNavController(view).navigate(R.id.action_encounterDetailsListFragment_to_encounterFragment);
+        Bundle arguments = new Bundle();
+        arguments.putString(Utils.ARG_ENCOUNTER_ID, mEncounterDetails.EncounterId);
+        if (Utils.getIsContributor(getContext())) {
+          Navigation.findNavController(view).navigate(
+            R.id.action_encounterDetailsListFragment_to_encounterFragment,
+            arguments);
         } else {
-          Navigation.findNavController(view)
-            .navigate(R.id.action_encounterDetailsListFragment_to_encounterDetailFragment);
+          Navigation.findNavController(view).navigate(
+            R.id.action_encounterDetailsListFragment_to_encounterDetailFragment,
+            arguments);
         }
       }
     }

@@ -50,7 +50,6 @@ import net.whollynugatory.android.wildlife.db.entity.TaskEntity;
 import net.whollynugatory.android.wildlife.db.entity.WildlifeEntity;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
 import net.whollynugatory.android.wildlife.ui.AutoCompleteAdapter;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -195,8 +194,12 @@ public class EncounterFragment extends Fragment {
       NavHostFragment.findNavController(this).navigate(R.id.action_encounterFragment_to_dataFragment);
     });
 
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    mEncounterId = viewModel.getEncounterId().getValue();
+    mEncounterId = null;
+    Bundle arguments = getArguments();
+    if (arguments != null) {
+      mEncounterId = arguments.getString(Utils.ARG_ENCOUNTER_ID);
+    }
+
     if (mEncounterId == null || mEncounterId.isEmpty()) { // set for adding
       deleteImage.setVisibility(View.GONE);
       updateEncounterButton.setVisibility(View.GONE);
@@ -247,8 +250,12 @@ public class EncounterFragment extends Fragment {
     EncounterEntity encounterEntity = new EncounterEntity();
     encounterEntity.Date = Utils.toTimestamp(mDateEdit.getText().toString());
     encounterEntity.EncounterId = UUID.randomUUID().toString();
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    String userId = viewModel.getUserId().getValue();
+    String userId = null;
+    Bundle arguments = getArguments();
+    if (arguments != null) {
+      userId = arguments.getString(Utils.ARG_USER_ID);
+    }
+
     if (userId != null) {
       encounterEntity.UserId = userId;
     }

@@ -18,6 +18,11 @@
 
   <group android:id="@+id/group_contributor" android:visible="false">
     <item
+      android:id="@+id/menu_administrative"
+      android:icon="@drawable/ic_administrative_dark"
+      android:title="@string/administrative"
+      app:showAsAction="ifRoom" />
+    <item
       android:id="@+id/menu_cleanup"
       android:icon="@drawable/ic_cleanup_dark"
       android:title="@string/menu_cleanup"

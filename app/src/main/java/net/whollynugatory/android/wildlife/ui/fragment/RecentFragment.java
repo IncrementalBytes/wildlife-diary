@@ -38,7 +38,6 @@ import net.whollynugatory.android.wildlife.R;
 import net.whollynugatory.android.wildlife.Utils;
 import net.whollynugatory.android.wildlife.db.entity.EncounterDetails;
 import net.whollynugatory.android.wildlife.db.viewmodel.WildlifeViewModel;
-import net.whollynugatory.android.wildlife.ui.viewmodel.FragmentDataViewModel;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -62,14 +61,13 @@ public class RecentFragment extends Fragment {
     final View view = inflater.inflate(R.layout.fragment_recent, container, false);
     FloatingActionButton addEncounterButton = view.findViewById(R.id.recent_fab_add);
 
-    FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity()).get(FragmentDataViewModel.class);
-    Boolean isContributor = viewModel.getIsContributor().getValue();
-    if (isContributor != null && isContributor) {
+    if (Utils.getIsContributor(getContext())) {
       addEncounterButton.setVisibility(View.VISIBLE);
       addEncounterButton.setOnClickListener(addEncounterButtonView -> {
 
-        viewModel.setEncounterId("");
-        Navigation.findNavController(addEncounterButtonView).navigate(R.id.encounterFragment);
+        Bundle arguments = new Bundle();
+        arguments.putString(Utils.ARG_ENCOUNTER_ID, "");
+        Navigation.findNavController(addEncounterButtonView).navigate(R.id.encounterFragment, arguments);
       });
     } else {
       addEncounterButton.setVisibility(View.INVISIBLE);
@@ -222,14 +220,13 @@ public class RecentFragment extends Fragment {
       public void onClick(View view) {
 
         Log.d(TAG, "++EncounterHolder::onClick(View)");
-        FragmentDataViewModel viewModel = new ViewModelProvider(requireActivity())
-          .get(FragmentDataViewModel.class);
-        Boolean isContributor = viewModel.getIsContributor().getValue();
-        viewModel.setEncounterId(mEncounterDetails.EncounterId);
-        if (isContributor != null && isContributor) {
-          Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterFragment);
+        Bundle arguments = new Bundle();
+        arguments.putString(Utils.ARG_ENCOUNTER_ID, mEncounterDetails.EncounterId);
+        arguments.putString(Utils.ARG_USER_ID, mEncounterDetails.UserId);
+        if (Utils.getIsContributor(getContext())) {
+          Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterFragment, arguments);
         } else {
-          Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterDetailFragment);
+          Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterDetailFragment, arguments);
         }
       }
     }
