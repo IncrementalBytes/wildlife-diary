@@ -21,7 +21,7 @@
   <EditText
     android:id="@+id/encounter_edit_date"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/default_edit_height_touch"
     android:layout_marginTop="@dimen/default_view_margin"
     android:layout_marginStart="@dimen/default_view_margin"
     android:textColor="@color/secondaryColor"
@@ -59,7 +59,7 @@
   <AutoCompleteTextView
     android:id="@+id/encounter_auto_wildlife"
     android:layout_width="0dp"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/default_edit_height_touch"
     android:layout_marginStart="@dimen/default_view_margin"
     android:textColor="@color/secondaryColor"
     android:ems="6"
@@ -86,7 +86,7 @@
 
   <Button
     android:id="@+id/encounter_button_minus"
-    android:layout_width="48dp"
+    android:layout_width="@dimen/default_button_width_short"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/default_view_margin"
     android:text="@string/minus_sign"
@@ -95,8 +95,8 @@
 
   <EditText
     android:id="@+id/encounter_edit_number_in_group"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="@dimen/default_edit_width_touch"
+    android:layout_height="@dimen/default_edit_height_touch"
     android:layout_marginStart="@dimen/default_view_margin"
     android:ems="2"
     android:inputType="number"
@@ -109,7 +109,7 @@
 
   <Button
     android:id="@+id/encounter_button_addition"
-    android:layout_width="48dp"
+    android:layout_width="@dimen/default_button_width_short"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/default_view_margin"
     android:text="@string/plus_sign"

@@ -5,4 +5,7 @@
   <dimen name="default_card_margin">3dp</dimen>
   <dimen name="default_card_corner">5dp</dimen>
   <dimen name="actionBarSize">56dp</dimen>
+  <dimen name="default_edit_height_touch">48dp</dimen>
+  <dimen name="default_edit_width_touch">48dp</dimen>
+  <dimen name="default_button_width_short">48dp</dimen>
 </resources>

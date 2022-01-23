@@ -204,7 +204,7 @@ public class DataFragment extends Fragment {
               tryAgain("UserData returned from server was unexpected. Try again later.");
             }
 
-            getActivity().invalidateOptionsMenu();
+            requireActivity().invalidateOptionsMenu();
           }
         });
     }

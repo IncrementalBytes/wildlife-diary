@@ -15,6 +15,8 @@
  */
 package net.whollynugatory.android.wildlife.db.entity;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
 
 import net.whollynugatory.android.wildlife.Utils;
@@ -40,6 +42,7 @@ public class UserEntity implements Serializable {
     IsContributor = false;
   }
 
+  @NonNull
   @Override
   public String toString() {
 

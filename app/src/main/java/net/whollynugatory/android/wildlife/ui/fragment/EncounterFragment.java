@@ -310,7 +310,7 @@ public class EncounterFragment extends Fragment {
             mGroupCountEdit.setText(String.valueOf(mGroupCount));
             mMinusButton.setEnabled(false);
             mAdditionButton.setEnabled(true);
-            Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Encounter added!", Toast.LENGTH_SHORT).show();
             mRecordEncountersButton.setEnabled(true);
           }
 
@@ -340,6 +340,8 @@ public class EncounterFragment extends Fragment {
 
               if (!task.isSuccessful()) {
                 Log.e(TAG, "Unable to delete encounter(s).", task.getException());
+              } else {
+                Toast.makeText(getContext(), "Encounter deleted.", Toast.LENGTH_SHORT).show();
               }
             });
         });
