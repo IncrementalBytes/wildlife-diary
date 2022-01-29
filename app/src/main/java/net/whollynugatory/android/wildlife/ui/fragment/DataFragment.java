@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -156,14 +156,8 @@ public class DataFragment extends Fragment {
   private void getUserInfo() {
 
     Log.d(TAG, "getUserInfo()");
-    Bundle arguments = getArguments();
-    String userId = null;
-    String userName = null;
-    if (arguments != null) {
-      userId = arguments.getString(Utils.ARG_USER_ID, Utils.UNKNOWN_USER_ID);
-      userName = arguments.getString(Utils.ARG_DISPLAY_NAME, Utils.UNKNOWN_STRING);
-    }
-
+    String userId = Utils.getUserId(getContext());
+    String userName = Utils.getUserName(getContext());
     if (userId == null || userId.isEmpty() || Objects.equals(userId, Utils.UNKNOWN_USER_ID)) {
       tryAgain("Unable to determine user data. Please sign out of app and try again.");
     } else {

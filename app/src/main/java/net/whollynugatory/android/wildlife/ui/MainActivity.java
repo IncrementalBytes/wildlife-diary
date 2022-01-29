@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements
     super.onCreate(savedInstanceState);
 
     Log.d(TAG, "++onCreate(Bundle)");
-    String displayName = getIntent().getStringExtra(Utils.ARG_DISPLAY_NAME);
-    String userId = getIntent().getStringExtra(Utils.ARG_USER_ID);
+    Utils.setUserName(this, getIntent().getStringExtra(Utils.ARG_DISPLAY_NAME));
+    Utils.setUserId(this, getIntent().getStringExtra(Utils.ARG_USER_ID));
 
     setContentView(R.layout.activity_main);
 
@@ -90,16 +90,13 @@ public class MainActivity extends AppCompatActivity implements
     bottomNavigationView.setOnItemSelectedListener(this);
     View navigationHeaderView = mNavigationView.inflateHeaderView(R.layout.header_main);
     TextView navigationFullName = navigationHeaderView.findViewById(R.id.header_text_full_name);
-    navigationFullName.setText(displayName);
+    navigationFullName.setText(Utils.getUserName(this));
 
-    Bundle arguments = new Bundle();
-    arguments.putString(Utils.ARG_USER_ID, userId);
-    arguments.putString(Utils.ARG_DISPLAY_NAME, displayName);
     NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
       .findFragmentById(R.id.main_fragment_container);
     if (navHostFragment != null) {
       mNavController = navHostFragment.getNavController();
-      mNavController.setGraph(R.navigation.nav_graph, arguments);
+      mNavController.setGraph(R.navigation.nav_graph);
       mAppBarConfiguration = new AppBarConfiguration.Builder(mNavController.getGraph()).build();
     } else {
       Log.e(TAG, "NavController was not initialized properly.");

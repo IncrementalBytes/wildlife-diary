@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,7 +31,19 @@ public interface TaskDao {
   @Query("DELETE FROM task_table")
   void deleteAll();
 
-  @Query("SELECT * FROM task_table ORDER BY name ASC")
+  @Query("SELECT " +
+    "  id, " +
+    "  name, " +
+    "  description, " +
+    "  is_sensitive " +
+    "FROM (" +
+    "  SELECT " +
+    "    Tasks.*, " +
+    "    COUNT(*) AS TaskCount " +
+    "  FROM encounter_table AS Encounters " +
+    "  INNER JOIN task_table AS Tasks ON Tasks.id = Encounters.task_id " +
+    "  GROUP BY Encounters.task_id " +
+    "  ORDER BY TaskCount DESC)")
   LiveData<List<TaskEntity>> getAll();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)

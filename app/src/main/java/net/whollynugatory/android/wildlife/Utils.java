@@ -113,6 +113,16 @@ public class Utils {
     return getBooleanPref(context, R.string.pref_key_enable_sensitive);
   }
 
+  public static String getUserId(Context context) {
+
+    return getStringPref(context, R.string.pref_key_user_id, Utils.UNKNOWN_USER_ID);
+  }
+
+  public static String getUserName(Context context) {
+
+    return getStringPref(context, R.string.pref_key_user_name, Utils.UNKNOWN_STRING);
+  }
+
   public static void setEncounterDetailsList(Context context, List<EncounterDetails> encounterDetailsArrayList) {
 
     Gson gson = new Gson();
@@ -142,6 +152,16 @@ public class Utils {
   public static void setShowSensitive(Context context, boolean showSensitive) {
 
     setBooleanPref(context, R.string.pref_key_enable_sensitive, showSensitive);
+  }
+
+  public static void setUserId(Context context, String userId) {
+
+    setStringPref(context, R.string.pref_key_user_id, userId);
+  }
+
+  public static void setUserName(Context context, String userName) {
+
+    setStringPref(context, R.string.pref_key_user_name, userName);
   }
 
   @TypeConverter

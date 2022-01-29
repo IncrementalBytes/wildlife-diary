@@ -222,7 +222,6 @@ public class RecentFragment extends Fragment {
         Log.d(TAG, "++EncounterHolder::onClick(View)");
         Bundle arguments = new Bundle();
         arguments.putString(Utils.ARG_ENCOUNTER_ID, mEncounterDetails.EncounterId);
-        arguments.putString(Utils.ARG_USER_ID, mEncounterDetails.UserId);
         if (Utils.getIsContributor(getContext())) {
           Navigation.findNavController(view).navigate(R.id.action_recentFragment_to_encounterFragment, arguments);
         } else {

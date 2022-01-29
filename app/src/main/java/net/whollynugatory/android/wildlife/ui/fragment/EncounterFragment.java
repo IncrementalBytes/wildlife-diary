@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package net.whollynugatory.android.wildlife.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.AnimatorRes;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
@@ -77,6 +80,7 @@ public class EncounterFragment extends Fragment {
   private int mGroupCount = 1;
   private boolean mShowSensitive;
   private HashMap<String, TaskEntity> mTaskEntityMap;
+  private List<TaskEntity> mTaskEntitySortedList;
   private HashMap<String, String> mWildlifeMap;
   private WildlifeViewModel mWildlifeViewModel;
 
@@ -190,6 +194,7 @@ public class EncounterFragment extends Fragment {
     mRecordEncountersButton.setEnabled(false);
     mRecordEncountersButton.setOnClickListener(v -> {
 
+      hideKeyboard();
       Utils.updateRemoteDataStamp(Utils.ENCOUNTER_ROOT);
       NavHostFragment.findNavController(this).navigate(R.id.action_encounterFragment_to_dataFragment);
     });
@@ -226,12 +231,14 @@ public class EncounterFragment extends Fragment {
     // populate the task list
     mWildlifeViewModel.getTasks().observe(getViewLifecycleOwner(), taskEntityList -> {
 
+      mTaskEntitySortedList = new ArrayList<>();
+      mTaskEntitySortedList.addAll(taskEntityList);
       mTaskEntityMap = new HashMap<>();
       for (TaskEntity taskEntity : taskEntityList) {
         mTaskEntityMap.put(taskEntity.Id, taskEntity);
       }
 
-      mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
+      mTaskAdapter.setTaskEntityList(mTaskEntitySortedList);
       prepareWildlifeList();
       if (mEncounterId != null && !mEncounterId.isEmpty()) {
         setupForEditing();
@@ -250,15 +257,7 @@ public class EncounterFragment extends Fragment {
     EncounterEntity encounterEntity = new EncounterEntity();
     encounterEntity.Date = Utils.toTimestamp(mDateEdit.getText().toString());
     encounterEntity.EncounterId = UUID.randomUUID().toString();
-    String userId = null;
-    Bundle arguments = getArguments();
-    if (arguments != null) {
-      userId = arguments.getString(Utils.ARG_USER_ID);
-    }
-
-    if (userId != null) {
-      encounterEntity.UserId = userId;
-    }
+    encounterEntity.UserId = Utils.getUserId(getContext());
 
     // TODO: add injury call-out
     // TODO: validate
@@ -286,7 +285,7 @@ public class EncounterFragment extends Fragment {
           newEntity.Id = UUID.randomUUID().toString(); // unique entry per task
           newEntity.TaskId = taskEntity.Id;
           if (newEntity.isValid()) {
-            Log.d(TAG, "Adding " + newEntity.toString());
+            Log.d(TAG, "Adding " + newEntity);
             encounterEntities.put(newEntity.Id, newEntity);
           } else {
             Toast.makeText(getContext(), "Missing encounter data.", Toast.LENGTH_SHORT).show();
@@ -314,7 +313,7 @@ public class EncounterFragment extends Fragment {
             mRecordEncountersButton.setEnabled(true);
           }
 
-          mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
+          mTaskAdapter.setTaskEntityList(mTaskEntitySortedList);
         });
     } else {
       Log.w(TAG, "No encounters were collected; look for earlier messages.");
@@ -349,6 +348,18 @@ public class EncounterFragment extends Fragment {
       Toast.makeText(getContext(), "Encounter data invalid.", Toast.LENGTH_SHORT).show();
       Log.w(TAG, "Encounter Id was empty.");
     }
+  }
+
+  private void hideKeyboard() {
+
+    Log.d(TAG, "++hideKeyboard()");
+    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+    View view = getActivity().getCurrentFocus();
+    if (view == null) {
+      view = new View(getContext());
+    }
+
+    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
   }
 
   private void prepareWildlifeList() {
@@ -396,7 +407,7 @@ public class EncounterFragment extends Fragment {
 
       mGroupCountEdit.setText(String.valueOf(mGroupCount));
       mWildlifeText.setEnabled(false);
-      mTaskAdapter.setTaskEntityList(mTaskEntityMap.values());
+      mTaskAdapter.setTaskEntityList(mTaskEntitySortedList);
       updateUI();
     });
   }
@@ -456,7 +467,6 @@ public class EncounterFragment extends Fragment {
       int currentSize = mTaskEntityList.size();
       mTaskEntityList.clear();
       mTaskEntityList.addAll(taskEntityCollection);
-      mTaskEntityList.sort(new TaskEntity.SortByName());
       notifyItemRangeRemoved(0, currentSize);
       notifyItemRangeInserted(0, taskEntityCollection.size());
     }

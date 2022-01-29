@@ -39,12 +39,6 @@
     <action
       android:id="@+id/action_dataFragment_to_recentFragment"
       app:destination="@+id/recentFragment" />
-    <argument
-      android:name="userId"
-      app:argType="string" />
-    <argument
-      android:name="displayName"
-      app:argType="string" />
   </fragment>
 
   <fragment
@@ -104,9 +98,6 @@
       app:destination="@id/dataFragment" />
     <argument
       android:name="encounterId"
-      app:argType="string" />
-    <argument
-      android:name="displayName"
       app:argType="string" />
   </fragment>
 
