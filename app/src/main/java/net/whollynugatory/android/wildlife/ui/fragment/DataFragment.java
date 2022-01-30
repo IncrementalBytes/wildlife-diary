@@ -69,87 +69,85 @@ public class DataFragment extends Fragment {
   private void executeDataProcessing(String dataToSync) {
 
     Log.d(TAG, "executeDataProcessing()");
-    FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).get().addOnCompleteListener(
-      task -> {
+    FirebaseDatabase.getInstance().getReference().child(Utils.DATA_STAMPS_ROOT).get()
+      .addOnSuccessListener(result -> {
 
-        if (!task.isSuccessful()) {
-          Log.d(TAG, "Retrieving data stamps was unsuccessful.", task.getException());
-          Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
-        } else {
-          updateUI("Grabbing remote data stamps...");
-          String remoteDataStamp = Utils.UNKNOWN_ID;
-          DataSnapshot resultSnapshot = task.getResult();
-          if (resultSnapshot != null) {
-            for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-              String id = dataSnapshot.getKey();
-              if (id != null && id.equals(dataToSync)) {
-                Object valueObject = dataSnapshot.getValue();
-                if (valueObject != null) {
-                  remoteDataStamp = dataSnapshot.getValue().toString();
-                  break;
-                }
-              }
-            }
-
-            updateUI("Comparing local data with " + dataToSync);
-            String localDataStamp = Utils.UNKNOWN_ID;
-            switch (dataToSync) {
-              case Utils.ENCOUNTER_ROOT:
-                localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_encounters);
+        updateUI("Grabbing remote data stamps...");
+        String remoteDataStamp = Utils.UNKNOWN_ID;
+        if (result != null) {
+          for (DataSnapshot dataSnapshot : result.getChildren()) {
+            String id = dataSnapshot.getKey();
+            if (id != null && id.equals(dataToSync)) {
+              Object valueObject = dataSnapshot.getValue();
+              if (valueObject != null) {
+                remoteDataStamp = dataSnapshot.getValue().toString();
                 break;
-              case Utils.TASK_ROOT:
-                localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_tasks);
-                break;
-              case Utils.WILDLIFE_ROOT:
-                localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_wildlife);
-                break;
-            }
-
-            if (remoteDataStamp.equals(Utils.UNKNOWN_ID)) {
-              Log.w(TAG, "Remote dataStamp was unexpected: " + remoteDataStamp);
-              onDataMissing();
-            } else if (localDataStamp.equals(Utils.UNKNOWN_ID) || !localDataStamp.equalsIgnoreCase(remoteDataStamp)) {
-              switch (dataToSync) {
-                case Utils.ENCOUNTER_ROOT:
-                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                    WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
-                  break;
-                case Utils.TASK_ROOT:
-                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                    WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
-                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                    WildlifeDatabase.getInstance(getContext()).taskDao().deleteAll());
-                  break;
-                case Utils.WILDLIFE_ROOT:
-                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                    WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
-                  WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                    WildlifeDatabase.getInstance(getContext()).wildlifeDao().deleteAll());
-                  break;
               }
-
-              populateTable(dataToSync, remoteDataStamp);
-            } else if (localDataStamp.equals(remoteDataStamp)) {
-              Log.d(TAG, "Local data in-sync with " + dataToSync);
-              updateUI("Local data matches " + dataToSync);
-              switch (dataToSync) {
-                case Utils.ENCOUNTER_ROOT:
-                  setHasOptionsMenu(true);
-                  NavHostFragment.findNavController(this).navigate(R.id.recentFragment);
-                  break;
-                case Utils.TASK_ROOT:
-                  executeDataProcessing(Utils.WILDLIFE_ROOT);
-                  break;
-                case Utils.WILDLIFE_ROOT:
-                  executeDataProcessing(Utils.ENCOUNTER_ROOT);
-                  break;
-              }
-            } else {
-              Log.w(TAG, "Unexpected results between local and remote data stamps.");
-              Toast.makeText(getContext(), "Timestamp check failed.", Toast.LENGTH_SHORT).show();
             }
           }
+
+          updateUI("Comparing local data with " + dataToSync);
+          String localDataStamp = Utils.UNKNOWN_ID;
+          switch (dataToSync) {
+            case Utils.ENCOUNTER_ROOT:
+              localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_encounters);
+              break;
+            case Utils.TASK_ROOT:
+              localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_tasks);
+              break;
+            case Utils.WILDLIFE_ROOT:
+              localDataStamp = Utils.getLocalTimeStamp(getContext(), R.string.pref_key_stamp_wildlife);
+              break;
+          }
+
+          if (remoteDataStamp.equals(Utils.UNKNOWN_ID)) {
+            Log.w(TAG, "Remote dataStamp was unexpected: " + remoteDataStamp);
+            onDataMissing();
+          } else if (localDataStamp.equals(Utils.UNKNOWN_ID) || !localDataStamp.equalsIgnoreCase(remoteDataStamp)) {
+            switch (dataToSync) {
+              case Utils.ENCOUNTER_ROOT:
+                WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                  WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
+                break;
+              case Utils.TASK_ROOT:
+                WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                  WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
+                WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                  WildlifeDatabase.getInstance(getContext()).taskDao().deleteAll());
+                break;
+              case Utils.WILDLIFE_ROOT:
+                WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                  WildlifeDatabase.getInstance(getContext()).encounterDao().deleteAll());
+                WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                  WildlifeDatabase.getInstance(getContext()).wildlifeDao().deleteAll());
+                break;
+            }
+
+            populateTable(dataToSync, remoteDataStamp);
+          } else if (localDataStamp.equals(remoteDataStamp)) {
+            Log.d(TAG, "Local data in-sync with " + dataToSync);
+            updateUI("Local data matches " + dataToSync);
+            switch (dataToSync) {
+              case Utils.ENCOUNTER_ROOT:
+                setHasOptionsMenu(true);
+                NavHostFragment.findNavController(this).navigate(R.id.recentFragment);
+                break;
+              case Utils.TASK_ROOT:
+                executeDataProcessing(Utils.WILDLIFE_ROOT);
+                break;
+              case Utils.WILDLIFE_ROOT:
+                executeDataProcessing(Utils.ENCOUNTER_ROOT);
+                break;
+            }
+          } else {
+            Log.w(TAG, "Unexpected results between local and remote data stamps.");
+            tryAgain("Timestamp check failed.");
+          }
         }
+      })
+      .addOnFailureListener(e -> {
+        Log.d(TAG, "Retrieving data stamps was unsuccessful.", e);
+        Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
       });
   }
 
@@ -165,41 +163,39 @@ public class DataFragment extends Fragment {
       final String finalUserId = userId;
       final String finalUserName = userName;
       FirebaseDatabase.getInstance().getReference().child(Utils.USERS_ROOT).child(userId).get()
-        .addOnCompleteListener(task -> {
+        .addOnSuccessListener(result -> {
 
-          if (!task.isSuccessful()) {
-            Log.e(TAG, "Error getting data", task.getException());
-            tryAgain("There was a problem accessing data. Try again later.");
-          } else {
-            DataSnapshot result = task.getResult();
-            if (result != null) {
-              UserEntity userEntity = result.getValue(UserEntity.class);
-              String path = Utils.combine(Utils.USERS_ROOT, finalUserId);
-              if (userEntity == null) {
-                userEntity = new UserEntity(); // sets following user id
-                userEntity.Id = finalUserId; // assign firebase user id
-                userEntity.DisplayName = finalUserName;
-                FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
-                  .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
-                Utils.setFollowingUserId(getContext(), Utils.DEFAULT_FOLLOWING_USER_ID);
-              } else if (userEntity.DisplayName.isEmpty()) {
-                userEntity.Id = finalUserId;
-                userEntity.DisplayName = finalUserName;
-                Utils.setFollowingUserId(getContext(), userEntity.FollowingId);
-                FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
-                  .addOnFailureListener(e -> Log.w(TAG, "Could not update user entry in firebase.", e));
-              } else {
-                Utils.setFollowingUserId(getContext(), userEntity.FollowingId);
-              }
-
-              Utils.setIsContributor(getContext(), userEntity.IsContributor);
-              executeDataProcessing(Utils.TASK_ROOT);
+          if (result != null) {
+            UserEntity userEntity = result.getValue(UserEntity.class);
+            String path = Utils.combine(Utils.USERS_ROOT, finalUserId);
+            if (userEntity == null) {
+              userEntity = new UserEntity(); // sets following user id
+              userEntity.Id = finalUserId; // assign firebase user id
+              userEntity.DisplayName = finalUserName;
+              FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
+                .addOnFailureListener(e -> Log.e(TAG, "Could not create new user entry in firebase.", e));
+              Utils.setFollowingUserId(getContext(), Utils.DEFAULT_FOLLOWING_USER_ID);
+            } else if (userEntity.DisplayName.isEmpty()) {
+              userEntity.Id = finalUserId;
+              userEntity.DisplayName = finalUserName;
+              Utils.setFollowingUserId(getContext(), userEntity.FollowingId);
+              FirebaseDatabase.getInstance().getReference().child(path).setValue(userEntity)
+                .addOnFailureListener(e -> Log.w(TAG, "Could not update user entry in firebase.", e));
             } else {
-              tryAgain("UserData returned from server was unexpected. Try again later.");
+              Utils.setFollowingUserId(getContext(), userEntity.FollowingId);
             }
 
-            requireActivity().invalidateOptionsMenu();
+            Utils.setIsContributor(getContext(), userEntity.IsContributor);
+            executeDataProcessing(Utils.TASK_ROOT);
+          } else {
+            tryAgain("UserData returned from server was unexpected. Try again later.");
           }
+
+          requireActivity().invalidateOptionsMenu();
+        })
+        .addOnFailureListener(e -> {
+          Log.e(TAG, "Error getting data", e);
+          tryAgain("There was a problem accessing data. Try again later.");
         });
     }
   }
@@ -214,88 +210,96 @@ public class DataFragment extends Fragment {
   private void populateTable(String dataRoot, String remoteDataStamp) {
 
     Log.d(TAG, "++populateTable(String, String)");
-    FirebaseDatabase.getInstance().getReference().child(dataRoot).get()
-      .addOnCompleteListener(task -> {
+    switch (dataRoot) {
+      case Utils.ENCOUNTER_ROOT:
+        String followingUserId = Utils.getFollowingUserId(getContext());
+        FirebaseDatabase.getInstance().getReference().child(dataRoot).orderByChild("UserId").equalTo(followingUserId).get()
+          .addOnSuccessListener(task -> {
 
-        if (!task.isSuccessful()) {
-          Log.e(TAG, "Error getting data", task.getException());
-          Toast.makeText(getContext(), "Getting remote data failed.", Toast.LENGTH_SHORT).show();
-        } else {
-          DataSnapshot resultSnapshot = task.getResult();
-          if (resultSnapshot != null) {
-            if (resultSnapshot.getChildrenCount() > 0) {
-              Log.d(TAG, "Attempting inserts: " + resultSnapshot.getChildrenCount());
-              if (getActivity() != null) {
-                for (DataSnapshot dataSnapshot : resultSnapshot.getChildren()) {
-                  String id = dataSnapshot.getKey();
-                  switch (dataRoot) {
-                    case Utils.ENCOUNTER_ROOT:
-                      EncounterEntity encounterEntity = dataSnapshot.getValue(EncounterEntity.class);
-                      if (encounterEntity != null && id != null) {
-                        encounterEntity.Id = id;
-                        if (encounterEntity.isValid()) {
-                          WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                            WildlifeDatabase.getInstance(getContext()).encounterDao().insert(encounterEntity));
-                        } else {
-                          Log.w(TAG, "Encounter entity was invalid, not adding: " + encounterEntity.toString());
-                        }
-                      }
-
-                      break;
-                    case Utils.TASK_ROOT:
-                      TaskEntity taskEntity = dataSnapshot.getValue(TaskEntity.class);
-                      if (taskEntity != null && id != null) {
-                        taskEntity.Id = id;
-                        if (taskEntity.isValid()) {
-                          WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                            WildlifeDatabase.getInstance(getContext()).taskDao().insert(taskEntity));
-                        } else {
-                          Log.w(TAG, "Task entity was invalid, not adding: " + taskEntity.toString());
-                        }
-                      }
-
-                      break;
-                    case Utils.WILDLIFE_ROOT:
-                      WildlifeEntity wildlifeEntity = dataSnapshot.getValue(WildlifeEntity.class);
-                      if (wildlifeEntity != null && id != null) {
-                        wildlifeEntity.Id = id;
-                        if (wildlifeEntity.isValid()) {
-                          WildlifeDatabase.databaseWriteExecutor.execute(() ->
-                            WildlifeDatabase.getInstance(getContext()).wildlifeDao().insert(wildlifeEntity));
-                        } else {
-                          Log.w(TAG, "Wildlife entity was invalid, not adding: " + wildlifeEntity.toString());
-                        }
-                      }
-
-                      break;
+            Log.d(TAG, "Attempting inserts: " + task.getChildrenCount());
+            if (getActivity() != null) {
+              for (DataSnapshot dataSnapshot : task.getChildren()) {
+                String id = dataSnapshot.getKey();
+                EncounterEntity encounterEntity = dataSnapshot.getValue(EncounterEntity.class);
+                if (encounterEntity != null && id != null) {
+                  encounterEntity.Id = id;
+                  if (encounterEntity.isValid()) {
+                    WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                      WildlifeDatabase.getInstance(getContext()).encounterDao().insert(encounterEntity));
+                  } else {
+                    Log.w(TAG, "Encounter entity was invalid, not adding: " + encounterEntity);
                   }
                 }
+              }
 
+              Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_encounters, remoteDataStamp);
+              NavHostFragment.findNavController(this).navigate(R.id.recentFragment);
+            }
+          })
+          .addOnFailureListener(e -> {
+            Log.e(TAG, "Error getting data", e);
+            tryAgain("Getting remote data failed.");
+          });
+        break;
+      case Utils.TASK_ROOT:
+      case Utils.WILDLIFE_ROOT:
+        FirebaseDatabase.getInstance().getReference().child(dataRoot).get()
+          .addOnSuccessListener(task -> {
+
+            Log.d(TAG, "Attempting inserts: " + task.getChildrenCount());
+            if (getActivity() != null) {
+              for (DataSnapshot dataSnapshot : task.getChildren()) {
+                String id = dataSnapshot.getKey();
                 switch (dataRoot) {
-                  case Utils.ENCOUNTER_ROOT:
-                    Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_encounters, remoteDataStamp);
-                    NavHostFragment.findNavController(this).navigate(R.id.recentFragment);
-                    break;
                   case Utils.TASK_ROOT:
-                    Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_tasks, remoteDataStamp);
-                    executeDataProcessing(Utils.WILDLIFE_ROOT);
+                    TaskEntity taskEntity = dataSnapshot.getValue(TaskEntity.class);
+                    if (taskEntity != null && id != null) {
+                      taskEntity.Id = id;
+                      if (taskEntity.isValid()) {
+                        WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                          WildlifeDatabase.getInstance(getContext()).taskDao().insert(taskEntity));
+                      } else {
+                        Log.w(TAG, "Task entity was invalid, not adding: " + taskEntity);
+                      }
+                    }
+
                     break;
                   case Utils.WILDLIFE_ROOT:
-                    Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_wildlife, remoteDataStamp);
-                    executeDataProcessing(Utils.ENCOUNTER_ROOT);
+                    WildlifeEntity wildlifeEntity = dataSnapshot.getValue(WildlifeEntity.class);
+                    if (wildlifeEntity != null && id != null) {
+                      wildlifeEntity.Id = id;
+                      if (wildlifeEntity.isValid()) {
+                        WildlifeDatabase.databaseWriteExecutor.execute(() ->
+                          WildlifeDatabase.getInstance(getContext()).wildlifeDao().insert(wildlifeEntity));
+                      } else {
+                        Log.w(TAG, "Wildlife entity was invalid, not adding: " + wildlifeEntity);
+                      }
+                    }
+
                     break;
                 }
-              } else {
-                Toast.makeText(getContext(), "Activity is invalid.", Toast.LENGTH_SHORT).show();
+              }
+
+              switch (dataRoot) {
+                case Utils.TASK_ROOT:
+                  Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_tasks, remoteDataStamp);
+                  executeDataProcessing(Utils.WILDLIFE_ROOT);
+                  break;
+                case Utils.WILDLIFE_ROOT:
+                  Utils.setLocalTimeStamp(getContext(), R.string.pref_key_stamp_wildlife, remoteDataStamp);
+                  executeDataProcessing(Utils.ENCOUNTER_ROOT);
+                  break;
               }
             } else {
-              onDataMissing();
+              Toast.makeText(getContext(), "Activity is invalid.", Toast.LENGTH_SHORT).show();
             }
-          } else {
-            Toast.makeText(getContext(), "Task results unknown.", Toast.LENGTH_SHORT).show();
-          }
-        }
-      });
+          })
+          .addOnFailureListener(e -> {
+            Log.e(TAG, "Error getting data", e);
+            tryAgain("Getting remote data failed.");
+          });
+        break;
+    }
   }
 
   private void tryAgain(String message) {

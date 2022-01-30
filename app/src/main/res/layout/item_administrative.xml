@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_view_margin"
-        android:text="@string/select_user_to_follow"
+        android:text="@string/label_select_user_to_follow"
         app:layout_constraintBottom_toBottomOf="@id/administrative_item_spinner_following"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/administrative_item_spinner_following" />

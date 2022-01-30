@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,7 +45,9 @@ public class TryAgainLaterFragment extends Fragment {
     Bundle arguments = getArguments();
     if (arguments != null) {
       message.setText(arguments.getString(Utils.ARG_MESSAGE));
-    } // TODO: if message is not set, then what?
+    } else {
+      message.setText(getString(R.string.no_message));
+    }
 
     return view;
   }

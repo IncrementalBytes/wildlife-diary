@@ -33,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.AnimatorRes;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
@@ -260,7 +259,6 @@ public class EncounterFragment extends Fragment {
     encounterEntity.UserId = Utils.getUserId(getContext());
 
     // TODO: add injury call-out
-    // TODO: validate
 
     String selectedWildlifeAbbreviation = mWildlifeText.getText().toString().toUpperCase();
     if (mWildlifeMap.containsKey(selectedWildlifeAbbreviation)) {
@@ -275,6 +273,10 @@ public class EncounterFragment extends Fragment {
     }
 
     int totalItems = mTaskAdapter.getItemCount();
+    if (totalItems == 0) {
+      Log.w(TAG, "No tasks were selected.");
+    }
+
     int groupTotal = Integer.parseInt(mGroupCountEdit.getText().toString());
     HashMap<String, Object> encounterEntities = new HashMap<>();
     for (int taskCount = 0; taskCount < totalItems; taskCount++) {
@@ -298,12 +300,9 @@ public class EncounterFragment extends Fragment {
 
     if (encounterEntities.size() > 0) {
       FirebaseDatabase.getInstance().getReference(Utils.ENCOUNTER_ROOT).updateChildren(encounterEntities)
-        .addOnCompleteListener(task -> {
+        .addOnSuccessListener(result -> {
 
-          if (!task.isSuccessful()) {
-            Log.e(TAG, "Error setting data Encounter data.", task.getException());
-            Toast.makeText(getContext(), "Update failed.", Toast.LENGTH_SHORT).show();
-          } else if (mEncounterId == null || mEncounterId.isEmpty()) { // reset view for additional encounters
+          if (mEncounterId == null || mEncounterId.isEmpty()) { // reset view for additional encounters
             mWildlifeText.setText("");
             mGroupCount = 1;
             mGroupCountEdit.setText(String.valueOf(mGroupCount));
@@ -314,6 +313,10 @@ public class EncounterFragment extends Fragment {
           }
 
           mTaskAdapter.setTaskEntityList(mTaskEntitySortedList);
+        })
+        .addOnFailureListener(e -> {
+          Log.e(TAG, "Error setting data Encounter data.", e);
+          Toast.makeText(getContext(), "Update failed.", Toast.LENGTH_SHORT).show();
         });
     } else {
       Log.w(TAG, "No encounters were collected; look for earlier messages.");
@@ -353,8 +356,8 @@ public class EncounterFragment extends Fragment {
   private void hideKeyboard() {
 
     Log.d(TAG, "++hideKeyboard()");
-    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-    View view = getActivity().getCurrentFocus();
+    InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+    View view = requireActivity().getCurrentFocus();
     if (view == null) {
       view = new View(getContext());
     }

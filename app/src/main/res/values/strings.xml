@@ -39,6 +39,7 @@
   <string name="header_most_encountered">Most Encountered</string>
   <string name="header_syringe_fed">Syringe Fed</string>
   <string name="header_first_encountered">First Encountered</string>
+  <string name="header_total_tasks">Total Tasks Performed</string>
 
   <string name="tap_for_details">Tap for encounter details</string>
   <string name="plus_sign">+</string>
@@ -51,6 +52,7 @@
   <string name="label_number_in_group">Number in group:</string>
   <string name="label_record_encounters">Record</string>
   <string name="label_delete">Delete</string>
+  <string name="label_select_user_to_follow">Select user to follow:</string>
 
   <string name="desc_add_encounter">Add new encounter</string>
   <string name="desc_task_completed">Shows whether or not task was completed during this encounter</string>
@@ -67,6 +69,7 @@
   <string name="menu_date">By Date</string>
   <string name="menu_statistics">Statistics</string>
   <string name="menu_crash">Force Crash</string>
+  <string name="menu_administrative">Administrative</string>
 
   <string name="format_number_in_group">Number of %s in this encounter: %d</string>
   <string name="format_number_of_encounters">Number of Encounter(s): %d</string>
@@ -76,8 +79,7 @@
 
   <string name="navigation_drawer_open">Open</string>
   <string name="navigation_drawer_close">Close</string>
-  <string name="header_total_tasks">Total Tasks Performed</string>
-  <string name="select_user_to_follow">Select user to follow:</string>
-  <string name="administrative">Administrative</string>
+  <string name="no_message">Something went wrong but no message was provide.</string>
+  <string name="header_lab_bloodwork">Lab (BloodWork)</string>
 
 </resources>

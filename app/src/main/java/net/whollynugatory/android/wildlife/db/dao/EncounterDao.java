@@ -37,7 +37,10 @@ public interface EncounterDao {
     "WHERE id NOT IN (SELECT task_id FROM encounter_table WHERE task_id IS NOT NULL) " +
     "UNION ALL " +
     "SELECT id AS Id, friendly_name AS Name, '" + Utils.WILDLIFE_ROOT + "' AS Type FROM wildlife_table " +
-    "WHERE id NOT IN ( SELECT wildlife_id FROM encounter_table WHERE wildlife_id IS NOT NULL)")
+    "WHERE id NOT IN ( SELECT wildlife_id FROM encounter_table WHERE wildlife_id IS NOT NULL) " +
+    "UNION ALL " +
+    "SELECT id AS Id, encounter_id AS Name, '" + Utils.ENCOUNTER_ROOT + "' AS Type FROM encounter_table " +
+    "WHERE user_id == '" + Utils.UNKNOWN_USER_ID + "' OR encounter_id == '" + Utils.UNKNOWN_ID + "'")
   LiveData<List<CleanUpDetails>> cleanUp();
 
   @Query("DELETE FROM encounter_table")
@@ -128,6 +131,7 @@ public interface EncounterDao {
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = 'c1ebbb56-4c65-42fb-beb8-c628393ffc3a' AND user_id == :userId) AS TotalHandledGavage, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '175720d7-79d3-4c7c-be33-2dd33db277fb' AND user_id == :userId) AS TotalHandledMedication, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '0525c4b8-37e4-4b95-bdc6-d1df62f7d670' AND user_id == :userId) AS TotalHandledSubcutaneous, " +
+    "(SELECT COUNT(*) FROM encounter_table WHERE task_id = 'ff8cb03d-47cb-4e68-ba90-874226bcdea8' AND user_id == :userId) AS TotalLabBloodWork, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = 'fc0e2bdf-00c0-4da4-855b-857c233effa6' AND user_id == :userId) AS TotalOcularMedicated, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '25a40f6a-fa23-4331-9fd8-ed8d0bfbb780' AND user_id == :userId) AS TotalOralMedicated, " +
     "(SELECT COUNT(*) FROM encounter_table WHERE task_id = '98bf72f8-f388-4a6a-962e-b3f4cc94f174' AND user_id == :userId) AS TotalSubcutaneous, " +

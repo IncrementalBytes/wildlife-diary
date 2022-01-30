@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import com.google.firebase.database.Exclude;
 import net.whollynugatory.android.wildlife.Utils;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Locale;
 
 @Entity(
@@ -120,8 +121,17 @@ public class EncounterEntity implements Serializable {
       return false;
     }
 
-    if (Date < 1) {
+    long dateTest = 1;
+    if (Date < dateTest) {
       Log.e(TAG, "Date is wrong.");
+      return false;
+    }
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DATE, 1);
+    dateTest = calendar.getTimeInMillis();
+    if (Date > dateTest) {
+      Log.e(TAG, "Date is invalid.");
       return false;
     }
 

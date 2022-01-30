@@ -37,9 +37,9 @@ public interface TaskDao {
     "  description, " +
     "  is_sensitive " +
     "FROM (" +
-    "  SELECT " +
-    "    Tasks.*, " +
-    "    COUNT(*) AS TaskCount " +
+    "  SELECT Tasks.*, NULL AS TaskCount FROM task_table Tasks " +
+    "  EXCEPT " +
+    "  SELECT Tasks.*, COUNT(*) AS TaskCount " +
     "  FROM encounter_table AS Encounters " +
     "  INNER JOIN task_table AS Tasks ON Tasks.id = Encounters.task_id " +
     "  GROUP BY Encounters.task_id " +

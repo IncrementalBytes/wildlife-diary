@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ public class StatisticsDetails {
 
   public int TotalHandledSubcutaneous;
 
+  public int TotalLabBloodWork;
+
   public int TotalOcularMedicated;
 
   public int TotalOralMedicated;
@@ -69,6 +71,7 @@ public class StatisticsDetails {
     TotalHandledGavage = 0;
     TotalHandledMedication = 0;
     TotalHandledSubcutaneous = 0;
+    TotalLabBloodWork = 0;
     TotalOcularMedicated = 0;
     TotalOralMedicated = 0;
     TotalSpeciesEncountered = 0;
