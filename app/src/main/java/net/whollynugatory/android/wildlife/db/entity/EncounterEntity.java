@@ -130,7 +130,7 @@ public class EncounterEntity implements Serializable {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DATE, 1);
     dateTest = calendar.getTimeInMillis();
-    if (Date > dateTest) {
+    if (Date >= dateTest) {
       Log.e(TAG, "Date is invalid.");
       return false;
     }

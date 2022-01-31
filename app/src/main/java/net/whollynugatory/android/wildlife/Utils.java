@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Ryan Ward
+ * Copyright 2022 Ryan Ward
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -174,14 +174,19 @@ public class Utils {
       dateString = dateString + dateFormat.substring(dateString.length());
     }
 
-    int month = Integer.parseInt(dateString.substring(0, 2));
-    int day = Integer.parseInt(dateString.substring(3, 5));
-    int year = Integer.parseInt(dateString.substring(6, 10));
-    month = month < 1 ? 1 : Math.min(month, 12);
-    calendar.set(Calendar.MONTH, month - 1);
-    calendar.set(Calendar.DATE, Math.min(day, calendar.getActualMaximum(Calendar.DATE)));
-    year = (year < 1900) ? 1900 : Math.min(year, 2100);
-    calendar.set(Calendar.YEAR, year);
+    try {
+      int month = Integer.parseInt(dateString.substring(0, 2));
+      int day = Integer.parseInt(dateString.substring(3, 5));
+      int year = Integer.parseInt(dateString.substring(6, 10));
+      month = month < 1 ? 1 : Math.min(month, 12);
+      calendar.set(Calendar.MONTH, month - 1);
+      calendar.set(Calendar.DATE, Math.min(day, calendar.getActualMaximum(Calendar.DATE)));
+      year = (year < 1900) ? 1900 : Math.min(year, 2100);
+      calendar.set(Calendar.YEAR, year);
+    } catch (NumberFormatException nfe) {
+      Log.w(TAG, "Invalid date format: " + nfe.getMessage());
+    }
+
     return calendar.getTimeInMillis();
   }
 

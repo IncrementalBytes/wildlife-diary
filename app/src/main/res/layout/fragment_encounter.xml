@@ -5,6 +5,16 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
+  <ImageView
+    android:id="@+id/encounter_image_close"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_view_margin"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:src="@drawable/ic_close_dark"
+    android:contentDescription="@string/label_close" />
+
   <TextView
     android:id="@+id/encounter_text_date"
     android:layout_width="wrap_content"
@@ -16,7 +26,7 @@
     android:textColor="@color/primaryTextColor"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="@id/encounter_edit_date"
-    app:layout_constraintBottom_toBottomOf="@id/encounter_edit_date"/>
+    app:layout_constraintBottom_toBottomOf="@id/encounter_edit_date" />
 
   <EditText
     android:id="@+id/encounter_edit_date"
@@ -29,19 +39,8 @@
     android:inputType="date"
     android:hint="@string/hint_date"
     app:layout_constraintStart_toEndOf="@id/encounter_text_date"
-    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/encounter_image_close"
     android:autofillHints="none" />
-
-  <ImageView
-    android:id="@+id/encounter_button_delete"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_view_margin"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="@id/encounter_edit_date"
-    app:layout_constraintBottom_toBottomOf="@id/encounter_edit_date"
-    android:src="@drawable/ic_delete_dark"
-    android:contentDescription="@string/label_delete"/>
 
   <TextView
     android:id="@+id/encounter_text_wildlife"
@@ -54,7 +53,7 @@
     android:textColor="@color/primaryTextColor"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="@id/encounter_auto_wildlife"
-    app:layout_constraintBottom_toBottomOf="@id/encounter_auto_wildlife"/>
+    app:layout_constraintBottom_toBottomOf="@id/encounter_auto_wildlife" />
 
   <AutoCompleteTextView
     android:id="@+id/encounter_auto_wildlife"
@@ -82,7 +81,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintStart_toEndOf="@id/encounter_button_minus"
     app:layout_constraintTop_toTopOf="@id/encounter_button_minus"
-    app:layout_constraintBottom_toBottomOf="@id/encounter_button_minus"/>
+    app:layout_constraintBottom_toBottomOf="@id/encounter_button_minus" />
 
   <Button
     android:id="@+id/encounter_button_minus"
@@ -91,7 +90,7 @@
     android:layout_marginStart="@dimen/default_view_margin"
     android:text="@string/minus_sign"
     app:layout_constraintStart_toEndOf="@id/encounter_text_number_in_group"
-    app:layout_constraintTop_toBottomOf="@id/encounter_auto_wildlife"/>
+    app:layout_constraintTop_toBottomOf="@id/encounter_auto_wildlife" />
 
   <EditText
     android:id="@+id/encounter_edit_number_in_group"
@@ -115,7 +114,7 @@
     android:text="@string/plus_sign"
     app:layout_constraintStart_toEndOf="@id/encounter_edit_number_in_group"
     app:layout_constraintTop_toTopOf="@id/encounter_button_minus"
-    app:layout_constraintBottom_toBottomOf="@id/encounter_button_minus"/>
+    app:layout_constraintBottom_toBottomOf="@id/encounter_button_minus" />
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/encounter_recycler_view"
@@ -127,7 +126,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/encounter_button_minus"
     app:layout_constraintBottom_toTopOf="@id/encounter_layout_buttons"
-    tools:listitem="@layout/item_task"/>
+    tools:listitem="@layout/item_task" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/encounter_layout_buttons"
@@ -136,6 +135,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toBottomOf="parent">
+
     <Button
       android:id="@+id/encounter_button_add"
       android:layout_width="wrap_content"
@@ -144,7 +144,7 @@
       android:text="@string/label_add_encounter"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toStartOf="@id/encounter_button_update"/>
+      app:layout_constraintEnd_toStartOf="@id/encounter_button_update" />
 
     <Button
       android:id="@+id/encounter_button_update"
@@ -154,17 +154,17 @@
       android:text="@string/label_update_encounter"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toEndOf="@id/encounter_button_add"
-      app:layout_constraintEnd_toStartOf="@id/encounter_button_record"/>
+      app:layout_constraintEnd_toStartOf="@id/encounter_button_delete" />
 
     <Button
-      android:id="@+id/encounter_button_record"
+      android:id="@+id/encounter_button_delete"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/default_view_margin"
-      android:text="@string/label_record_encounters"
+      android:text="@string/label_delete"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toEndOf="@id/encounter_button_update"
-      app:layout_constraintEnd_toEndOf="parent"/>
+      app:layout_constraintEnd_toEndOf="parent" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 
